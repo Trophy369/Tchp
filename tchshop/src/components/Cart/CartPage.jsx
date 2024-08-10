@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaDollarSign } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
-import { useAuth } from "../components/authContext/AuthProvider";
-import { handleQuantity, getCart, removeFromCart  } from "../services/userApi";
-import Cart from "../components/Cart";
+import { useAuth } from "../authContext/AuthProvider";
+import { handleQuantity, getCart, removeFromCart  } from "../../services/userApi";
+import Cart from "./Cart";
 import { Link } from "react-router-dom";
 
 const CartPage = ({}) => {

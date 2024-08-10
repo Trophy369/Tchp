@@ -3,7 +3,7 @@ import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-import { getShipping } from '../services/userApi';
+import { getShipping } from '../../services/userApi';
 
 const dummyShippingMethods = [
   { id: 1, name: "Standard Shipping", deliveryTime: "5-7 days", cost: 5.99 },

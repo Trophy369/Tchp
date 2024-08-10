@@ -5,15 +5,15 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import DefaultLayout from './layouts/DefaultLayout';
-import HomePage from './pages/HomePage';
-import CartPage from './pages/CartPage';
+import HomePage from './components/Home/HomePage';
+import CartPage from './components/Cart/CartPage';
 import SignIn from './components/Auth/SignIn';
 import SignUp from './components/Auth/SignUp';
 import UpdateProfile from './components/User/UpdateProfile';
 import Shipping from './pages/shoppolicy/Shipping'
 import Warranty from './pages/shoppolicy/Warranty';
 import Returns from './pages/Returns';
-import ProductPro from './components/ProductPro';
+import ProductPro from './components/Products/ProductPro';
 import AdminDash from './components/Admin/AdminDash';
 import AddProduct from './components/Admin/AddProducts';
 import CreateRole from './components/Admin/CreateRole';
@@ -21,7 +21,7 @@ import AssignRole from './components/Admin/AssignRole';
 import CreateCategory from './components/Admin/CreateCategory';
 import AssignCategory from './components/Admin/AssignCategory';
 import Dashboard from './components/User/Dashboard';
-import Checkout from './components/Checkout';
+import Checkout from './components/Cart/Checkout';
 
 const router = createBrowserRouter(
      createRoutesFromElements(

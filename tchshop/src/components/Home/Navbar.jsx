@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Adjust if using a different routing setup
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faShoppingCart, faScrewdriverWrench, faUser } from '@fortawesome/free-solid-svg-icons';
-import { signout } from "../services";
-import { useAuth } from "./authContext/AuthProvider";
+import { signout } from "../../services";
+import { useAuth } from "../authContext/AuthProvider";
 
 const Navbar = (props) => {
   const { user, itemTotal } = useAuth();

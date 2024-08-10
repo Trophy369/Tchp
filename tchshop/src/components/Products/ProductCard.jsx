@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import ShowImage from "./ShowImage";
+import ShowImage from "../ShowImage";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons';
-import { addToCart } from "../services/userApi";
+import { addToCart } from "../../services/userApi";
 // import { loggedUser } from "../services";
-import { useAuth } from "./authContext/AuthProvider";
+import { useAuth } from "../authContext/AuthProvider";
 
 const ProductCard = ({ id, name, description, quantity, price, regPrice }) => {
   const user = useAuth()

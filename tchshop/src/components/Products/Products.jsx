@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 // import { useDispatch, useSelector } from "react-redux";
-import { listproducts } from "../services";
+import { listproducts } from "../../services";
 // import { getProduct } from "../store/products";
 import ProductCard from "./ProductCard";
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaDollarSign } from 'react-icons/fa';
-import {addToCart} from "../services/userApi";
+import {addToCart} from "../../services/userApi";
 
 // Carousel component
 const Carousel = ({ images }) => {

@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { FaTrash, FaPlus, FaMinus, FaDollarSign } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
-import ShowImage from "./ShowImage.jsx";
-import { inputQuantity } from "../services/userApi.js";
+import ShowImage from "../ShowImage.jsx";
+import { inputQuantity } from "../../services/userApi.js";
 
 const Cart = ({
   productId,
