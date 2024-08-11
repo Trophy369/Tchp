@@ -18,6 +18,7 @@ import AdminDash from './components/Admin/AdminDash';
 import AddProduct from './components/Admin/AddProducts';
 import CreateRole from './components/Admin/CreateRole';
 import AssignRole from './components/Admin/AssignRole';
+import CreateReview from './components/Admin/CreateReview';
 import CreateCategory from './components/Admin/CreateCategory';
 import AssignCategory from './components/Admin/AssignCategory';
 import Dashboard from './components/User/Dashboard';
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/admin/addproduct' element={<AddProduct />} />
         <Route path='/admin/createcategory' element={<CreateCategory />} />
+        <Route path='/admin/createReview' element={<CreateReview />} />
         <Route path='/admin/createrole' element={<CreateRole />} />
         <Route path='/admin/assignrole' element={<AssignRole />} />
         <Route path='/admin/assigncategory' element={<AssignCategory />} />

@@ -67,17 +67,39 @@ export const createproduct = async (
   return response.json();
 };
 
-export const createReview = async (name) => {
+export const createReview = async (formData) => {
+  const extractedId = formData.get('id')
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(name),
+    body: formData, 
     credentials: "include"
   };
 
-  const response = await fetch(`${baseUrl}/admin/addreview`, requestOptions);
-  return response.json();
+  try {
+    const response = await fetch(`${baseUrl}/admin/addReview/${extractedId}`, requestOptions);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json(); 
+  } catch (error) {
+    console.error('Error creating review:', error);
+    throw error;
+  }
 };
+
+// export const createReview = async (id) => {
+//   const requestOptions = {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify(name),
+//     credentials: "include"
+//   };
+
+//   const response = await fetch(`${baseUrl}/admin/addReview/${id}`, requestOptions);
+//   return response.json();
+// };
 
 export const createRole = async (name) => {
   const requestOptions = {
