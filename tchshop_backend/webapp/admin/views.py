@@ -259,7 +259,7 @@ def add_review(product_id):
         # return jsonify({'Message': "Successfully reviewed"}), 200
 
         if len(review_images) >= 1 and (len(review_images) <= 5):
-            prod_reviews = Review.query.filter_by(productid=product.id).first()
+            # prod_reviews = Review.query.filter_by(productid=product.id).first()
             logging.info(f"prod review {prod_reviews}")
 
             for uploaded_file in review_images:
@@ -270,7 +270,9 @@ def add_review(product_id):
                     file_ext = os.path.splitext(filename)[1]
                     if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
                         abort(400)
-                    rev_img = ReviewImage(image=filename, review_id=prod_reviews.id, product_id=product_id)
+                    prod_reviews_img = Review.query.order_by(Review.timestamp.desc()).first()
+
+                    rev_img = ReviewImage(image=filename, review_id=prod_reviews_img.id, product_id=product_id)
                     db.session.add(rev_img)
                     db.session.commit()
                     # image.append(filename)
