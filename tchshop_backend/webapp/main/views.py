@@ -29,6 +29,12 @@ def get_products():
     return jsonify(product_list), 200
 
 
+# get a product
+@main.route('/product/<int:id>', methods=['GET'], strict_slashes=False)
+def view_product(id):
+    product = Product.query.get_or_404(id)
+    return jsonify(product.to_dict()), 200
+
 # users cart
 @login_required
 @main.route('/addToCart/<product_id>', methods=['GET', 'POST'], strict_slashes=False)
@@ -225,11 +231,13 @@ def view_reviews(product_id):
     product = Product.query.get_or_404(product_id)
     if product:
         all_review = Review.query.filter_by(productid=product_id).all()
+        # all_reviewimg = ReviewImage.query.filter_by(productid=product_id).all()
         reviews = [{
             "Rating": review.product_rating,
             "Review": review.product_review,
             "Timestamp": review.timestamp,
-            "Image": [img.to_dict() for img in review.images]
+            "Image": [img.to_dict() for img in review.images],
+            "user_id": review.user_id
         } for review in all_review]
         return jsonify(reviews)
     return jsonify({"error": "Item not found"}), 404

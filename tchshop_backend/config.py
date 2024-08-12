@@ -17,6 +17,7 @@ class Config:
     MAX_CONTENT_LENGTH = 6144 * 6144
     UPLOAD_EXTENSIONS = ['.jpg', '.png', '.img', '.jpeg']
     REVIEW_UPLOAD_PATH = 'webapp/static/reviews/'
+    PRODUCT_IMAGE_UPLOAD_PATH = 'webapp/static/products/'
     SESSION_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SECURE = True
     # ADMIN = os.environ.get('ADMIN') or "administrator@gmail.com"

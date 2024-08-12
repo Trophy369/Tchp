@@ -53,8 +53,35 @@ class DescriptionImage(db.Model):
 class ProductImage(db.Model):
     __tablename__ = 'productimages'
     id = db.Column(db.Integer, primary_key=True)
-    image_name = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String(100), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            # 'id': self.id,
+            'image_name': self.image
+        }
+
+    def __repr__(self):
+        return f"Product Image ('{self.image}', '{self.product_id}')"
+
+
+# product colors
+class ProductColor(db.Model):
+    __tablename__ = 'product_colors'
+    id = db.Column(db.Integer, primary_key=True)
+    color = db.Column(db.String(100), nullable=False)
+    number = db.Column(db.Integer, default=24)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            # 'id': self.id,
+            'color': self.color
+        }
+
+    def __repr__(self):
+        return f"Product Color ('{self.color}', '{self.number}', '{self.product_id}')"
 
 
 # product
@@ -73,6 +100,9 @@ class Product(db.Model):
     # add images to each product
     images = db.relationship('ProductImage', backref='products', lazy=True)
 
+    # add product colors available
+    colors = db.relationship('ProductColor', backref='products', lazy='dynamic')
+
     prod_cat = db.relationship('Category', secondary=product_category, backref=db.backref('products', lazy=True))
     reviews = db.relationship('Review', backref='products', lazy='dynamic')
 
@@ -83,10 +113,11 @@ class Product(db.Model):
             'id': self.id,
             'product_name': self.product_name,
             'description': self.descriptions,
-            'categoryid': self.categoryid,
+            # 'categoryid': self.categoryid,
             'quantity': self.quantity,
             'regular_price': self.regular_price,
-            'discounted_price': self.discounted_price
+            'discounted_price': self.discounted_price,
+            'product_image': [image.to_dict() for image in self.images]
         }
 
     # get product by product name
@@ -169,7 +200,7 @@ class Review(db.Model):
         }
 
     def __repr__(self):
-        return f"Product('{self.product_review}', '{self.product_rating}', '{self.user_id}', '{self.productid}', '{self.images}')"
+        return f"Review ('{self.id}',{self.product_review}', '{self.product_rating}', '{self.user_id}', '{self.productid}', '{self.images}')"
 
 
 # review images
