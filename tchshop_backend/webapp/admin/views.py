@@ -217,13 +217,16 @@ def colors_available(product_name):
     data = request.get_json()
     colors = data[f"name"]
     logging.info(f'{colors}, type{type(colors)}')
+    product = Product.query.filter_by(product_name=product_name).first()
+
 
     # for i in data:
     #     print(logging.info(f'{data[f"{i}"]}'))
-
+    present = ProductColor.query.filter_by(product_id=product.id).all()
+    if len(present) >= 6:
+        return jsonify({"error": "Consider clearing all product previous colors"}), 400
     if not colors or not isinstance(colors, list):
         return jsonify({"error": "Invalid JSON data"}), 400
-    product = Product.query.filter_by(product_name=product_name).first()
     if product is None:
         return jsonify({'error': f'{product_name} does not exists'}), 403
     for name in colors:
@@ -295,17 +298,19 @@ def admin_delete_product(id):
 def add_shipping():
     data = request.json
     cost = data.get('cost')
+    name = data.get('name')
     method = data.get('method')
     method_description = data.get('method_description')
-    if Shipping.query.filter_by(method=method).first():
+    shipping = Shipping.query.filter_by(method=method).first()
+    if shipping:
         return jsonify({"message": f"Shipping method already exist"})
-    elif cost or method:
-        shipping_method = Shipping(cost=cost, method=method, method_description=method_description)
+    elif cost and method and name:
+        shipping_method = Shipping(name=name, cost=cost, method=method, method_description=method_description)
         db.session.add(shipping_method)
         db.session.commit()
         return jsonify({"message": f"Shipping method added"})
     db.session.rollback()
-    return jsonify({"error": f"Failed to add"})
+    return jsonify({"error": f"Failed to add fill all fields correctly"})
 
 
 # delete shipping method
@@ -313,12 +318,32 @@ def add_shipping():
 @admin.route('/delete_shipping/<method>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
 def admin_delete_shipping(method):
-    shippings = Shipping.query.filter_by(method=method, user_id=None).all()
     delete_id = Shipping.query.filter_by(method=method).first()
-    if delete_id in shippings:
+    if delete_id:
         db.session.delete(delete_id)
         db.session.commit()
         return {"Message": f"Shipping {delete_id.method_description} deleted"}, 200
+    return {"Error": "No such shipping"}, 403
+
+
+# update shipping cost
+# delete shipping method
+@login_required
+@admin.route('/update_shipping_cost/<method>', methods=["PUT"], strict_slashes=False)
+@has_role('administrator')
+def admin_update_shipping_cost(method):
+    shippings = Shipping.query.filter_by(method=method, user_id=None).all()
+    delete_id = Shipping.query.filter_by(method=method).first()
+    data = request.json
+
+    if request.method == "PUT":
+        method = Shipping.query.filter_by(method=method).first()
+
+        if method in shippings:
+            method.cost = data["cost"]
+            db.session.commit()
+            return {"Message": f"Shipping cost for {delete_id.method_description} updated"}, 201
+
     return {"Error": "No such shipping"}, 403
 
 
@@ -329,7 +354,7 @@ def admin_delete_shipping(method):
 def all_shipping():
     available_methods = Shipping.query.all()
     all_methods = [{"method": ship.method, "method_description": ship.method_description, "cost": ship.cost
-                    } for ship in available_methods]
+                    , "name": ship.name} for ship in available_methods]
     return jsonify(all_methods), 200
 
 
