@@ -246,6 +246,25 @@ def admin_delete_product_description_img(product_name):
     return jsonify({'error': 'delete failed'})
 
 
+# update product description detailed version
+@login_required
+@admin.route('/update_product_description/<string:product_name>', methods=["PUT"], strict_slashes=False)
+@has_role('administrator')
+def admin_update_product_description_img(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+    data = request.json
+    if product is None:
+        return jsonify({'error', 'Product does not exist'})
+    if request.method == 'PUT':
+        product_description = Description.query.filter_by(product_id=product.id).first()
+        product_description.specifications = data['specifications']
+        db.session.commit()
+        product_description = Description.query.filter_by(product_id=product.id).first()
+        return jsonify({'status': 'success', 'product_name': f'description updated for {product.product_name}', 'product_description': product_description.to_dict()})
+    db.session.rollback()
+    return jsonify({'error': 'update failed'})
+
+
 # add images to a product
 @login_required
 @admin.route('/addProductImage/<string:product_name>', methods=['POST'], strict_slashes=False)
@@ -388,14 +407,13 @@ def add_shipping():
     data = request.json
     cost = data.get('cost')
     name = data.get('name')
-    method = data.get('method')
-    method_description = data.get('method_description')
-    shipping = Shipping.query.filter_by(method=method).first()
+    deliveryTime = data.get('deliveryTime')
+    shipping = Shipping.query.filter_by(name=name).first()
     if shipping:
         return jsonify({"message": f"Shipping method already exist"})
     elif cost and method and name:
-        shipping_method = Shipping(name=name, cost=cost, method=method, method_description=method_description)
-        db.session.add(shipping_method)
+        shipping_name = Shipping(name=name, cost=cost, deliveryTime=deliveryTime)
+        db.session.add(shipping_name)
         db.session.commit()
         return jsonify({"message": f"Shipping method added"})
     db.session.rollback()
@@ -404,34 +422,30 @@ def add_shipping():
 
 # delete shipping method
 @login_required
-@admin.route('/delete_shipping/<method>', methods=["DELETE"], strict_slashes=False)
+@admin.route('/delete_shipping/<name>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
-def admin_delete_shipping(method):
-    delete_id = Shipping.query.filter_by(method=method).first()
+def admin_delete_shipping(name):
+    delete_id = Shipping.query.filter_by(name=name).first()
     if delete_id:
         db.session.delete(delete_id)
         db.session.commit()
-        return {"Message": f"Shipping {delete_id.method_description} deleted"}, 200
+        return {"Message": f"Shipping {delete_id.name} deleted"}, 200
     return {"Error": "No such shipping"}, 403
 
 
 # update shipping cost
 # delete shipping method
 @login_required
-@admin.route('/update_shipping_cost/<method>', methods=["PUT"], strict_slashes=False)
+@admin.route('/update_shipping_cost/<id>', methods=["PUT"], strict_slashes=False)
 @has_role('administrator')
-def admin_update_shipping_cost(method):
-    shippings = Shipping.query.filter_by(method=method, user_id=None).all()
-    delete_id = Shipping.query.filter_by(method=method).first()
+def admin_update_shipping_cost(id):
+    shipping = Shipping.query.filter_by(id=id).first()
     data = request.json
-
     if request.method == "PUT":
-        method = Shipping.query.filter_by(method=method).first()
-
-        if method in shippings:
-            method.cost = data["cost"]
+        if shipping:
+            shipping.cost = data["cost"]
             db.session.commit()
-            return {"Message": f"Shipping cost for {delete_id.method_description} updated"}, 201
+            return {"Message": f"Shipping cost for {shipping.name} updated"}, 201
 
     return {"Error": "No such shipping"}, 403
 
@@ -442,7 +456,7 @@ def admin_update_shipping_cost(method):
 @has_role('administrator')
 def all_shipping():
     available_methods = Shipping.query.all()
-    all_methods = [{"method": ship.method, "method_description": ship.method_description, "cost": ship.cost
+    all_methods = [{"id": ship.id, "deliveryTime": ship.deliveryTime, "cost": ship.cost
                     , "name": ship.name} for ship in available_methods]
     return jsonify(all_methods), 200
 

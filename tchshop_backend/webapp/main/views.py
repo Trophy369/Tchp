@@ -22,7 +22,7 @@ def get_products():
     product_quantity = CartItem.query.filter_by()
     # logging.info(f"product data{products}")
 
-    product_list = [{'id': product.id, 'Product name': product.product_name, 'Description': [p for p in product.descriptions]
+    product_list = [{'id': product.id, 'Product name': product.product_name, 'description': product.description
                     ,'quantity': product.quantity, 'regular_price': product.regular_price,
                      'discounted_price': product.discounted_price} for product in products
                     ]
@@ -59,14 +59,14 @@ def add_to_cart(product_id):
     product_id = product_id
     product = Product.query.get(product_id)
     quantity = data.get('quantity', 1)
-    shipping = data.get('shipping', 6)
+    shipping = data.get('shipping', 2)
     all_colors = ProductColor.query.filter_by(product_id=product_id).first()
     color = data.get('color', f'{all_colors.color}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
 
     # add or update shipping
-    shipping_method = Shipping.query.filter_by(method=shipping).first()
+    shipping_method = Shipping.query.filter_by(id=shipping).first()
 
 
     cart_len = 0
@@ -125,7 +125,7 @@ def cart(id):
     cart_details = []
     for item in cart_items:
         product = Product.query.get(item.product_id)
-        shipping = Shipping.query.filter_by(method=item.shipping).first()
+        shipping = Shipping.query.filter_by(id=item.shipping).first()
         logging.info(f"Shipping: {shipping}")
         cart_details.append({
             'id': product.id,
@@ -134,10 +134,10 @@ def cart(id):
             'regular_price': product.regular_price,
             'discounted_price': product.discounted_price,
             'total_price': item.quantity * product.discounted_price,
-            'shipping_method': shipping.method_description if shipping else None,
+            'shipping_method': shipping.name if shipping else None,
             'shipping_price': shipping.cost,
             'color': item.color,
-            'delivery_date': 'now'
+            'delivery_date': shipping.deliveryTime if shipping else None
         })
     total_items = len(cart_items)#user.total_cart(id)
     logging.info(f"Cart details {cart_details}")
@@ -248,16 +248,16 @@ def update_cart_item_shipping(product_id):
     id = current_user.id
     data = request.json
     # product = Product.query.get(product_id)
-    shipping = Shipping.query.filter_by(method=data['method']).first_or_404()
+    shipping = Shipping.query.filter_by(id=data['id']).first_or_404()
 
-    if "method" not in data:
+    if "id" not in data:
         return jsonify({"message": "Shipping not provided"}), 400
 
     cart_item = CartItem.query.filter_by(cart_id=id, product_id=product_id).first()
     if not cart_item:
         return jsonify({"message": "Item not found in cart or Shipping method does not exist"}), 404
 
-    cart_item.shipping = data["method"]
+    cart_item.shipping = data["id"]
     db.session.commit()
 
     return jsonify({"message": "Item shipping updated successfully"}), 200

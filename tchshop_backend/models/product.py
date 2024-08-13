@@ -182,12 +182,11 @@ class Shipping(db.Model):
     __tablename__ = 'shippings'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
+    deliveryTime = db.Column(db.String(200))
     cost = db.Column(db.Float, nullable=False)
-    method = db.Column(db.Integer, nullable=False)
-    method_description = db.Column(db.String(200))
 
-    def total_cost(self, method, quantity):
-        method = Shipping.query.filter_by(method=method).first()
+    def total_cost(self, name, quantity):
+        method = Shipping.query.filter_by(name=name).first()
         logging.info(f'Method for total cost {method}')
         if quantity > 1:
             return (quantity * method.cost) * 0.55
@@ -195,8 +194,8 @@ class Shipping(db.Model):
             return "%.3f".format(method.cost)
 
     def __repr__(self):
-        return (f"Shipping(id: '{self.id}' Method: '{self.method}', Cost: '{self.cost}' \
-         Method Description: '{self.method_description}'")
+        return (f"Shipping(id: '{self.id}' Name: '{self.name}', Cost: '{self.cost}' \
+         deliveryTime: '{self.deliveryTime}'")
 
 
 # product review
