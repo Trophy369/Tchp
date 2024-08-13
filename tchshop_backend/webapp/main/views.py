@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session
-from models.product import Product, Category, Review, CartItem, Shipping
+from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description
 from models.user import User, Cart
 from webapp import db
 from models.order import Order, OrderedProduct, SaleTransaction
@@ -29,6 +29,25 @@ def get_products():
     return jsonify(product_list), 200
 
 
+# get a product
+@main.route('/product/<string:product_name>', methods=['GET'], strict_slashes=False)
+def view_product(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+    if product:
+        return jsonify(product.to_dict()), 200
+    return jsonify({'error': 'Product Not found '}), 400
+
+
+# view product description
+@main.route('/product_desc/<string:product_name>', methods=['GET'], strict_slashes=False)
+def view_product_desc(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+    desc = Description.query.filter_by(product_id=product.id).first()
+    if desc:
+        return jsonify(desc.to_dict()), 200
+    return jsonify({'error': 'Not found Update it'}), 400
+
+
 # users cart
 @login_required
 @main.route('/addToCart/<product_id>', methods=['GET', 'POST'], strict_slashes=False)
@@ -40,7 +59,9 @@ def add_to_cart(product_id):
     product_id = product_id
     product = Product.query.get(product_id)
     quantity = data.get('quantity', 1)
-    shipping = data.get('shipping', 2)
+    shipping = data.get('shipping', 6)
+    all_colors = ProductColor.query.filter_by(product_id=product_id).first()
+    color = data.get('color', f'{all_colors.color}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
 
@@ -64,7 +85,7 @@ def add_to_cart(product_id):
         if cart_item:
             return jsonify({"Message": "Item already in cart"})
         else:
-            add_cartitem = CartItem(cart_id=current_user.id, product_id=product.id, quantity=quantity, shipping=shipping)
+            add_cartitem = CartItem(cart_id=current_user.id, product_id=product.id, quantity=quantity, shipping=shipping, color=color)
             db.session.add(add_cartitem)
             db.session.commit()
         all_items = CartItem.query.filter_by(cart_id=current_user.id).all()
@@ -88,7 +109,7 @@ def cart(id):
     logging.info(f"User {user}")
     if not User.query.get(current_user.id):
         return jsonify({'message': 'Fack off!'}), 404
-    if not user:
+    if user is None:
         return jsonify({'message': 'Empty Cart!'}), 404
 
     cart = user.productid
@@ -115,9 +136,10 @@ def cart(id):
             'total_price': item.quantity * product.discounted_price,
             'shipping_method': shipping.method_description if shipping else None,
             'shipping_price': shipping.cost,
+            'color': item.color,
             'delivery_date': 'now'
         })
-    total_items = user.total_cart(id)
+    total_items = len(cart_items)#user.total_cart(id)
     logging.info(f"Cart details {cart_details}")
     return jsonify({'Number of items': total_items}, cart_details), 200
 
@@ -178,12 +200,43 @@ def update_cart_item_quantity(product_id):
     return jsonify({"message": "Item quantity updated successfully"}), 200
 
 
+# Update color of a product in the cart
+@login_required
+@main.route('/updateColor/<int:product_id>', methods=['PUT'], strict_slashes=False)
+def update_cart_item_color(product_id):
+    id = current_user.id
+    data = request.json
+    # product = Product.query.get(product_id)
+
+    if "color" not in data:
+        return jsonify({"message": "Color not provided"}), 400
+
+    cart_item = CartItem.query.filter_by(cart_id=id, product_id=product_id).first()
+    if not cart_item:
+        return jsonify({"message": "Item not found in cart"}), 404
+
+    # update to real quantity in db
+    # ini_quantity = product.quantity
+    # logging.info(f"Initial Product quantity: {ini_quantity}")
+    #
+    # new_quantity = int(data.get('quantity'))
+    # if (cart_item.quantity - new_quantity) <= 0:
+    #     return jsonify({"error": "Not enough in Stock reduce quantity"}), 404
+    # ini_quantity += cart_item.quantity
+    # ini_quantity -= new_quantity
+    # logging.info(f"Product quantity: {ini_quantity}")
+
+    cart_item.color = data["color"]
+    db.session.commit()
+
+    return jsonify({"message": "Item color updated successfully"}), 200
+
 # get all shipping methods available
 @login_required
 @main.route('/shipping', methods=['GET'], strict_slashes=False)
 def all_shipping():
     available_methods = Shipping.query.all()
-    all_methods = [{"method": ship.method, "method_description": ship.method_description, "cost": ship.cost
+    all_methods = [{"method": ship.method, "name": ship.name, "method_description": ship.method_description, "cost": ship.cost
                     } for ship in available_methods]
     return jsonify(all_methods), 200
 
@@ -225,11 +278,13 @@ def view_reviews(product_id):
     product = Product.query.get_or_404(product_id)
     if product:
         all_review = Review.query.filter_by(productid=product_id).all()
+        # all_reviewimg = ReviewImage.query.filter_by(productid=product_id).all()
         reviews = [{
             "Rating": review.product_rating,
             "Review": review.product_review,
             "Timestamp": review.timestamp,
-            "Image": [img.to_dict() for img in review.images]
+            "Image": [img.to_dict() for img in review.images],
+            "user_id": review.user_id
         } for review in all_review]
         return jsonify(reviews)
     return jsonify({"error": "Item not found"}), 404

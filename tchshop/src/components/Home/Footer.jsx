@@ -3,6 +3,7 @@ import { AiFillTikTok } from "react-icons/ai";
 import { AiFillInstagram } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { IoMdCall } from "react-icons/io";
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -13,6 +14,7 @@ const Footer = () => {
         <AiFillInstagram className="w-6 h-6 " />
         <MdEmail className="w-6 h-6 " />
         <IoMdCall className="w-6 h-6 " />
+        <Link to="/admin">logoo</Link>
     </div>
     <div
     className='py-1 font-semibold text-center'

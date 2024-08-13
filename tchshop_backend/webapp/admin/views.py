@@ -1,10 +1,13 @@
 import os
+import random
+
 from config import Config
 from flask import render_template, url_for, abort, redirect, request, flash, jsonify, current_app
 from . import admin
 from models.user import Role, User, Cart
 from flask_login import login_required, current_user
-from models.product import Product, Category, Review, Shipping, ReviewImage
+from models.product import Product, Category, Review, Shipping, ReviewImage, ProductImage, ProductColor,\
+    DescriptionImage, Description
 from models.order import Order
 from webapp.auth import has_role
 from webapp import db
@@ -175,6 +178,194 @@ def addproduct():
     return jsonify({"Message": "Product  added successfully", "Product name": prod_name}), 201
 
 
+# add description to a product
+@login_required
+@admin.route('/addProductDescription/<string:product_name>', methods=['POST'], strict_slashes=False)
+@has_role('administrator')
+def addDescription(product_name):
+    data = request.form
+    description_images = request.files.getlist('file')
+    logging.info(f"len img description {len(description_images)}")
+
+    user = current_user.id
+    product = Product.query.filter_by(product_name=product_name).first()
+    specifications = data['specifications']
+
+    if product:
+        product_description = Description(specifications=specifications, product_id=product.id)
+        db.session.add(product_description)
+        db.session.commit()
+        prod_description = Description.query.filter_by(product_id=product.id).first()
+        logging.info(f"description {prod_description}")
+        # return jsonify({'Message': "Successfully reviewed"}), 200
+
+        if len(description_images) >= 1 and (len(description_images) <= 5):
+            # prod_reviews = Review.query.filter_by(productid=product.id).first()
+            # logging.info(f"prod review {prod_reviews}")
+
+            for uploaded_file in description_images:
+                name = secure_filename(uploaded_file.filename)
+                filename = product.product_name + '_' + name
+
+                if name != '':
+                    file_ext = os.path.splitext(filename)[1]
+                    if file_ext not in current_app.config['DESCRIPTION_UPLOAD_EXTENSIONS']:
+                        abort(400)
+                    prod_description_img = Description.query.filter_by(product_id=product.id).first()
+
+                    des_img = DescriptionImage(image_name=filename, description_id=prod_description_img.id, product_id=product.id)
+                    db.session.add(des_img)
+                    db.session.commit()
+                    # image.append(filename)
+                    # logging.info(f"all images: {image}")
+                uploaded_file.save(os.path.join(current_app.config['DESCRIPTION_UPLOAD_PATH'], filename))
+        #     image.append(filename)
+        # u = ReviewImage.query.filter_by(review_id=prod_reviews.id)
+        return jsonify({'Message': f'Description Successfully added for {product.product_name}'}), 201
+    db.session.rollback()
+    return jsonify({'error': 'review failed'}), 404
+
+
+# delete description of a product
+@login_required
+@admin.route('/delete_product_description/<string:product_name>', methods=["DELETE"], strict_slashes=False)
+@has_role('administrator')
+def admin_delete_product_description_img(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+
+    if product is None:
+        return jsonify({'error', 'Product does not exist'})
+    if request.method == 'DELETE':
+        product_description = DescriptionImage.query.filter_by(product_id=product.id).all()
+        for image in product_description:
+            db.session.delete(image)
+        db.session.commit()
+        product_description = DescriptionImage.query.filter_by(product_id=product.id).all()
+        images = [image.to_dict() for image in product_description]
+        return jsonify({'status': 'success', 'product_name': product.product_name, 'images_available': images})
+    return jsonify({'error': 'delete failed'})
+
+
+# add images to a product
+@login_required
+@admin.route('/addProductImage/<string:product_name>', methods=['POST'], strict_slashes=False)
+@has_role('administrator')
+def addImage(product_name):
+    product_images = request.files.getlist('file')
+    logging.info(f"len img review {len(product_images)}")
+
+    product = Product.query.filter_by(product_name=product_name).first()
+    if product is None:
+        return jsonify({'error': f'{product_name} does not exists'}), 403
+
+    if len(product_images) >= 1 and (len(product_images) <= 7):
+        # prod_reviews = Review.query.filter_by(productid=product.id).first()
+        logging.info(f"prod {product}")
+        for uploaded_file in product_images:
+            name = secure_filename(uploaded_file.filename)
+            filename = product.product_name + '_' + name
+
+            if name != '':
+                file_ext = os.path.splitext(filename)[1]
+                if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+                    abort(400)
+                prod_img = ProductImage(image=filename, product_id=product.id)
+                db.session.add(prod_img)
+                db.session.commit()
+            uploaded_file.save(os.path.join(current_app.config['PRODUCT_IMAGE_UPLOAD_PATH'], filename))
+    #     image.append(filename)
+    u = ProductImage.query.filter_by(product_id=product.id).all()
+    logging.info(f"prod images {u}")
+    return jsonify({'Message': "Product Images(s) Successfully added"}), 200
+
+
+# delete product images
+@login_required
+@admin.route('/delete_product_images/<string:product_name>', methods=["DELETE"], strict_slashes=False)
+@has_role('administrator')
+def admin_delete_product_images(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+
+    if product is None:
+        return jsonify({'error', 'Product does not exist'})
+    if request.method == 'DELETE':
+        product_images = ProductImage.query.filter_by(product_id=product.id).all()
+        for image in product_images:
+            db.session.delete(image)
+        db.session.commit()
+        product_images = ProductImage.query.filter_by(product_id=product.id).all()
+        images = [image.to_dict() for image in product_images]
+        return jsonify({'status': 'success', 'product_name': product.product_name, 'images_available': images})
+    return jsonify({'error': 'delete failed'})
+
+# add product color
+@login_required
+@admin.route('/addProductColor/<string:product_name>', methods=['POST'], strict_slashes=False)
+@has_role('administrator')
+def colors_available(product_name):
+    data = request.get_json()
+    colors = data[f"name"]
+    logging.info(f'{colors}, type{type(colors)}')
+    product = Product.query.filter_by(product_name=product_name).first()
+
+
+    # for i in data:
+    #     print(logging.info(f'{data[f"{i}"]}'))
+    present = ProductColor.query.filter_by(product_id=product.id).all()
+    if len(present) >= 6:
+        return jsonify({"error": "Consider clearing all product previous colors"}), 400
+    if not colors or not isinstance(colors, list):
+        return jsonify({"error": "Invalid JSON data"}), 400
+    if product is None:
+        return jsonify({'error': f'{product_name} does not exists'}), 403
+    for name in colors:
+        product_color = ProductColor(color=name, number=random.choice(range(20)), product_id=product.id)
+        db.session.add(product_color)
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Colors added successfully'}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+    # logging.info(f"{colors}")
+
+
+# view products colors
+@login_required
+@admin.route('/view_product_color/<string:product_name>', methods=["GET"], strict_slashes=False)
+@has_role('administrator')
+def admin_view_product_colors(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+    if product is None:
+        return jsonify({'error', 'Product does not exist'})
+    if request.method == 'GET':
+        product_colors = ProductColor.query.filter_by(product_id=product.id).all()
+        colors = [color.to_dict() for color in product_colors]
+        return jsonify({'product_name': product.product_name, 'colors_available': colors})
+
+
+# delete product colors
+@login_required
+@admin.route('/delete_product_color/<string:product_name>', methods=["DELETE"], strict_slashes=False)
+@has_role('administrator')
+def admin_delete_product_colors(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+
+    if product is None:
+        return jsonify({'error', 'Product does not exist'})
+    if request.method == 'DELETE':
+        product_colors = ProductColor.query.filter_by(product_id=product.id).all()
+        for color in product_colors:
+            db.session.delete(color)
+        db.session.commit()
+        product_colors = ProductColor.query.filter_by(product_id=product.id).all()
+        # colors = [color.to_dict() for color in product_colors]
+        return jsonify({'status': 'success', 'product_name': product.product_name, 'colors_available': product_colors})
+    return jsonify({'error': 'delete failed'})
+
+
 # delete product
 @login_required
 @admin.route('/delete_product/<id>', methods=["POST"], strict_slashes=False)
@@ -196,17 +387,19 @@ def admin_delete_product(id):
 def add_shipping():
     data = request.json
     cost = data.get('cost')
+    name = data.get('name')
     method = data.get('method')
     method_description = data.get('method_description')
-    if Shipping.query.filter_by(method=method).first():
+    shipping = Shipping.query.filter_by(method=method).first()
+    if shipping:
         return jsonify({"message": f"Shipping method already exist"})
-    elif cost or method:
-        shipping_method = Shipping(cost=cost, method=method, method_description=method_description)
+    elif cost and method and name:
+        shipping_method = Shipping(name=name, cost=cost, method=method, method_description=method_description)
         db.session.add(shipping_method)
         db.session.commit()
         return jsonify({"message": f"Shipping method added"})
     db.session.rollback()
-    return jsonify({"error": f"Failed to add"})
+    return jsonify({"error": f"Failed to add fill all fields correctly"})
 
 
 # delete shipping method
@@ -214,12 +407,32 @@ def add_shipping():
 @admin.route('/delete_shipping/<method>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
 def admin_delete_shipping(method):
-    shippings = Shipping.query.filter_by(method=method, user_id=None).all()
     delete_id = Shipping.query.filter_by(method=method).first()
-    if delete_id in shippings:
+    if delete_id:
         db.session.delete(delete_id)
         db.session.commit()
         return {"Message": f"Shipping {delete_id.method_description} deleted"}, 200
+    return {"Error": "No such shipping"}, 403
+
+
+# update shipping cost
+# delete shipping method
+@login_required
+@admin.route('/update_shipping_cost/<method>', methods=["PUT"], strict_slashes=False)
+@has_role('administrator')
+def admin_update_shipping_cost(method):
+    shippings = Shipping.query.filter_by(method=method, user_id=None).all()
+    delete_id = Shipping.query.filter_by(method=method).first()
+    data = request.json
+
+    if request.method == "PUT":
+        method = Shipping.query.filter_by(method=method).first()
+
+        if method in shippings:
+            method.cost = data["cost"]
+            db.session.commit()
+            return {"Message": f"Shipping cost for {delete_id.method_description} updated"}, 201
+
     return {"Error": "No such shipping"}, 403
 
 
@@ -230,7 +443,7 @@ def admin_delete_shipping(method):
 def all_shipping():
     available_methods = Shipping.query.all()
     all_methods = [{"method": ship.method, "method_description": ship.method_description, "cost": ship.cost
-                    } for ship in available_methods]
+                    , "name": ship.name} for ship in available_methods]
     return jsonify(all_methods), 200
 
 
@@ -259,7 +472,7 @@ def add_review(product_id):
         # return jsonify({'Message': "Successfully reviewed"}), 200
 
         if len(review_images) >= 1 and (len(review_images) <= 5):
-            prod_reviews = Review.query.filter_by(productid=product.id).first()
+            # prod_reviews = Review.query.filter_by(productid=product.id).first()
             logging.info(f"prod review {prod_reviews}")
 
             for uploaded_file in review_images:
@@ -270,14 +483,16 @@ def add_review(product_id):
                     file_ext = os.path.splitext(filename)[1]
                     if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
                         abort(400)
-                    rev_img = ReviewImage(image=filename, review_id=prod_reviews.id, product_id=product_id)
+                    prod_reviews_img = Review.query.order_by(Review.timestamp.desc()).first()
+
+                    rev_img = ReviewImage(image=filename, review_id=prod_reviews_img.id, product_id=product_id)
                     db.session.add(rev_img)
                     db.session.commit()
                     # image.append(filename)
                     # logging.info(f"all images: {image}")
                 uploaded_file.save(os.path.join(current_app.config['REVIEW_UPLOAD_PATH'], filename))
         #     image.append(filename)
-        u = ReviewImage.query.filter_by(review_id=prod_reviews.id)
+        # u = ReviewImage.query.filter_by(review_id=prod_reviews.id)
         return jsonify({'Message': "Successfully reviewed"}), 200
     db.session.rollback()
     return jsonify({'error': 'review failed'}), 404
