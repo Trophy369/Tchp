@@ -16,8 +16,11 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAX_CONTENT_LENGTH = 6144 * 6144
     UPLOAD_EXTENSIONS = ['.jpg', '.png', '.img', '.jpeg']
+    DESCRIPTION_UPLOAD_EXTENSIONS = ['.jpg', '.png', '.img', '.jpeg', '.gif', '.pdf']
     REVIEW_UPLOAD_PATH = 'webapp/static/reviews/'
     PRODUCT_IMAGE_UPLOAD_PATH = 'webapp/static/products/'
+    DESCRIPTION_UPLOAD_PATH = 'webapp/static/descriptions/'
+
     SESSION_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SECURE = True
     # ADMIN = os.environ.get('ADMIN') or "administrator@gmail.com"

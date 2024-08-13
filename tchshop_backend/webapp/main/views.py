@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session
-from models.product import Product, Category, Review, CartItem, Shipping, ProductColor
+from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description
 from models.user import User, Cart
 from webapp import db
 from models.order import Order, OrderedProduct, SaleTransaction
@@ -30,10 +30,23 @@ def get_products():
 
 
 # get a product
-@main.route('/product/<int:id>', methods=['GET'], strict_slashes=False)
-def view_product(id):
-    product = Product.query.get_or_404(id)
-    return jsonify(product.to_dict()), 200
+@main.route('/product/<string:product_name>', methods=['GET'], strict_slashes=False)
+def view_product(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+    if product:
+        return jsonify(product.to_dict()), 200
+    return jsonify({'error': 'Product Not found '}), 400
+
+
+# view product description
+@main.route('/product_desc/<string:product_name>', methods=['GET'], strict_slashes=False)
+def view_product_desc(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+    desc = Description.query.filter_by(product_id=product.id).first()
+    if desc:
+        return jsonify(desc.to_dict()), 200
+    return jsonify({'error': 'Not found Update it'}), 400
+
 
 # users cart
 @login_required

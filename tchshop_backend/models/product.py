@@ -38,15 +38,35 @@ class Description(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     specifications = db.Column(db.Text, nullable=True)
     images = db.relationship('DescriptionImage', backref='descriptions', lazy=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
 
-    
-# decription images for more images for product description
+    def to_dict(self):
+        return {
+            'product_id': self.product_id,
+            'specifications': self.specifications,
+            'images': [image.to_dict() for image in self.images]
+        }
+
+    def __repr__(self):
+        return f"Product Description('{self.id}', '{self.product_id}', '{self.specifications}', '{self.images}')"
+
+
+# description images for more images for product description
 class DescriptionImage(db.Model):
     __tablename__ = 'descriptionimages'
     id = db.Column(db.Integer, primary_key=True)
     image_name = db.Column(db.String(100), nullable=False)
-    description_id = db.Column(db.Integer, db.ForeignKey('descriptions.id'), nullable=True)
+    description_id = db.Column(db.Integer, db.ForeignKey('descriptions.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            # 'id': self.id,
+            'image_name': self.image_name
+        }
+
+    def __repr__(self):
+        return f"Description Image ('{self.image_name}', '{self.description_id}')"
 
 
 # product image table relationship with product
@@ -93,9 +113,9 @@ class Product(db.Model):
     regular_price = db.Column(db.Float, nullable=False)
     discounted_price = db.Column(db.Float, nullable=False)
     number_sold = db.Column(db.Integer)
-
+    description = db.Column(db.String(300))
     # add description table and look into one to many relationship
-    descriptions = db.relationship('Description', backref='products', lazy=True)
+    descriptions = db.relationship('Description', backref='products', lazy='dynamic')
 
     # add images to each product
     images = db.relationship('ProductImage', backref='products', lazy=True)
@@ -112,7 +132,7 @@ class Product(db.Model):
         return {
             'id': self.id,
             'product_name': self.product_name,
-            'description': self.descriptions,
+            'description': self.description,
             # 'categoryid': self.categoryid,
             'quantity': self.quantity,
             'regular_price': self.regular_price,
@@ -177,6 +197,7 @@ class Shipping(db.Model):
     def __repr__(self):
         return (f"Shipping(id: '{self.id}' Method: '{self.method}', Cost: '{self.cost}' \
          Method Description: '{self.method_description}'")
+
 
 # product review
 class Review(db.Model):
