@@ -67,7 +67,7 @@ const Hero = () => {
           Welcome to{' '}
           <FontAwesomeIcon icon={faScrewdriverWrench} className="mx-2 text-2xl text-yellow-900 md:text-3xl lg:text-4xl" />
           <span className="text-2xl font-extrabold md:text-3xl lg:text-4xl">
-            <span className="overline">Tch</span>SHOP
+            <span className="overline">Hack</span>SHOP
           </span>
         </motion.h1>
         <motion.p
@@ -76,7 +76,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          Discover amazing technology tools for software engineers, developers, and pentesters.
+          Discover amazing technology tools for software engineering, development, and pentesting.
         </motion.p>
       </div>
     </section>

@@ -1,4 +1,6 @@
-const baseUrl = "http://127.0.0.1:5000";
+import config from '../config';
+
+const baseUrl = config.baseUrl;
 
 export const getCategory = async (category_id) => {
   const requestOptions = {
@@ -6,7 +8,7 @@ export const getCategory = async (category_id) => {
     headers: { "Content-Type": "application/json" },
     credentials: "include",
   };
-
+  
   const response = await fetch(
     `${baseUrl}/admin/category/${category_id}`,
     requestOptions

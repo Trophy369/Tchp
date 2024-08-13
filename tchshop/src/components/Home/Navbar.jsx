@@ -29,7 +29,7 @@ const Navbar = (props) => {
         <Link to="/" className="flex items-center">
           <FontAwesomeIcon icon={faScrewdriverWrench} className="mr-2 text-2xl text-white" />
           <span className="text-lg font-extrabold">
-            <span className="overline">Tch</span>SHOP
+            <span className="overline">Hack</span>SHOP
           </span>
         </Link>
 

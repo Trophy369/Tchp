@@ -1,4 +1,7 @@
-const baseUrl = "http://127.0.0.1:5000";
+import axios from "axios"
+import config from '../config';
+
+const baseUrl = config.baseUrl;
 
 export const addToCart = async (id, userId, quantity) => {
   const requestOptions = {
@@ -7,7 +10,7 @@ export const addToCart = async (id, userId, quantity) => {
     body: JSON.stringify({ userId, quantity }),
     credentials: 'include',
   };
-
+  
   const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
   return response.json();
 };

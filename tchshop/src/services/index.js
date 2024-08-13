@@ -1,6 +1,7 @@
 import axios from "axios";
+import config from '../config';
 
-const baseUrl = "http://127.0.0.1:5000";
+const baseUrl = config.baseUrl;
 
 export const getUser = async () => {
   const requestOptions = {
@@ -9,7 +10,7 @@ export const getUser = async () => {
     headers: { "Content-Type": "application/json" },
     credentials: "include"
   };
-
+ 
   const response = await fetch(`${baseUrl}/@me`, requestOptions);
   return response.json();
 };
