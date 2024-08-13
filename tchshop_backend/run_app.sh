@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-export WEBAPP_ENV=dev
-flask --debug run
+export WEBAPP_ENV=Dev
+python app.py
+#flask --debug run

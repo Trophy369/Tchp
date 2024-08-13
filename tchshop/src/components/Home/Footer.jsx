@@ -17,7 +17,7 @@ const Footer = () => {
     <div
     className='py-1 font-semibold text-center'
     >
-         <small>&copy; Copyright 2024, TchShop</small>
+         <small>&copy; Copyright 2022 - 2024, HackShop</small>
     </div>
        
     </footer>
