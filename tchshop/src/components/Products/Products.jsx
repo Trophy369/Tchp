@@ -27,7 +27,7 @@ const Products = () => {
               key={product.id}
               id={product.id}
               name={product["Product name"]}
-              description={product.Description}
+              description={product.description}
               quantity={product.quantity}
               price={product.discounted_price}
               regPrice={product.regular_price}
