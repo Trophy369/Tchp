@@ -411,7 +411,7 @@ def add_shipping():
     shipping = Shipping.query.filter_by(name=name).first()
     if shipping:
         return jsonify({"message": f"Shipping method already exist"})
-    elif cost and method and name:
+    elif cost and name:
         shipping_name = Shipping(name=name, cost=cost, deliveryTime=deliveryTime)
         db.session.add(shipping_name)
         db.session.commit()

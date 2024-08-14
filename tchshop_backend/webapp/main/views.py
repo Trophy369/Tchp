@@ -236,7 +236,7 @@ def update_cart_item_color(product_id):
 @main.route('/shipping', methods=['GET'], strict_slashes=False)
 def all_shipping():
     available_methods = Shipping.query.all()
-    all_methods = [{"method": ship.method, "name": ship.name, "method_description": ship.method_description, "cost": ship.cost
+    all_methods = [{"id": ship.id, "name": ship.name, "deliveryTime": ship.deliveryTime, "cost": ship.cost
                     } for ship in available_methods]
     return jsonify(all_methods), 200
 
