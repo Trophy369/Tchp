@@ -31,6 +31,7 @@ const ProductCard = ({ id, name, description, quantity, price, regPrice }) => {
           <p className="text-sm text-gray-600">
             Sold: {quantity} | Left: {quantity}
           </p>
+
         </div>
       </div>
     </Link>
