@@ -23,6 +23,7 @@ import CreateCategory from './components/Admin/CreateCategory';
 import AssignCategory from './components/Admin/AssignCategory';
 import Dashboard from './components/User/Dashboard';
 import Checkout from './components/Cart/Checkout';
+import Faq from './pages/Faq'
 
 const router = createBrowserRouter(
      createRoutesFromElements(
@@ -44,7 +45,8 @@ const router = createBrowserRouter(
         <Route path='/shoppolicy/shipping' element={<Shipping />} />
         <Route path='/shoppolicy/returns' element={<Returns />} />
         <Route path='/shoppolicy/warranty' element={<Warranty />} />
-        <Route path='/Checkout' element={<Checkout />} />
+        <Route path='/checkout' element={<Checkout />} />
+        <Route path='/faq' element={<Faq />} />
       </Route>
       
      )
