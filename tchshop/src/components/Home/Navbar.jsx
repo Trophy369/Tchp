@@ -37,17 +37,15 @@ const Navbar = (props) => {
         <div className="justify-center flex-grow hidden md:flex">
           <Link to="/" className="px-2 py-2 mx-4 rounded hover:bg-blue-600">Home</Link>
           <div className="relative px-2 py-2 mx-4 rounded group">
-            <span className="cursor-pointer hover:bg-blue-600">Products</span>
+            <span className="cursor-pointer hover:bg-blue-600">Collections</span>
             <div className="absolute hidden w-48 mt-1 bg-black rounded shadow-lg group-hover:block">
               {/* Dropdown content */}
-              <Link to="/category1" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Category 1</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Category 2</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Category 3</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Category 4</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Category 5</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Category 6</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Category 7</Link>
-              {/* Add more categories as needed */}
+              <Link to="collections/flipper-zero" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Flipper-Zero</Link>
+              <Link to="collections/pentesting" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Pentesting</Link>
+              <Link to="collections/sdr" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">SDR</Link>
+              <Link to="collections/rf-tools" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">RF Tools</Link>
+              <Link to="collections/hak5" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Hak5</Link>
+             
             </div>
           </div>
           <Link to="/faq" className="px-2 py-2 mx-4 rounded hover:bg-blue-600">FAQ</Link>
@@ -138,19 +136,14 @@ const Navbar = (props) => {
 
 
           <div className="relative px-2 py-2 mx-4 rounded group">
-            <span className="block px-4 py-2 text-center cursor-pointer hover:bg-blue-600">Products</span>
+            <span className="block px-4 py-2 text-center cursor-pointer hover:bg-blue-600">Collections</span>
             <div className="absolute hidden w-48 mt-1 text-center bg-black rounded shadow-lg group-hover:block">
               {/* Dropdown content */}
-              <Link to="/category1" className="block px-4 py-2 text-sm hover:bg-gray-100">Category 1</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm hover:bg-gray-100">Category 2</Link>
-              <Link to="/category1" className="block px-4 py-2 text-sm hover:bg-gray-600">Category 1</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm hover:bg-gray-600">Category 2</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm hover:bg-gray-600">Category 3</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm hover:bg-gray-600">Category 4</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm hover:bg-gray-600">Category 5</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm hover:bg-gray-600">Category 6</Link>
-              <Link to="/category2" className="block px-4 py-2 text-sm hover:bg-gray-600">Category 7</Link>
-              {/* Add more categories as needed */}
+              <Link to="collections/flipper-zero" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Flipper-Zero</Link>
+              <Link to="collections/pentesting" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Pentesting</Link>
+              <Link to="collections/sdr" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">SDR</Link>
+              <Link to="collections/rf-tools" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">RF Tools</Link>
+              <Link to="collections/hak5" className="block px-4 py-2 text-sm text-center hover:bg-gray-600">Hak5</Link>
             </div>
           </div>
           <Link to="/faq" className="block px-4 py-2 text-center hover:bg-blue-600">FAQ</Link>
