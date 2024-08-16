@@ -434,7 +434,6 @@ def admin_delete_shipping(name):
 
 
 # update shipping cost
-# delete shipping method
 @login_required
 @admin.route('/update_shipping_cost/<id>', methods=["PUT"], strict_slashes=False)
 @has_role('administrator')

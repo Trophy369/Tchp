@@ -1,5 +1,5 @@
-from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session
-from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description
+from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session, send_from_directory
+from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
 from webapp import db
 from models.order import Order, OrderedProduct, SaleTransaction
@@ -9,33 +9,54 @@ from webapp.auth import has_role
 from webapp.main import main
 import logging
 from sqlalchemy.exc import IntegrityError
+import os
 
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
-
-
 
 # get all products
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
     products = Product.query.all()
-    product_quantity = CartItem.query.filter_by()
+    # product_quantity = CartItem.query.filter_by()
     # logging.info(f"product data{products}")
+    product_image = ProductImage.query.all()
 
-    product_list = [{'id': product.id, 'Product name': product.product_name, 'description': product.description
-                    ,'quantity': product.quantity, 'regular_price': product.regular_price,
+    product_list = [
+
+                    {'id': product.id,
+                     'Product name': product.product_name,
+                     'description': product.description,
+                     'quantity': product.quantity,
+                     'regular_price': product.regular_price,
+                     'product_images': [url_for('static'\
+                            ,filename=f'products/{image.to_dict()}', _externel=True)
+                                        for image in product.images],
+                     # 'product_images': i,
                      'discounted_price': product.discounted_price} for product in products
                     ]
     return jsonify(product_list), 200
 
 
 # get a product
-@main.route('/product/<string:product_name>', methods=['GET'], strict_slashes=False)
-def view_product(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
-    if product:
-        return jsonify(product.to_dict()), 200
-    return jsonify({'error': 'Product Not found '}), 400
+@main.route('/product/<int:product_id>', methods=['GET'], strict_slashes=False)
+def view_product(product_id):
+    product = Product.query.get_or_404(product_id)
+    if not product:
+        return jsonify({'error': 'Product Not found'}), 404
+
+    # Convert the product object to a dictionary
+    product_data = product.to_dict()
+
+    base_url = '/static/products'  
+
+    # Construct image URLs
+    if 'images' in product_data:
+        product_data['image_urls'] = [
+            f'{base_url}/{img["image_name"]}' for img in product_data['images']
+        ]
+
+    return jsonify(product_data), 200
 
 
 # view product description
@@ -101,32 +122,19 @@ def add_to_cart(product_id):
 
 # cart items
 @login_required
-@main.route('/cart/<id>', methods=['GET'], strict_slashes=False)
-def cart(id):
-    id = current_user.id
-    user = Cart.query.filter_by(user_id=id).first()
-    cart_items = CartItem.query.filter_by(cart_id=id).all()
-    logging.info(f"User {user}")
-    if not User.query.get(current_user.id):
-        return jsonify({'message': 'Fack off!'}), 404
-    if user is None:
+@main.route('/cart', methods=['GET'], strict_slashes=False)
+def cart():
+    user_id = current_user.id
+    user = Cart.query.filter_by(user_id=user_id).first()
+    cart_items = CartItem.query.filter_by(cart_id=user_id).all()
+    
+    if not cart_items:
         return jsonify({'message': 'Empty Cart!'}), 404
 
-    cart = user.productid
-    if not cart:
-        return jsonify({'message': 'Cart not found!'}), 404
-
-    # products = cart
-    # logging.info(f"Cart products {products}")
-    # pquantity = CartItem.query.filter_by(cart_id=current_user.id, product_id=user.productid).first()
-
-    # product_list = [{'product_name': product.product_name, 'id': product.id, 'description': product.description,
-    #                  'regular_price': product.regular_price, 'discounted_price': product.discounted_price} for product in products]
     cart_details = []
     for item in cart_items:
         product = Product.query.get(item.product_id)
         shipping = Shipping.query.filter_by(id=item.shipping).first()
-        logging.info(f"Shipping: {shipping}")
         cart_details.append({
             'id': product.id,
             'product_name': product.product_name,
@@ -135,13 +143,57 @@ def cart(id):
             'discounted_price': product.discounted_price,
             'total_price': item.quantity * product.discounted_price,
             'shipping_method': shipping.name if shipping else None,
-            'shipping_price': shipping.cost,
+            'shipping_price': shipping.cost if shipping else None,
             'color': item.color,
             'delivery_date': shipping.deliveryTime if shipping else None
         })
-    total_items = len(cart_items)#user.total_cart(id)
-    logging.info(f"Cart details {cart_details}")
-    return jsonify({'Number of items': total_items}, cart_details), 200
+    
+    total_items = len(cart_items)
+    logging.info(f"Cart details: {cart_details}")
+    return jsonify({'Number of items': total_items, 'cart_details': cart_details}), 200
+
+# @login_required
+# @main.route('/cart/<id>', methods=['GET'], strict_slashes=False)
+# def cart(id):
+#     id = current_user.id
+#     user = Cart.query.filter_by(user_id=id).first()
+#     cart_items = CartItem.query.filter_by(cart_id=id).all()
+#     logging.info(f"User {user}")
+#     if not User.query.get(current_user.id):
+#         return jsonify({'message': 'Fack off!'}), 404
+#     if not CartItem.query.filter_by(cart_id=id).first():
+#         return jsonify({'message': 'Empty Cart!'}), 404
+
+#     cart = user.productid
+#     if not cart:
+#         return jsonify({'message': 'Cart not found!'}), 404
+
+#     # products = cart
+#     # logging.info(f"Cart products {products}")
+#     # pquantity = CartItem.query.filter_by(cart_id=current_user.id, product_id=user.productid).first()
+
+#     # product_list = [{'product_name': product.product_name, 'id': product.id, 'description': product.description,
+#     #                  'regular_price': product.regular_price, 'discounted_price': product.discounted_price} for product in products]
+#     cart_details = []
+#     for item in cart_items:
+#         product = Product.query.get(item.product_id)
+#         shipping = Shipping.query.filter_by(id=item.shipping).first()
+#         logging.info(f"Shipping: {shipping}")
+#         cart_details.append({
+#             'id': product.id,
+#             'product_name': product.product_name,
+#             'prod_quantity': item.quantity,
+#             'regular_price': product.regular_price,
+#             'discounted_price': product.discounted_price,
+#             'total_price': item.quantity * product.discounted_price,
+#             'shipping_method': shipping.name if shipping else None,
+#             'shipping_price': shipping.cost,
+#             'color': item.color,
+#             'delivery_date': shipping.deliveryTime if shipping else None
+#         })
+#     total_items = len(cart_items)#user.total_cart(id)
+#     logging.info(f"Cart details {cart_details}")
+#     return jsonify({'Number of items': total_items}, cart_details), 200
 
 
 @login_required
@@ -248,11 +300,10 @@ def update_cart_item_shipping(product_id):
     id = current_user.id
     data = request.json
     # product = Product.query.get(product_id)
-    shipping = Shipping.query.filter_by(id=data['id']).first_or_404()
+    shipping = Shipping.query.filter_by(id=data["id"]).first_or_404()
 
     if "id" not in data:
-        return jsonify({"message": "Shipping not provided"}), 400
-
+        return jsonify({"message": "Shipping not provided"}), 401
     cart_item = CartItem.query.filter_by(cart_id=id, product_id=product_id).first()
     if not cart_item:
         return jsonify({"message": "Item not found in cart or Shipping method does not exist"}), 404
@@ -283,7 +334,7 @@ def view_reviews(product_id):
             "Rating": review.product_rating,
             "Review": review.product_review,
             "Timestamp": review.timestamp,
-            "Image": [img.to_dict() for img in review.images],
+            "Image": [url_for(img.to_dict()) for img in review.images],
             "user_id": review.user_id
         } for review in all_review]
         return jsonify(reviews)

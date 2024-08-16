@@ -10,12 +10,14 @@ from models.user import User
 from webapp import db
 
 
-@auth_views.route('/signup', methods=['GET', 'POST'], strict_slashes=False)
+@auth_views.route('/signup', methods=['POST'], strict_slashes=False)
 def signup():
     data = request.json
-    # Check if username or email already exists
-    existing_user = User.query.filter(User.email == data['email']).first()
+    
+    # Check if email already exists
+    existing_user = User.query.filter_by(email=data['email']).first()
     if existing_user:
+
         return jsonify({'message': 'Username or email already exists'}), 400
 
     else:
@@ -28,6 +30,7 @@ def signup():
             city=data.get('city', ''),
             state=data.get('state', ''),
             country=data.get('country', ''),
+            street=data.get('street', ''),
             zipcode=data.get('zipcode', ''),
             phone=data.get('phone', '')
         )
@@ -49,9 +52,10 @@ def signin():
             login_user(user, remember=data.get('remember', True))
 
             # token = request.cookies
-            # logging.info(f"token:{token}")
+            logging.info(f"token:{user}")
             session["userId"] = user.id
-            return jsonify({"Message": "Login Successful", "username": user.firstname, "id": user.id}), 201
+
+            return jsonify({"Message": "Login Successful", "username": user.firstname, "id": user.id, "roles": len([role.to_dict() for role in user.roles])}), 200
         return {"error": "Login failed Wrong password"}, 401
     return jsonify({"error": "Login failed"}), 401
 
@@ -60,4 +64,4 @@ def signin():
 @login_required
 def logout():
     logout_user()
-    return jsonify({"message": "User logged out"}), 201
+    return jsonify({"message": "User logged out"}), 200
