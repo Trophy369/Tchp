@@ -1,4 +1,3 @@
-import axios from "axios";
 import config from '../config';
 
 const baseUrl = config.baseUrl;
@@ -22,30 +21,6 @@ export const listproducts = async () => {
   return response.json();
 };
 
-// export const listproducts = async () => {
-//   const response = await axios.get(`${baseUrl}/listproducts`, {
-//     withCredentials: true,
-//   });
-//   return response.data;
-// };
-
-// export const signin = async (email, password) => {
-//   try {
-//     const response = await axios.post(
-//       `${baseUrl}/auth/signin`,
-//       { email, password },
-//       { withCredentials: true }
-//     );
-//     // // console.log(response.data.data);
-//     // if (response.ok) {
-//     //   console.log('i did')
-//     return response.data.data;
-//     // }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 export const signin = async (email, password) => {
   const requestOptions = {
     method: "POST",
@@ -67,12 +42,6 @@ export const signin = async (email, password) => {
   }
 };
 
-// export const loggedUser = () => {
-//   if (localStorage.getItem("user")) {
-//     return JSON.parse(localStorage.getItem("user"));
-//   }
-// };
-
 export const signup = async (email, password, remember) => {
   const requestOptions = {
     method: "POST",
@@ -89,10 +58,4 @@ export const signout = async (next) => {
   const response = await fetch(`${baseUrl}/auth/logout`, {credentials: "include"});
   next();
   return response;
-
-  // if (typeof window !== "undefined") {
-  //   localStorage.removeItem("loggedUser");
-  //   axios.get(`${baseUrl}/signout`);
-  //   next();
-  // }
 };
