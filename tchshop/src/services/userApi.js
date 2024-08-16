@@ -1,19 +1,29 @@
-import axios from "axios"
 import config from '../config';
 
 const baseUrl = config.baseUrl;
 
-export const addToCart = async (id, userId, quantity) => {
+export const addToCart = async (id, userId, quantity, shipping, color) => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId, quantity }),
+    body: JSON.stringify({ userId, quantity, shipping, color }),
     credentials: 'include',
   };
   
   const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
   return response.json();
 };
+// export const addToCart = async (id, userId, quantity) => {
+//   const requestOptions = {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ userId, quantity }),
+//     credentials: 'include',
+//   };
+  
+//   const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
+//   return response.json();
+// };
 
 // export const getCart = async (userId) => {
 //   const response = await axios.get(`${baseUrl}/cart/${userId}`, {withCredentials: true});

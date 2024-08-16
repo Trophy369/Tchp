@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
-import { addToCart, viewProduct, viewReview, getShipping } from "../../services/userApi";
 import { useParams } from "react-router-dom";
-import Carousel from "./Carousel"
+import Carousel from "./Carousel";
+import {
+  addToCart,
+  viewProduct,
+  viewReview,
+  getShipping
+} from "../../services/userApi";
 
 // Product component
-const ProductPro = (props) => {
+const ProductPro = props => {
   const [color, setColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
@@ -16,6 +21,8 @@ const ProductPro = (props) => {
   const [shippingMethods, setShippingMethods] = useState([]);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const { id } = useParams();
+  const [lilQuantity, setLilQuantity] = useState(quantity);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -45,8 +52,10 @@ const ProductPro = (props) => {
   }, []);
 
   const imageUrls = Array.isArray(product.product_image)
-  ? product.product_image.map(img => `http://127.0.0.1:5000/static/products/${img.image_name}`)
-  : [];
+    ? product.product_image.map(
+        img => `http://127.0.0.1:5000/static/products/${img.image_name}`
+      )
+    : [];
 
   const { description, product_name, discounted_price } = product;
 
@@ -59,6 +68,32 @@ const ProductPro = (props) => {
     // addToCart(id)
     setNotification("Product added to cart");
     setTimeout(() => setNotification(""), 3000);
+  };
+
+  const handleIncrement = () => {
+    addOneToCart(productId);
+  };
+
+  const handleDecrement = () => {
+    minusOneToCart(productId);
+  };
+
+  const handleChange = e => {
+    const newQuantity = Number(e.target.value);
+    setLilQuantity(newQuantity);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      updateQuantity(productId, newQuantity);
+      inputQuantity(productId, newQuantity);
+    }, 1000);
+  };
+
+  const handleRemove = () => {
+    removeItem(productId);
   };
 
   return (
@@ -118,13 +153,11 @@ const ProductPro = (props) => {
           </button>
           <input
             type="number"
-            value={quantity}
-            onChange={e =>
-              setQuantity(Math.max(1, Math.min(27, Number(e.target.value))))
-            }
+            value={lilQuantity}
+            onChange={handleChange}
             className="px-4 py-2 text-center border"
             min="1"
-            max="27"
+            max="28"
           />
           <button
             onClick={() => setQuantity(q => Math.min(27, q + 1))}

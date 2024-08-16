@@ -1,14 +1,14 @@
-import config from '../config';
+import config from "../config";
 
 const baseUrl = config.baseUrl;
 
-export const getCategory = async (category_id) => {
+export const getCategory = async category_id => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    credentials: "include"
   };
-  
+
   const response = await fetch(
     `${baseUrl}/admin/category/${category_id}`,
     requestOptions
@@ -20,22 +20,19 @@ export const getShipping = async () => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
+    credentials: "include"
   };
 
-  const response = await fetch(
-    `${baseUrl}/admin/shipping`,
-    requestOptions
-  );
+  const response = await fetch(`${baseUrl}/admin/shipping`, requestOptions);
   return response.json();
 };
 
-export const createCategory = async (category_name) => {
+export const createCategory = async category_name => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ category_name }),
-    credentials: "include",
+    credentials: "include"
   };
 
   const response = await fetch(
@@ -60,7 +57,7 @@ export const createproduct = async (
       description,
       quantity,
       regular_price,
-      discounted_price,
+      discounted_price
     }),
     credentials: "include"
   };
@@ -69,41 +66,88 @@ export const createproduct = async (
   return response.json();
 };
 
-export const createReview = async (formData) => {
-  const extractedId = formData.get('id')
+export const addProductColors = async (productName, colors) => {
   const requestOptions = {
     method: "POST",
-    body: formData, 
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: colors }),
     credentials: "include"
   };
 
   try {
-    const response = await fetch(`${baseUrl}/admin/addReview/${extractedId}`, requestOptions);
-    
+    const response = await fetch(
+      `${baseUrl}/admin/addProductColor/${productName}`,
+      requestOptions
+    );
+    return response.json
+  } catch (error) {
+    console.error("Error:", error.message);
+    throw error;
+  }
+};
+
+export const handleUpload = async (productName, selectedFiles) => {
+  if (selectedFiles.length === 0) {
+    setError("Please select at least one image.");
+    return;
+  }
+
+  const formData = new FormData();
+  selectedFiles.forEach(file => formData.append("file", file));
+
+  try {
+    const requestOptions = {
+      method: "POST",
+      body: formData,
+      credentials: "include"
+    };
+
+    const response = await fetch(
+      `${baseUrl}/admin/addProductImage/${productName}`,
+      requestOptions
+    );
+    return response.json();
+  } catch (err) {}
+};
+
+export const createReview = async formData => {
+  const extractedId = formData.get("id");
+  const requestOptions = {
+    method: "POST",
+    body: formData,
+    credentials: "include"
+  };
+
+  try {
+    const response = await fetch(
+      `${baseUrl}/admin/addReview/${extractedId}`,
+      requestOptions
+    );
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json(); 
+    return await response.json();
   } catch (error) {
-    console.error('Error creating review:', error);
+    console.error("Error creating review:", error);
     throw error;
   }
 };
 
 // export const createReview = async (id) => {
-//   const requestOptions = {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify(name),
-//     credentials: "include"
-//   };
-
-//   const response = await fetch(`${baseUrl}/admin/addReview/${id}`, requestOptions);
-//   return response.json();
+// const requestOptions = {
+//   method: "POST",
+//   headers: { "Content-Type": "application/json" },
+//   body: JSON.stringify(name),
+//   credentials: "include"
 // };
 
-export const createRole = async (name) => {
+// const response = await fetch(`${baseUrl}/admin/addReview/${id}`, requestOptions);
+// return response.json();
+// };
+
+export const createRole = async name => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -120,13 +164,10 @@ export const createShipping = async (cost, method, method_description) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ cost, method, method_description }),
-    credentials: "include",
+    credentials: "include"
   };
 
-  const response = await fetch(
-    `${baseUrl}/admin/addShipping`,
-    requestOptions
-  );
+  const response = await fetch(`${baseUrl}/admin/addShipping`, requestOptions);
   return response.json();
 };
 
@@ -148,7 +189,7 @@ export const assignCategory = async (product_name, category_to_assign) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       product_name,
-      category_to_assign,
+      category_to_assign
     }),
     credentials: "include"
   };
@@ -160,7 +201,7 @@ export const assignCategory = async (product_name, category_to_assign) => {
   return response.json();
 };
 
-export const deleteCategory = async (id) => {
+export const deleteCategory = async id => {
   const requestOptions = {
     method: "DELETE",
     credentials: "include"
@@ -173,7 +214,7 @@ export const deleteCategory = async (id) => {
   return response.json();
 };
 
-export const deleteProduct = async (id) => {
+export const deleteProduct = async id => {
   const requestOptions = {
     method: "DELETE",
     credentials: "include"
@@ -186,7 +227,7 @@ export const deleteProduct = async (id) => {
   return response.json();
 };
 
-export const deleteRole = async (id) => {
+export const deleteRole = async id => {
   const requestOptions = {
     method: "DELETE",
     credentials: "include"
@@ -199,7 +240,7 @@ export const deleteRole = async (id) => {
   return response.json();
 };
 
-export const deleteShipping = async (method) => {
+export const deleteShipping = async method => {
   const requestOptions = {
     method: "DELETE",
     credentials: "include"

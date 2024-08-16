@@ -24,12 +24,14 @@ import AssignCategory from './components/Admin/AssignCategory';
 import Dashboard from './components/User/Dashboard';
 import Checkout from './components/Cart/Checkout';
 import Faq from './pages/Faq'
+// import Colors from "./components/Admin/Colors"
 
 const router = createBrowserRouter(
      createRoutesFromElements(
       <Route path='/' element={<DefaultLayout />}>
         <Route index element={<HomePage />} />
         <Route path='/cart' element={<CartPage />} />
+        {/* <Route path='/colors' element={<Colors />} /> */}
         <Route path='/admin' element={<AdminDash />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/admin/addproduct' element={<AddProduct />} />

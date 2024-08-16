@@ -14,26 +14,6 @@ import os
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
-#serve image
-# @main.route('/static/<string:directory>/<path:path>', methods=['GET'])
-# def send_static_file(directory, path):
-#     # Define the base directory where your images are stored
-#     base_dir = os.path.join(os.path.dirname(__file__), '..', 'static')
-
-#     # Create the full path based on the directory and path provided
-#     if directory in ['reviews', 'prod']:
-#         file_path = os.path.join(base_dir, directory, path)
-#     else:
-#         return abort(404)  # Return 404 if the directory is not recognized
-
-#     # Serve the file from the appropriate directory
-#     return send_from_directory(os.path.dirname(file_path), os.path.basename(file_path))
-
-# @main.route('/static/reviews/<path:path>', methods=['GET'])
-# def send_static_reviews(path):
-#     file_path = os.path.join(os.path.dirname(__file__), '..', 'static', 'reviews', path)
-#     return send_from_directory(os.path.dirname(file_path), path)
-
 # get all products
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
@@ -58,9 +38,7 @@ def view_product(product_id):
     # Convert the product object to a dictionary
     product_data = product.to_dict()
 
-    # Assuming product_data has an array of image objects like:
-    # product_data['images'] = [{"image_name": "Michael_Screenshot_2024-07-02_at_08.26.02.png"}, {...}]
-    base_url = '/static/products'  # Updated base URL for product images
+    base_url = '/static/products'  
 
     # Construct image URLs
     if 'images' in product_data:
@@ -69,20 +47,6 @@ def view_product(product_id):
         ]
 
     return jsonify(product_data), 200
-
-# @main.route('/product/<int:product_id>', methods=['GET'], strict_slashes=False)
-# def view_product(product_id):
-#     product = Product.query.get_or_404(product_id)
-#     if product:
-#         return jsonify(product.to_dict()), 200
-#     return jsonify({'error': 'Product Not found '}), 404
-
-# @main.route('/product/<string:product_name>', methods=['GET'], strict_slashes=False)
-# def view_product(product_name):
-#     product = Product.query.filter_by(product_name=product_name).first()
-#     if product:
-#         return jsonify(product.to_dict()), 200
-#     return jsonify({'error': 'Product Not found '}), 400
 
 
 # view product description
