@@ -10,7 +10,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       const fetchProducts = async () => {
-        const data = await getCart(user.id);
+        const data = await getCart();
         setItemTotal(data[0]['Number of items']);
       };
 

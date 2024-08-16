@@ -52,14 +52,14 @@ export const viewReview = async (id) => {
   return response.json();
 }
 
-export const getCart = async (userId) => {
+export const getCart = async () => {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: 'include',
   };
 
-  const response = await fetch(`${baseUrl}/cart/${userId}`, requestOptions);
+  const response = await fetch(`${baseUrl}/cart`, requestOptions);
   return response.json();
 };
 

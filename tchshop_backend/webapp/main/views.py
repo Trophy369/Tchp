@@ -122,32 +122,19 @@ def add_to_cart(product_id):
 
 # cart items
 @login_required
-@main.route('/cart/<id>', methods=['GET'], strict_slashes=False)
-def cart(id):
-    id = current_user.id
-    user = Cart.query.filter_by(user_id=id).first()
-    cart_items = CartItem.query.filter_by(cart_id=id).all()
-    logging.info(f"User {user}")
-    if not User.query.get(current_user.id):
-        return jsonify({'message': 'Fack off!'}), 404
-    if not CartItem.query.filter_by(cart_id=id).first():
+@main.route('/cart', methods=['GET'], strict_slashes=False)
+def cart():
+    user_id = current_user.id
+    user = Cart.query.filter_by(user_id=user_id).first()
+    cart_items = CartItem.query.filter_by(cart_id=user_id).all()
+    
+    if not cart_items:
         return jsonify({'message': 'Empty Cart!'}), 404
 
-    cart = user.productid
-    if not cart:
-        return jsonify({'message': 'Cart not found!'}), 404
-
-    # products = cart
-    # logging.info(f"Cart products {products}")
-    # pquantity = CartItem.query.filter_by(cart_id=current_user.id, product_id=user.productid).first()
-
-    # product_list = [{'product_name': product.product_name, 'id': product.id, 'description': product.description,
-    #                  'regular_price': product.regular_price, 'discounted_price': product.discounted_price} for product in products]
     cart_details = []
     for item in cart_items:
         product = Product.query.get(item.product_id)
         shipping = Shipping.query.filter_by(id=item.shipping).first()
-        logging.info(f"Shipping: {shipping}")
         cart_details.append({
             'id': product.id,
             'product_name': product.product_name,
@@ -156,13 +143,57 @@ def cart(id):
             'discounted_price': product.discounted_price,
             'total_price': item.quantity * product.discounted_price,
             'shipping_method': shipping.name if shipping else None,
-            'shipping_price': shipping.cost,
+            'shipping_price': shipping.cost if shipping else None,
             'color': item.color,
             'delivery_date': shipping.deliveryTime if shipping else None
         })
-    total_items = len(cart_items)#user.total_cart(id)
-    logging.info(f"Cart details {cart_details}")
-    return jsonify({'Number of items': total_items}, cart_details), 200
+    
+    total_items = len(cart_items)
+    logging.info(f"Cart details: {cart_details}")
+    return jsonify({'Number of items': total_items, 'cart_details': cart_details}), 200
+
+# @login_required
+# @main.route('/cart/<id>', methods=['GET'], strict_slashes=False)
+# def cart(id):
+#     id = current_user.id
+#     user = Cart.query.filter_by(user_id=id).first()
+#     cart_items = CartItem.query.filter_by(cart_id=id).all()
+#     logging.info(f"User {user}")
+#     if not User.query.get(current_user.id):
+#         return jsonify({'message': 'Fack off!'}), 404
+#     if not CartItem.query.filter_by(cart_id=id).first():
+#         return jsonify({'message': 'Empty Cart!'}), 404
+
+#     cart = user.productid
+#     if not cart:
+#         return jsonify({'message': 'Cart not found!'}), 404
+
+#     # products = cart
+#     # logging.info(f"Cart products {products}")
+#     # pquantity = CartItem.query.filter_by(cart_id=current_user.id, product_id=user.productid).first()
+
+#     # product_list = [{'product_name': product.product_name, 'id': product.id, 'description': product.description,
+#     #                  'regular_price': product.regular_price, 'discounted_price': product.discounted_price} for product in products]
+#     cart_details = []
+#     for item in cart_items:
+#         product = Product.query.get(item.product_id)
+#         shipping = Shipping.query.filter_by(id=item.shipping).first()
+#         logging.info(f"Shipping: {shipping}")
+#         cart_details.append({
+#             'id': product.id,
+#             'product_name': product.product_name,
+#             'prod_quantity': item.quantity,
+#             'regular_price': product.regular_price,
+#             'discounted_price': product.discounted_price,
+#             'total_price': item.quantity * product.discounted_price,
+#             'shipping_method': shipping.name if shipping else None,
+#             'shipping_price': shipping.cost,
+#             'color': item.color,
+#             'delivery_date': shipping.deliveryTime if shipping else None
+#         })
+#     total_items = len(cart_items)#user.total_cart(id)
+#     logging.info(f"Cart details {cart_details}")
+#     return jsonify({'Number of items': total_items}, cart_details), 200
 
 
 @login_required
