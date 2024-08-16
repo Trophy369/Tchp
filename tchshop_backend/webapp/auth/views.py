@@ -28,6 +28,7 @@ def signup():
             city=data.get('city', ''),
             state=data.get('state', ''),
             country=data.get('country', ''),
+            street=data.get('street', ''),
             zipcode=data.get('zipcode', ''),
             phone=data.get('phone', '')
         )
@@ -51,7 +52,7 @@ def signin():
             # token = request.cookies
             # logging.info(f"token:{token}")
             session["userId"] = user.id
-            return jsonify({"Message": "Login Successful", "username": user.firstname, "id": user.id}), 201
+            return jsonify({"Message": "Login Successful", "username": user.firstname, "id": user.id, "roles": len([role.to_dict() for role in user.roles])}), 201
         return {"error": "Login failed Wrong password"}, 401
     return jsonify({"error": "Login failed"}), 401
 
