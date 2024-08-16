@@ -359,6 +359,19 @@ def address():
     return jsonify({"Shipping address": user.zipcode + ', ' + user.street + ', ' + user.state + ', ' + user.city + ', ' + user.country})
 
 
+# view product colors available
+@login_required
+@main.route('/view_product_color/<string:product_name>', methods=["GET"], strict_slashes=False)
+def admin_view_product_colors(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+    if product is None:
+        return jsonify({'error', 'Product does not exist'})
+    if request.method == 'GET':
+        product_colors = ProductColor.query.filter_by(product_id=product.id).all()
+        colors = [color.to_dict() for color in product_colors]
+        return jsonify({'product_name': product.product_name, 'colors_available': colors})
+
+
 @login_required
 @main.route('/checkout', methods=["GET"], strict_slashes=False)
 def checkout():
