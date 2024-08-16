@@ -20,25 +20,25 @@ export const addToCart = async (id, userId, quantity) => {
 //   return response.data;
 // };
 
-export const viewProduct = async (product_name) => {
+export const viewProduct = async (id) => {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: 'include',
   };
 
-  const response = await fetch(`${baseUrl}/product/${product_name}`, requestOptions);
+  const response = await fetch(`${baseUrl}/product/${id}`, requestOptions);
   return response.json();
 }
 
-export const viewReview = async (product_name) => {
+export const viewReview = async (id) => {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: 'include',
   };
 
-  const response = await fetch(`${baseUrl}/reviews/${product_name}`, requestOptions);
+  const response = await fetch(`${baseUrl}/reviews/${id}`, requestOptions);
   return response.json();
 }
 

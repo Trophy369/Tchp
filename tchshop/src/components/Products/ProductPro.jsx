@@ -1,74 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
-import { addToCart, viewProduct, viewReview } from "../../services/userApi";
+import { addToCart, viewProduct, viewReview, getShipping } from "../../services/userApi";
 import { useParams } from "react-router-dom";
-
-// Carousel component
-const Carousel = ({ images }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
-    }, 3000); // 3 seconds interval
-    return () => clearInterval(interval);
-  }, [images.length]);
-
-  const handleSwipe = direction => {
-    if (direction === "left") {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
-    } else if (direction === "right") {
-      setCurrentIndex(
-        prevIndex => (prevIndex - 1 + images.length) % images.length
-      );
-    }
-  };
-
-  return (
-    <div className="relative overflow-hidden" style={{ height: "25vh" }}>
-      <div
-        className="flex transition-transform duration-500"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-      >
-        {images.map((src, index) => (
-          <div key={index} className="flex-shrink-0 w-full">
-            <img
-              src={src}
-              alt={`Slide ${index}`}
-              className="object-cover w-full h-full"
-            />
-          </div>
-        ))}
-      </div>
-      <div className="absolute bottom-0 flex space-x-2 transform -translate-x-1/2 left-1/2">
-        {images.map((_, index) => (
-          <div
-            key={index}
-            className={`w-2 h-2 rounded-full ${
-              index === currentIndex ? "bg-black" : "bg-gray-400"
-            }`}
-          ></div>
-        ))}
-      </div>
-      <button
-        onClick={() => handleSwipe("right")}
-        className="absolute left-0 px-2 py-1 text-white transform -translate-y-1/2 bg-black top-1/2"
-      >
-        &lt;
-      </button>
-      <button
-        onClick={() => handleSwipe("left")}
-        className="absolute right-0 px-2 py-1 text-white transform -translate-y-1/2 bg-black top-1/2"
-      >
-        &gt;
-      </button>
-    </div>
-  );
-};
+import Carousel from "./Carousel"
 
 // Product component
-const ProductPro = () => {
+const ProductPro = (props) => {
   const [color, setColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
@@ -76,11 +14,8 @@ const ProductPro = () => {
   const [product, setProduct] = useState([]);
   const [review, setReview] = useState([]);
   const [shippingMethods, setShippingMethods] = useState([]);
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const { id } = useParams();
-
-  console.log(name);
-
-  const { description, product_name, discounted_price } = product;
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -89,7 +24,7 @@ const ProductPro = () => {
     };
 
     fetchProduct();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const fetchReview = async () => {
@@ -98,7 +33,7 @@ const ProductPro = () => {
     };
 
     fetchReview();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const fetchShipping = async () => {
@@ -108,6 +43,12 @@ const ProductPro = () => {
 
     fetchShipping();
   }, []);
+
+  const imageUrls = Array.isArray(product.product_image)
+  ? product.product_image.map(img => `http://127.0.0.1:5000/static/products/${img.image_name}`)
+  : [];
+
+  const { description, product_name, discounted_price } = product;
 
   const handleAddToCart = () => {
     if (!color) {
@@ -137,14 +78,7 @@ const ProductPro = () => {
           {notification}
         </motion.div>
       )}
-      <Carousel
-        images={[
-          "/path/to/image1.jpg",
-          "/path/to/image2.jpg",
-          "/path/to/image3.jpg",
-          "/path/to/image4.jpg"
-        ]}
-      />
+      <Carousel images={imageUrls} />
       <div className="my-4 text-center">
         <h1 className="text-2xl font-bold">{product_name}</h1>
         <p className="flex items-center justify-center text-lg font-medium">
@@ -215,17 +149,17 @@ const ProductPro = () => {
           {
             <div className="space-y-4">
               {shippingMethods.map(ship => (
-                <label key={ship.method} className="flex items-center">
+                <label key={ship.id} className="flex items-center">
                   <input
                     type="checkbox"
-                    checked={selectedShippingMethod === ship.method}
-                    onChange={() => setSelectedShippingMethod(ship.method)}
+                    checked={selectedShippingMethod === ship.id}
+                    onChange={() => setSelectedShippingMethod(ship.id)}
                     className="mr-2 text-black form-checkbox border-ash-300"
                   />
                   <div>
-                    <span className="font-semibold">{method.name}</span>
+                    <span className="font-semibold">{ship.name}</span>
                     <div className="text-sm text-gray-600">
-                      Delivery Time: {method.deliveryTime}
+                      Delivery Time: {ship.deliveryTime}
                     </div>
                   </div>
                 </label>
