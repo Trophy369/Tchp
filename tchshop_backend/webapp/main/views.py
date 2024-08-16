@@ -119,7 +119,7 @@ def cart(id):
     logging.info(f"User {user}")
     if not User.query.get(current_user.id):
         return jsonify({'message': 'Fack off!'}), 404
-    if user is None:
+    if not CartItem.query.filter_by(cart_id=id).first():
         return jsonify({'message': 'Empty Cart!'}), 404
 
     cart = user.productid
