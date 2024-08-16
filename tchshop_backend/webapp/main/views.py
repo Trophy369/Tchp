@@ -334,7 +334,8 @@ def view_reviews(product_id):
             "Rating": review.product_rating,
             "Review": review.product_review,
             "Timestamp": review.timestamp,
-            "Image": [url_for(img.to_dict()) for img in review.images],
+            "Image": [url_for('static'\
+                            ,filename=f'reviews/{image.to_dict()}', _externel=True) for image in review.images],
             "user_id": review.user_id
         } for review in all_review]
         return jsonify(reviews)
