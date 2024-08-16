@@ -128,6 +128,8 @@ class Product(db.Model):
 
     cart_items = db.relationship('CartItem', backref='products', lazy=True)
 
+
+
     def to_dict(self):
         return {
             'id': self.id,
