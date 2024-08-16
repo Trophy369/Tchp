@@ -110,12 +110,13 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     product_name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+    product_image = db.Column(db.String(50))
     regular_price = db.Column(db.Float, nullable=False)
     discounted_price = db.Column(db.Float, nullable=False)
     number_sold = db.Column(db.Integer)
     description = db.Column(db.String(300))
     # add description table and look into one to many relationship
-    descriptions = db.relationship('Description', backref='products', lazy='dynamic')
+    descriptions = db.relationship('Description', backref='products', lazy=True)
 
     # add images to each product
     images = db.relationship('ProductImage', backref='products', lazy=True)
@@ -136,6 +137,7 @@ class Product(db.Model):
             'product_name': self.product_name,
             'description': self.description,
             # 'categoryid': self.categoryid,
+            'image': self.product_image,
             'quantity': self.quantity,
             'regular_price': self.regular_price,
             'discounted_price': self.discounted_price,
@@ -162,7 +164,7 @@ class Product(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return (f"Product('id: {self.id}','name: {self.product_name}',  'quantity: {self.quantity}', descriptions: '{self.descriptions}'\
+        return (f"Product('id: {self.id}','name: {self.product_name}', 'image': {self.product_image}, 'quantity: {self.quantity}', descriptions: '{self.descriptions}'\
          '{self.regular_price}', '{self.discounted_price}', '{self.prod_cat}', {self.cart_items}, {self.colors}, number_sold: {self.number_sold}")
 
 

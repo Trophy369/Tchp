@@ -14,6 +14,7 @@ import os
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
+
 # get all products
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
@@ -29,10 +30,10 @@ def get_products():
                      'description': product.description,
                      'quantity': product.quantity,
                      'regular_price': product.regular_price,
-                     'product_images': [url_for('static'\
-                            ,filename=f'products/{image.to_dict()}', _externel=True)
-                                        for image in product.images],
-                     # 'product_images': i,
+                     # 'product_images': [url_for('static'\
+                     #        ,filename=f'products/{image.to_dict()}', _externel=True)
+                     #                    for image in product.images],
+                     'product_image': url_for('static', filename=f'products/default_img/{product.product_image}') or None,
                      'discounted_price': product.discounted_price} for product in products
                     ]
     return jsonify(product_list), 200

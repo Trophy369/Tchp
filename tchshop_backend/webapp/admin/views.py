@@ -161,21 +161,39 @@ def assign_role():
 @admin.route('/addproduct', methods=['POST'], strict_slashes=False)
 @has_role('administrator')
 def addproduct():
-    new_product = request.json
+    new_product = request.form
+    image = request.files['file']
     products = Product.query.filter_by(product_name=new_product['product_name']).first()
     if products:
         return jsonify({'error': 'product_name exists parameter'}), 403
-    prod_name = new_product['product_name']
-    new_product = Product(
-        product_name=new_product["product_name"],
-        quantity=new_product["quantity"],
-        regular_price=new_product["regular_price"],
-        discounted_price=new_product["discounted_price"],
-    )
+
+    product_name = new_product['product_name']
+
+    name = secure_filename(image.filename)
+    filename = product_name + '_' + name
+    logging.info(f"len img description {filename}")
+
+    if name != '':
+        file_ext = os.path.splitext(filename)[1]
+        if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+            abort(400)
+        # product_img = Product.query.filter_by(product_id=product.id).first()
+        image.save(os.path.join(current_app.config['SINGLE_PRODUCT_UPLOAD_PATH'], filename))
+        new_product = Product(
+            product_name=new_product["product_name"],
+            product_image=filename,
+            quantity=new_product["quantity"],
+            regular_price=new_product["regular_price"],
+            discounted_price=new_product["discounted_price"],
+        )
     db.session.add(new_product)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'{e}product not added'})
     db.session.close()
-    return jsonify({"Message": "Product  added successfully", "Product name": prod_name}), 201
+    return jsonify({"Message": "Product  added successfully", "Product name": product_name}), 201
 
 
 # add description to a product
@@ -317,6 +335,7 @@ def admin_delete_product_images(product_name):
         return jsonify({'status': 'success', 'product_name': product.product_name, 'images_available': images})
     return jsonify({'error': 'delete failed'})
 
+
 # add product color
 @login_required
 @admin.route('/addProductColor/<string:product_name>', methods=['POST'], strict_slashes=False)
@@ -387,16 +406,18 @@ def admin_delete_product_colors(product_name):
 
 # delete product
 @login_required
-@admin.route('/delete_product/<id>', methods=["POST"], strict_slashes=False)
+@admin.route('/delete_product/<id>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
 def admin_delete_product(id):
     products = Product.query.all()
     delete_id = Product.query.get(id)
     if delete_id:
-        delete_id.delete_user_role(id=delete_id)
+        # delete_id.delete_user_role(id=delete_id)
+        db.session.delete(delete_id)
         db.session.commit()
-        flash(f"User {delete_id.product_name}'s Role deleted")
-        return redirect(url_for("admin.base"))
+        flash(f"User {delete_id.product_name}'s Product deleted")
+        return jsonify({"message": f"User {delete_id.product_name}'s Product deleted"})
+    return jsonify({"error": "Product not found"})
 
 # shipping
 # add_shipping methods and price

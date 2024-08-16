@@ -19,6 +19,7 @@ class Config:
     DESCRIPTION_UPLOAD_EXTENSIONS = ['.jpg', '.png', '.img', '.jpeg', '.gif', '.pdf']
     REVIEW_UPLOAD_PATH = 'webapp/static/reviews/'
     PRODUCT_IMAGE_UPLOAD_PATH = 'webapp/static/products/'
+    SINGLE_PRODUCT_UPLOAD_PATH = 'webapp/static/products/default_img/'
     DESCRIPTION_UPLOAD_PATH = 'webapp/static/descriptions/'
 
     SESSION_COOKIE_SAMESITE = 'None'
