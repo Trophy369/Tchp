@@ -12,8 +12,8 @@ const CartPage = ({}) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const data = await getCart(user.id);
-      setCart(data[1]);
+      const data = await getCart();
+      setCart(data.cart_details);
     };
 
     fetchProducts();
@@ -52,6 +52,7 @@ const CartPage = ({}) => {
   const subtotal = cart
     .reduce((acc, item) => acc + item.discounted_price * item.prod_quantity, 0)
     .toFixed(2);
+
 
   const updateQuantity = (productId, newQuantity) => {
     setCart(

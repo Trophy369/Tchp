@@ -9,9 +9,11 @@ import {
   viewReview,
   getShipping
 } from "../../services/userApi";
+import { useAuth } from "../authContext/AuthProvider";
 
 // Product component
 const ProductPro = props => {
+  const { user } = useAuth();
   const [color, setColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
@@ -65,36 +67,36 @@ const ProductPro = props => {
       return;
     }
     setError("");
-    // addToCart(id)
+    addToCart(id, user.id, quantity, selectedShippingMethod)
     setNotification("Product added to cart");
     setTimeout(() => setNotification(""), 3000);
   };
 
-  const handleIncrement = () => {
-    addOneToCart(productId);
-  };
+  // const handleIncrement = () => {
+  //   addOneToCart(productId);
+  // };
 
-  const handleDecrement = () => {
-    minusOneToCart(productId);
-  };
+  // const handleDecrement = () => {
+  //   minusOneToCart(productId);
+  // };
 
-  const handleChange = e => {
-    const newQuantity = Number(e.target.value);
-    setLilQuantity(newQuantity);
+  // const handleChange = e => {
+  //   const newQuantity = Number(e.target.value);
+  //   setLilQuantity(newQuantity);
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+  //   if (timeoutRef.current) {
+  //     clearTimeout(timeoutRef.current);
+  //   }
 
-    timeoutRef.current = setTimeout(() => {
-      updateQuantity(productId, newQuantity);
-      inputQuantity(productId, newQuantity);
-    }, 1000);
-  };
+  //   timeoutRef.current = setTimeout(() => {
+  //     updateQuantity(productId, newQuantity);
+  //     inputQuantity(productId, newQuantity);
+  //   }, 1000);
+  // };
 
-  const handleRemove = () => {
-    removeItem(productId);
-  };
+  // const handleRemove = () => {
+  //   removeItem(productId);
+  // };
 
   return (
     <div className="p-4 md:p-8">

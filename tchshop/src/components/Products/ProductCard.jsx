@@ -1,24 +1,16 @@
 import { Link } from "react-router-dom";
 import ShowImage from "../ShowImage";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import { addToCart } from "../../services/userApi";
 // import { loggedUser } from "../services";
 import { useAuth } from "../authContext/AuthProvider";
 
 const ProductCard = ({ id, name, description, quantity, price, regPrice }) => {
-  const user = useAuth()
-
-  const handleClick = async () => {
-    let quantity = 1
-    const data = await addToCart(id, user.id, quantity);
-  };
-
   return (
     <Link
-      to={{pathname: `/viewproduct/${id}`, state: {name}}}
+      to={{ pathname: `/viewproduct/${id}`, state: { name } }}
       className="overflow-hidden transition-transform transform border border-gray-200 rounded-lg group hover:scale-105"
-      onClick={handleClick}
     >
       <div className="flex flex-col h-full">
         <ShowImage />
@@ -31,7 +23,6 @@ const ProductCard = ({ id, name, description, quantity, price, regPrice }) => {
           <p className="text-sm text-gray-600">
             Sold: {quantity} | Left: {quantity}
           </p>
-
         </div>
       </div>
     </Link>
