@@ -208,6 +208,11 @@ class Role(db.Model):
     def __init__(self, name):
         self.name = name
 
+    def to_dict(self):
+        return {
+            'role': self.name
+        }
+
     def __repr__(self):
         return '<Role %r>' % self.name
 
