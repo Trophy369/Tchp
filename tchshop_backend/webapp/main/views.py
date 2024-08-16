@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session, send_from_directory
-from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description
+from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
 from webapp import db
 from models.order import Order, OrderedProduct, SaleTransaction
@@ -18,11 +18,21 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
     products = Product.query.all()
-    product_quantity = CartItem.query.filter_by()
+    # product_quantity = CartItem.query.filter_by()
     # logging.info(f"product data{products}")
+    product_image = ProductImage.query.all()
 
-    product_list = [{'id': product.id, 'Product name': product.product_name, 'description': product.description
-                    ,'quantity': product.quantity, 'regular_price': product.regular_price,
+    product_list = [
+
+                    {'id': product.id,
+                     'Product name': product.product_name,
+                     'description': product.description,
+                     'quantity': product.quantity,
+                     'regular_price': product.regular_price,
+                     'product_images': [url_for('static'\
+                            ,filename=f'products/{image.to_dict()}', _externel=True)
+                                        for image in product.images],
+                     # 'product_images': i,
                      'discounted_price': product.discounted_price} for product in products
                     ]
     return jsonify(product_list), 200
@@ -259,11 +269,10 @@ def update_cart_item_shipping(product_id):
     id = current_user.id
     data = request.json
     # product = Product.query.get(product_id)
-    shipping = Shipping.query.filter_by(id=data['id']).first_or_404()
+    shipping = Shipping.query.filter_by(id=data["id"]).first_or_404()
 
     if "id" not in data:
-        return jsonify({"message": "Shipping not provided"}), 400
-
+        return jsonify({"message": "Shipping not provided"}), 401
     cart_item = CartItem.query.filter_by(cart_id=id, product_id=product_id).first()
     if not cart_item:
         return jsonify({"message": "Item not found in cart or Shipping method does not exist"}), 404
@@ -294,7 +303,7 @@ def view_reviews(product_id):
             "Rating": review.product_rating,
             "Review": review.product_review,
             "Timestamp": review.timestamp,
-            "Image": [img.to_dict() for img in review.images],
+            "Image": [url_for(img.to_dict()) for img in review.images],
             "user_id": review.user_id
         } for review in all_review]
         return jsonify(reviews)
