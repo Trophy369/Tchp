@@ -1,5 +1,0 @@
-env/
-__py*/
-.env
-# does not ignore the README.md file
-!README.md

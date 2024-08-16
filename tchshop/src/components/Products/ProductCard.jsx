@@ -16,7 +16,7 @@ const ProductCard = ({ id, name, description, quantity, price, regPrice }) => {
 
   return (
     <Link
-      to={`/viewproduct/${id}`}
+      to={{pathname: `/viewproduct/${id}`, state: {name}}}
       className="overflow-hidden transition-transform transform border border-gray-200 rounded-lg group hover:scale-105"
       onClick={handleClick}
     >
