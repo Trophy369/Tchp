@@ -49,9 +49,9 @@ def signin():
             login_user(user, remember=data.get('remember', True))
 
             # token = request.cookies
-            # logging.info(f"token:{token}")
+            logging.info(f"token:{user}")
             session["userId"] = user.id
-            return jsonify({"Message": "Login Successful", "username": user.firstname, "id": user.id}), 201
+            return jsonify({"Message": "Login Successful", "username": user.firstname, "id": user.id}), 200
         return {"error": "Login failed Wrong password"}, 401
     return jsonify({"error": "Login failed"}), 401
 
