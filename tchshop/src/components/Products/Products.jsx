@@ -12,7 +12,6 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       const data = await listproducts();
-      const image = await
       setProducts(data)
       // dispatch(getProduct(data));
 
