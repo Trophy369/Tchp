@@ -5,8 +5,8 @@ import {
   RouterProvider
 } from "react-router-dom";
 import DefaultLayout from "./layouts/DefaultLayout";
-// import AdminRoutes from "./components/Auth/AdminRoutes"; 
-// import UserRoutes from "./components/Auth/UserRoutes";
+import AdminRoutes from "./components/Auth/AdminRoutes"; 
+import UserRoutes from "./components/Auth/UserRoutes";
 import HomePage from "./components/Home/HomePage";
 import CartPage from "./components/Cart/CartPage";
 import SignIn from "./components/Auth/SignIn";
@@ -32,14 +32,14 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<DefaultLayout />}>
       <Route index element={<HomePage />} />
-      {/* <Route element={<UserRoutes />}> */}
+      <Route element={<UserRoutes />}>
         <Route path="/cart" element={<CartPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/update" element={<UpdateProfile />} />
         <Route path="/checkout" element={<Checkout />} />
-      {/* </Route> */}
+      </Route>
       {/* <Route path='/colors' element={<Colors />} /> */}
-      {/* <Route element={<AdminRoutes />}> */}
+      <Route element={<AdminRoutes />}>
         <Route path="/admin" element={<AdminDash />} />
         <Route path="/admin/addproduct" element={<AddProduct />} />
         <Route path="/admin/createcategory" element={<CreateCategory />} />
@@ -47,7 +47,7 @@ const router = createBrowserRouter(
         <Route path="/admin/createrole" element={<CreateRole />} />
         <Route path="/admin/assignrole" element={<AssignRole />} />
         <Route path="/admin/assigncategory" element={<AssignCategory />} />
-      {/* </Route> */}
+      </Route>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/viewproduct/:id" element={<ProductPro />} />

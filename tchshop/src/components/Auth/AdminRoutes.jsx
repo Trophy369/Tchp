@@ -1,13 +1,26 @@
-// import { Outlet, Navigate } from "react-router-dom";
-// import { useAuth } from "../authContext/AuthProvider";
+import { Outlet, Navigate } from "react-router-dom";
+import { useAuth } from "../authContext/AuthProvider";
+import { useState, useEffect } from "react";
 
-// const AdminRoutes = () => {
-//   const { user } = useAuth();
-  
-//   if (user.roles === null) {
-//     return;
-//   }
-//   return user.roles === 1  ? <Outlet /> : <Navigate to="/signin" />;
-// };
+const AdminRoutes = () => {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
 
-// export default AdminRoutes;
+  useEffect(() => {
+    if (user) {
+      setLoading(false);
+    }
+  }, [user]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (user && user.roles !== null) {
+    return user.roles === 2 ? <Outlet /> : <Navigate to="/signin" />;
+  } else {
+    return <Navigate to="/signin" />;
+  }
+};
+
+export default AdminRoutes;
