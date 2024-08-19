@@ -19,24 +19,51 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
     products = Product.query.all()
-    # product_quantity = CartItem.query.filter_by()
-    # logging.info(f"product data{products}")
-    product_image = ProductImage.query.all()
+    
+    product_list = []
+    
+    for product in products:
+        # Construct the URL for the product image
+        if product.product_image:
+            # Handle URL encoding of spaces and special characters if needed
+            image_filename = product.product_image.replace(' ', '%20')
+            image_url = f'{image_filename}'
+        else:
+            image_url = None
+        
+        product_list.append({
+            'id': product.id,
+            'Product name': product.product_name,
+            'description': product.description,
+            'quantity': product.quantity,
+            'regular_price': product.regular_price,
+            'product_image': image_url,
+            'discounted_price': product.discounted_price
+        })
 
-    product_list = [
-
-                    {'id': product.id,
-                     'Product name': product.product_name,
-                     'description': product.description,
-                     'quantity': product.quantity,
-                     'regular_price': product.regular_price,
-                     # 'product_images': [url_for('static'\
-                     #        ,filename=f'products/{image.to_dict()}', _externel=True)
-                     #                    for image in product.images],
-                     'product_image': url_for('static', filename=f'products/default_img/{product.product_image}') or None,
-                     'discounted_price': product.discounted_price} for product in products
-                    ]
     return jsonify(product_list), 200
+    
+# @main.route('/listproducts', methods=['GET'], strict_slashes=False)
+# def get_products():
+#     products = Product.query.all()
+#     # product_quantity = CartItem.query.filter_by()
+#     # logging.info(f"product data{products}")
+#     product_image = ProductImage.query.all()
+
+#     product_list = [
+
+#                     {'id': product.id,
+#                      'Product name': product.product_name,
+#                      'description': product.description,
+#                      'quantity': product.quantity,
+#                      'regular_price': product.regular_price,
+#                      # 'product_images': [url_for('static'\
+#                      #        ,filename=f'products/{image.to_dict()}', _externel=True)
+#                      #                    for image in product.images],
+#                      'product_image': url_for('static', filename=f'products/default_img/{product.product_image}') or None,
+#                      'discounted_price': product.discounted_price} for product in products
+#                     ]
+#     return jsonify(product_list), 200
 
 
 # get a product
@@ -152,50 +179,6 @@ def cart():
     total_items = len(cart_items)
     logging.info(f"Cart details: {cart_details}")
     return jsonify({'Number of items': total_items, 'cart_details': cart_details}), 200
-
-# @login_required
-# @main.route('/cart/<id>', methods=['GET'], strict_slashes=False)
-# def cart(id):
-#     id = current_user.id
-#     user = Cart.query.filter_by(user_id=id).first()
-#     cart_items = CartItem.query.filter_by(cart_id=id).all()
-#     logging.info(f"User {user}")
-#     if not User.query.get(current_user.id):
-#         return jsonify({'message': 'Fack off!'}), 404
-#     if not CartItem.query.filter_by(cart_id=id).first():
-#         return jsonify({'message': 'Empty Cart!'}), 404
-
-#     cart = user.productid
-#     if not cart:
-#         return jsonify({'message': 'Cart not found!'}), 404
-
-#     # products = cart
-#     # logging.info(f"Cart products {products}")
-#     # pquantity = CartItem.query.filter_by(cart_id=current_user.id, product_id=user.productid).first()
-
-#     # product_list = [{'product_name': product.product_name, 'id': product.id, 'description': product.description,
-#     #                  'regular_price': product.regular_price, 'discounted_price': product.discounted_price} for product in products]
-#     cart_details = []
-#     for item in cart_items:
-#         product = Product.query.get(item.product_id)
-#         shipping = Shipping.query.filter_by(id=item.shipping).first()
-#         logging.info(f"Shipping: {shipping}")
-#         cart_details.append({
-#             'id': product.id,
-#             'product_name': product.product_name,
-#             'prod_quantity': item.quantity,
-#             'regular_price': product.regular_price,
-#             'discounted_price': product.discounted_price,
-#             'total_price': item.quantity * product.discounted_price,
-#             'shipping_method': shipping.name if shipping else None,
-#             'shipping_price': shipping.cost,
-#             'color': item.color,
-#             'delivery_date': shipping.deliveryTime if shipping else None
-#         })
-#     total_items = len(cart_items)#user.total_cart(id)
-#     logging.info(f"Cart details {cart_details}")
-#     return jsonify({'Number of items': total_items}, cart_details), 200
-
 
 @login_required
 @main.route('/removeFromCart/<product_id>', methods=['DELETE'], strict_slashes=False)
@@ -329,18 +312,44 @@ def delete_all_items():
 def view_reviews(product_id):
     product = Product.query.get_or_404(product_id)
     if product:
-        all_review = Review.query.filter_by(productid=product_id).all()
-        # all_reviewimg = ReviewImage.query.filter_by(productid=product_id).all()
-        reviews = [{
-            "Rating": review.product_rating,
-            "Review": review.product_review,
-            "Timestamp": review.timestamp,
-            "Image": [url_for('static'\
-                            ,filename=f'reviews/{image.to_dict()}', _externel=True) for image in review.images],
-            "user_id": review.user_id
-        } for review in all_review]
-        return jsonify(reviews)
+        all_reviews = Review.query.filter_by(productid=product_id).all()
+        base_url = '/static/reviews'
+
+        reviews = []
+        for review in all_reviews:
+            image_urls = [
+                f'{img["image_name"]}' for img in [image.to_dict() for image in review.images]
+            ]
+            logging.info(f"Image URLs for review {review.id}: {image_urls}")
+
+            reviews.append({
+                "Rating": review.product_rating,
+                "Review": review.product_review,
+                "Timestamp": review.timestamp,
+                "Image": image_urls,
+                "user_id": review.user_id
+            })
+
+        return jsonify(reviews), 200
     return jsonify({"error": "Item not found"}), 404
+
+
+# @main.route('/reviews/<int:product_id>', methods=["GET"], strict_slashes=False)
+# def view_reviews(product_id):
+#     product = Product.query.get_or_404(product_id)
+#     if product:
+#         all_review = Review.query.filter_by(productid=product_id).all()
+#         # all_reviewimg = ReviewImage.query.filter_by(productid=product_id).all()
+#         reviews = [{
+#             "Rating": review.product_rating,
+#             "Review": review.product_review,
+#             "Timestamp": review.timestamp,
+#             "Image": [url_for('static'\
+#                             ,filename=f'reviews/{image.to_dict()}', _externel=True) for image in review.images],
+#             "user_id": review.user_id
+#         } for review in all_review]
+#         return jsonify(reviews)
+#     return jsonify({"error": "Item not found"}), 404
 
 
 @login_required

@@ -9,17 +9,17 @@ from flask_login import login_user, logout_user, login_required
 from models.user import User
 from webapp import db
 
-@auth_views.route('/@me')
-user_id = session.get("userId")
-    if user_id:
-        user = User.query.get(user_id)
-        if user:
-            return jsonify({
-                "id": user.id,
-                "username": user.firstname,
-                "roles": len([role.to_dict() for role in user.roles])
-            }), 200
-    return jsonify({"error": "User not authenticated"}), 401
+# @auth_views.route('/@me')
+# user_id = session.get("userId")
+#     if user_id:
+#         user = User.query.get(user_id)
+#         if user:
+#             return jsonify({
+#                 "id": user.id,
+#                 "username": user.firstname,
+#                 "roles": len([role.to_dict() for role in user.roles])
+#             }), 200
+#     return jsonify({"error": "User not authenticated"}), 401
     
 # def get_current_user():
 #     user = current_user.email

@@ -42,6 +42,38 @@ export const createCategory = async category_name => {
   return response.json();
 };
 
+export const addProduct = async (
+  product_name,
+  description,
+  quantity,
+  regular_price,
+  discounted_price,
+  imageFile
+) => {
+  // Create a new FormData object to handle file upload along with other fields
+  const formData = new FormData();
+  formData.append("product_name", product_name);
+  formData.append("description", description);
+  formData.append("quantity", quantity);
+  formData.append("regular_price", regular_price);
+  formData.append("discounted_price", discounted_price);
+  formData.append("file", imageFile); // Append the image file
+
+  // Set up request options
+  const requestOptions = {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  };
+
+  // Make the API request
+  const response = await fetch(`${baseUrl}/admin/addproduct`, requestOptions);
+
+  // Return the response as JSON
+  return response.json();
+};
+
+
 export const createproduct = async (
   product_name,
   description,

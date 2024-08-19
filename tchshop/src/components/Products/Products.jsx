@@ -5,20 +5,12 @@ import { listproducts } from "../../services";
 import ProductCard from "./ProductCard";
 
 const Products = () => {
-  const [products, setProducts, setImageUrls] = useState([])
-  // const dispatch = useDispatch();
-  // const products = useSelector((state) => state.products);
+  const [products, setProducts] = useState([])
 
   useEffect(() => {
     const fetchProducts = async () => {
       const data = await listproducts();
       setProducts(data)
-      // dispatch(getProduct(data));
-
-
-    };
-    const fetchImages = async () => {
-      fetch
     };
 
     fetchProducts();
@@ -31,7 +23,7 @@ const Products = () => {
             <ProductCard
               key={product.id}
               id={product.id}
-              product_images={product.images}
+              product_image={product.product_image}
               name={product["Product name"]}
               description={product.description}
               quantity={product.quantity}

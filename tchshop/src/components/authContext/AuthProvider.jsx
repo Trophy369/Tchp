@@ -7,24 +7,24 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [itemTotal, setItemTotal] = useState(0);
 
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const response = await getUser()
-        if (response.id) {
-          const data = await response;
-          setUser(data);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error('Error checking auth status:', error);
-        setUser(null);
-      }
-    };
+  // useEffect(() => {
+  //   const checkAuthStatus = async () => {
+  //     try {
+  //       const response = await getUser()
+  //       if (response.id) {
+  //         const data = await response;
+  //         setUser(data);
+  //       } else {
+  //         setUser(null);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error checking auth status:', error);
+  //       setUser(null);
+  //     }
+  //   };
 
-    checkAuthStatus();
-  }, []);
+  //   checkAuthStatus();
+  // }, []);
 
   console.log(user)
 

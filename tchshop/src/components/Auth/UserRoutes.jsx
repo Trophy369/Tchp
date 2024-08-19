@@ -16,6 +16,7 @@ const UserRoutes = () => {
     return <div>Loading...</div>;
   }
 
+  console.log(user)
   if (user && user.roles !== null) {
     return user.roles === 1 ? <Outlet /> : <Navigate to="/signin" />;
   } else {
