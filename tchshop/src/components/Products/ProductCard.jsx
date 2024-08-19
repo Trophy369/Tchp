@@ -7,7 +7,6 @@ import { addToCart } from "../../services/userApi";
 import { useAuth } from "../authContext/AuthProvider";
 
 const ProductCard = ({ id, name, description, quantity, price, regPrice, product_image }) => {
-  console.log('products/default_img/', product_image)
   return (
     <Link
       to={{ pathname: `/viewproduct/${id}`, state: { name } }}

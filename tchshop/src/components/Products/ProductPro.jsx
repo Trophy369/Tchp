@@ -35,15 +35,6 @@ const ProductPro = props => {
   }, [id]);
 
   useEffect(() => {
-    const fetchReview = async () => {
-      const data = await viewReview(id);
-      // setReview(data);
-    };
-
-    fetchReview();
-  }, [id]);
-
-  useEffect(() => {
     const fetchShipping = async () => {
       const shipReq = await getShipping();
       setShippingMethods(shipReq);

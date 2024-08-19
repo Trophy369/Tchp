@@ -18,6 +18,7 @@ import Returns from "./pages/Returns";
 import ProductPro from "./components/Products/ProductPro";
 import AdminDash from "./components/Admin/AdminDash";
 import AddProduct from "./components/Admin/AddProducts";
+import Product from "./components/Admin/Product";
 import CreateProduct from "./components/Admin/CreateProduct";
 import CreateRole from "./components/Admin/CreateRole";
 import AssignRole from "./components/Admin/AssignRole";
@@ -43,6 +44,7 @@ const router = createBrowserRouter(
       <Route element={<AdminRoutes />}>
         <Route path="/admin" element={<AdminDash />} />
         <Route path="/admin/addproduct" element={<AddProduct />} />
+        <Route path="/admin/product/:id" element={<Product />} />
         <Route path="/admin/createproduct" element={<CreateProduct />} />
         <Route path="/admin/createcategory" element={<CreateCategory />} />
         <Route path="/admin/createReview" element={<CreateReview />} />

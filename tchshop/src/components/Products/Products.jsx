@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
 import { listproducts } from "../../services";
-// import { getProduct } from "../store/products";
 import ProductCard from "./ProductCard";
 
 const Products = () => {
@@ -22,7 +20,7 @@ const Products = () => {
         {products.map(product => (
             <ProductCard
               key={product.id}
-              id={product.id}
+              productId={product.id}
               product_image={product.product_image}
               name={product["Product name"]}
               description={product.description}

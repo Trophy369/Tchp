@@ -42,29 +42,6 @@ def get_products():
         })
 
     return jsonify(product_list), 200
-    
-# @main.route('/listproducts', methods=['GET'], strict_slashes=False)
-# def get_products():
-#     products = Product.query.all()
-#     # product_quantity = CartItem.query.filter_by()
-#     # logging.info(f"product data{products}")
-#     product_image = ProductImage.query.all()
-
-#     product_list = [
-
-#                     {'id': product.id,
-#                      'Product name': product.product_name,
-#                      'description': product.description,
-#                      'quantity': product.quantity,
-#                      'regular_price': product.regular_price,
-#                      # 'product_images': [url_for('static'\
-#                      #        ,filename=f'products/{image.to_dict()}', _externel=True)
-#                      #                    for image in product.images],
-#                      'product_image': url_for('static', filename=f'products/default_img/{product.product_image}') or None,
-#                      'discounted_price': product.discounted_price} for product in products
-#                     ]
-#     return jsonify(product_list), 200
-
 
 # get a product
 @main.route('/product/<int:product_id>', methods=['GET'], strict_slashes=False)
