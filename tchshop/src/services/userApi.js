@@ -162,3 +162,27 @@ export const assignShipping = async (productId) => {
   const response = await fetch(`${baseUrl}/assignShipping/${productId}`, requestOptions);
   return response.json();
 };
+
+export const checkout = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include', // Include credentials for authentication
+  };
+
+  try {
+    const response = await fetch(`${baseUrl}/checkout`, requestOptions);
+    
+    if (!response.ok) {
+      // Handle errors based on the response status
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'An error occurred during checkout.');
+    }
+
+    const data = await response.json();
+    return data; // Return the data containing total_price and total_shipping
+  } catch (error) {
+    console.error('Checkout error:', error);
+    throw error; // Rethrow the error for further handling if needed
+  }
+};

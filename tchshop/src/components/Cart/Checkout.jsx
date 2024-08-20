@@ -3,7 +3,7 @@ import 'tailwindcss/tailwind.css';
 import axios from 'axios';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-import { getShipping } from '../../services/userApi';
+import { getShipping, checkout } from '../../services/userApi';
 
 const dummyShippingMethods = [
   { id: 1, name: "Standard Shipping", deliveryTime: "5-7 days", cost: 5.99 },
@@ -40,6 +40,14 @@ const Checkout = () => {
   }, [])
 
   useEffect(() => {
+    const fetchCheckout = async () => {
+      const check = await checkout()
+    }
+
+    fetchCheckout()
+  }, [])
+
+  useEffect(() => {
     // Fetch countries from a public API
     axios.get('https://restcountries.com/v3.1/all')
       .then(response => {
@@ -47,7 +55,11 @@ const Checkout = () => {
           name: country.name.common,
           code: country.cca2,
         }));
-        setCountries(countryData);
+  
+        // Sort the country data alphabetically by name
+        const sortedCountries = countryData.sort((a, b) => a.name.localeCompare(b.name));
+  
+        setCountries(sortedCountries);
       });
   }, []);
 
