@@ -62,7 +62,8 @@ class User(db.Model):
     street = db.Column(db.String(70))
     phone = db.Column(db.String(20), nullable=False)
 
-
+    coupons_count = db.Column(db.Integer, default=0)
+    coupons = db.relationship("Coupon", backref="users", lazy=True)
 
     roles = db.relationship("Role", secondary=user_roles, backref=db.backref('users', lazy=True))
     carts = db.relationship('Cart', backref='users', lazy=True)
@@ -96,7 +97,7 @@ class User(db.Model):
             'country': self.country,
             'zipcode': self.zipcode,
             'street': self.street,
-            'phone': self.phone
+            'phone': self.phone,
             # Add more fields as needed
         }
 
@@ -191,7 +192,7 @@ class User(db.Model):
         return (self.id)
 
     def __repr__(self):
-        return f"User('{self.firstname}', '{self.lastname}'), '{self.roles}', " \
+        return f"User('{self.firstname}', '{self.lastname}'), '{self.roles}', '{self.coupons_count}', '{self.coupons}'"\
                f"'{self.city}', '{self.state}', '{self.country}', '{self.zipcode}', '{self.street}','{self.email}', '{self.carts}'"
 
 

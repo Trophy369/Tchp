@@ -4,7 +4,7 @@ from flask import render_template, url_for, flash, jsonify, redirect, request, m
 from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
 from webapp import db
-from models.order import Order, OrderedProduct, SaleTransaction
+from models.order import Order, OrderedProduct, SaleTransaction, Coupon
 from flask_login import current_user, login_required
 from datetime import datetime
 from webapp.auth import has_role
@@ -342,6 +342,9 @@ def view_reviews(product_id):
 @main.route('/shippingAddress', methods=["GET", "POST"], strict_slashes=False)
 def address():
     user = User.query.get(current_user.id)
+    if request.method == 'GET' and not all([user.zipcode, user.street, user.city]):
+        return jsonify({'error': 'add shipping'}), 400
+
     if request.method == 'POST':
         data = request.json
         user.country = data['country']
@@ -350,7 +353,7 @@ def address():
         user.street = data['street']
         user.zipcode = data['zipcode']
         db.session.commit()
-        return jsonify(status="success", message="Shipping address added successfully"), 200
+        return jsonify(status="success", message="Shipping address added successfully"), 201
     return jsonify({"Shipping address": user.zipcode + ', ' + user.street + ', ' + user.state + ', ' + user.city + ', ' + user.country})
 
 
@@ -370,20 +373,61 @@ def view_product_colors(product_name):
 @login_required
 @main.route('/checkout', methods=["GET"], strict_slashes=False)
 def checkout():
+
     cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
 
     if not cart_items:
         return jsonify(status="error", message="Your cart is empty"), 400
+    user = User.query.get(current_user.id)
 
+    if not all([user.zipcode, user.street, user.city]):
+        return jsonify(status="error", error_type="missing_data",
+                       message="Update shipping"), 400
+
+    total_price = 0
+    total_shipping = 0
     # Update the product's available quantity
     for cart_item in cart_items:
         product = Product.query.get(cart_item.product_id)
         product.quantity -= cart_item.quantity
-        method = Shipping.query.filter_by(method=cart_item.shipping).first()
-        total_price = sum((product.discounted_price * cart_item.quantity))
-        total_shipping = sum((method.cost * cart_item.quantity) * 0.55)
-        user = User.query.get(current_user.id)
+        method = Shipping.query.filter_by(id=cart_item.shipping).first()
+        total_price += product.discounted_price * cart_item.quantity
+        total_shipping += (method.cost * cart_item.quantity) * 0.55
+
         billing_address = f"{user.zipcode},{user.street}, {user.city}, {user.state}, {user.country}"
         contacts = f"{user.email}, {user.phone}"
-        new_order = Order(order_date=datetime.utcnow(), shipping_price=total_shipping, billing_address=billing_address,\
-                          contacts=contacts, coupon_code=coupon_code)
+        new_order = Order(order_date=datetime.utcnow(), shipping_price=round(total_shipping, 3), billing_address=billing_address,\
+                          contacts=contacts, userid=user.id)
+        db.session.add(new_order)
+        db.session.commit()
+
+        items = OrderedProduct(orderid=new_order.id, productid=cart_item.product_id, quantity=cart_item.quantity)
+        db.session.add(items)
+    try:
+        db.session.commit()
+        return jsonify({"total_price": round(total_price, 3), "total_shipping": round(total_shipping, 3)}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": e}), 400
+
+
+@login_required
+@main.route('/coupon', methods=["GET"], strict_slashes=False)
+def coupon():
+    user = Coupon.query.filter_by(user_id=current_user.id).first()
+    if not user:
+        return jsonify({"error": "no coupon for this user"}), 400
+
+
+# @login_required
+# @main.route('/coupon', methods=["POST"], strict_slashes=False)
+# def generate_coupon():
+#     code = request.json
+#     user = User.query.get(current_user.id)
+#     count = user.coupons_count
+#     if not user:
+#         return jsonify({"error": "SignUp to claim coupon"}), 400
+#     if len(count) > 4:
+#     new_coup = Coupon()
+
+

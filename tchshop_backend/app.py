@@ -8,7 +8,7 @@ import os
 from models.base_model import BaseModel
 from models.product import Product, Category, Review, CartItem, Description, DescriptionImage, ProductImage, Shipping, ReviewImage, ProductColor
 from models.user import Role, User, Cart
-from models.order import Order, OrderedProduct, SaleTransaction
+from models.order import Order, OrderedProduct, SaleTransaction, Coupon
 from flask_cors import CORS
 
 
@@ -29,7 +29,7 @@ def make_shell_context():
     return dict(db=db, BaseModel=BaseModel, Product=Product, Category=Category, Cart=Cart, CartItem=CartItem,
                 User=User, Role=Role, Review=Review, Order=Order, OrderedProduct=OrderedProduct, SaleTransaction=SaleTransaction,
                 Shipping=Shipping, Description=Description, DescriptionImage=DescriptionImage, ProductImage=ProductImage, ReviewImage=ReviewImage
-                , ProductColor=ProductColor)
+                , ProductColor=ProductColor, Coupon=Coupon)
 
 
 @app.errorhandler(404)
