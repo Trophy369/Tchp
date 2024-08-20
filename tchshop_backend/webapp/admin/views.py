@@ -7,7 +7,7 @@ from . import admin
 from models.user import Role, User, Cart
 from flask_login import login_required, current_user
 from models.product import Product, Category, Review, Shipping, ReviewImage, ProductImage, ProductColor,\
-    DescriptionImage, Description
+    DescriptionImage, Description, CartItem
 from models.order import Order
 from webapp.auth import has_role
 from webapp import db
@@ -185,6 +185,7 @@ def addproduct():
             quantity=new_product["quantity"],
             regular_price=new_product["regular_price"],
             discounted_price=new_product["discounted_price"],
+            description=new_product["description"]
         )
     db.session.add(new_product)
     try:
@@ -209,7 +210,13 @@ def addDescription(product_name):
     if product is None:
         return jsonify({'error': f'{product_name} does not exist'}), 403
 
-    specifications = data.get('specifications')
+    # Retrieve the saved product description if it exist
+    prod_description = Description.query.filter_by(product_id=product.id).first()
+    if prod_description and len(description_images) == 0:
+        prod_description.specifications = data['specifications']
+        db.session.commit()
+        return jsonify({'Message': f'Description specification updated successfully'})
+    specifications = data['specifications']
 
     # Create and save the product description
     product_description = Description(specifications=specifications, product_id=product.id)
@@ -249,8 +256,8 @@ def addDescription(product_name):
 def admin_delete_product_description_img(product_name):
     product = Product.query.filter_by(product_name=product_name).first()
 
-    if product is None:
-        return jsonify({'error', 'Product does not exist'})
+    if not product:
+        return jsonify({'error': 'Product does not exist'})
     if request.method == 'DELETE':
         product_description = DescriptionImage.query.filter_by(product_id=product.id).all()
         for image in product_description:
@@ -407,9 +414,18 @@ def admin_delete_product_colors(product_name):
 @admin.route('/delete_product/<id>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
 def admin_delete_product(id):
-    products = Product.query.all()
+    cart_item = CartItem.query.filter_by(product_id=id).all()
+    colors = ProductColor.query.filter_by(product_id=id).all()
+
     delete_id = Product.query.get(id)
     if delete_id:
+        for prod in cart_item:
+            db.session.delete(prod)
+        # for col in colors:
+        #     db.session.delete(col)
+        admin_delete_product_description_img(delete_id.product_name)
+        admin_delete_product_colors(delete_id.product_name)
+        admin_delete_product_images(delete_id.product_name)
         # delete_id.delete_user_role(id=delete_id)
         db.session.delete(delete_id)
         db.session.commit()

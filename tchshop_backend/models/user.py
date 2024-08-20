@@ -62,6 +62,8 @@ class User(db.Model):
     street = db.Column(db.String(70))
     phone = db.Column(db.String(20), nullable=False)
 
+
+
     roles = db.relationship("Role", secondary=user_roles, backref=db.backref('users', lazy=True))
     carts = db.relationship('Cart', backref='users', lazy=True)
     reviews = db.relationship('Review', backref='users', lazy=True)

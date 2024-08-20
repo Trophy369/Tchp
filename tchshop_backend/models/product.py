@@ -1,6 +1,7 @@
 import logging
 
 from webapp import db
+from flask import url_for
 from models.base_model import BaseModel
 from models.user import User
 from flask_login import current_user
@@ -44,7 +45,9 @@ class Description(db.Model):
         return {
             'product_id': self.product_id,
             'specifications': self.specifications,
-            'images': [image.to_dict() for image in self.images]
+            # 'images': [url_for("static", filename=f'descriptions/{image.to_dict()}') for image in self.images] or None
+            'images': [image.to_dict() for image in self.images] or None
+
         }
 
     def __repr__(self):
@@ -90,7 +93,7 @@ class ProductImage(db.Model):
 class ProductColor(db.Model):
     __tablename__ = 'product_colors'
     id = db.Column(db.Integer, primary_key=True)
-    color = db.Column(db.String(100), nullable=False)
+    color = db.Column(db.String(100), nullable=True)
     number = db.Column(db.Integer, default=24)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
 

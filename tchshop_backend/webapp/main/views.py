@@ -27,9 +27,12 @@ def get_products():
     for product in products:
         # Construct the URL for the product image
         if product.product_image:
+            # logging.error(f'image url {product.product_image}')
+
             # Handle URL encoding of spaces and special characters if needed
             image_filename = product.product_image.replace(' ', '%20')
             image_url = f'{image_filename}'
+            # logging.error(f'image url {image_url}')
         else:
             image_url = None
         
@@ -44,6 +47,7 @@ def get_products():
         })
 
     return jsonify(product_list), 200
+
 
 # get a product
 @main.route('/product/<int:product_id>', methods=['GET'], strict_slashes=False)
@@ -88,8 +92,12 @@ def add_to_cart(product_id):
     product = Product.query.get(product_id)
     quantity = data.get('quantity', 1)
     shipping = data.get('shipping', 2)
-    all_colors = ProductColor.query.filter_by(product_id=product_id).first()
-    color = data.get('color', f'{all_colors[random.choice(range(1, len(all_colors)))]}')
+    all_colors = ProductColor.query.filter_by(product_id=product_id).all()
+    logging.info(f"all colors: {all_colors}")
+    logging.info(f"len all colors: {len(all_colors)}")
+
+    cs = len(all_colors)
+    color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
 
@@ -349,7 +357,7 @@ def address():
 # view product colors available
 @login_required
 @main.route('/view_product_color/<string:product_name>', methods=["GET"], strict_slashes=False)
-def admin_view_product_colors(product_name):
+def view_product_colors(product_name):
     product = Product.query.filter_by(product_name=product_name).first()
     if product is None:
         return jsonify({'error', 'Product does not exist'})
