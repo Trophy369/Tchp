@@ -347,7 +347,7 @@ def admin_delete_product_images(product_name):
 @has_role('administrator')
 def colors_available(product_name):
     data = request.get_json()
-    colors = data[f"name"]
+    colors = data["name"]
     logging.info(f'{colors}, type{type(colors)}')
     product = Product.query.filter_by(product_name=product_name).first()
 
