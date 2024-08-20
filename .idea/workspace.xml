@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a066d651-436e-45cc-810e-a40e78cd8f07" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tchshop_backend/dev.db" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/dev.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tchshop_backend/models/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/models/order.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tchshop_backend/webapp/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/webapp/main/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Tchp.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
