@@ -6,7 +6,8 @@ import Carousel from "./Carousel";
 import {
   addToCart,
   viewProduct,
-  viewReview,
+  viewProductDescription,
+  viewProductColors,
   getShipping
 } from "../../services/userApi";
 import { useAuth } from "../authContext/AuthProvider";
@@ -15,7 +16,7 @@ import Reviews from "./Reviews"
 // Product component
 const ProductPro = props => {
   const { user } = useAuth();
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
   const [error, setError] = useState("");
@@ -24,6 +25,7 @@ const ProductPro = props => {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const { id } = useParams();
   const [lilQuantity, setLilQuantity] = useState(quantity);
+  const [productDesc, setProductDesc] = useState([])
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -32,6 +34,24 @@ const ProductPro = props => {
     };
 
     fetchProduct();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchProductDesc = async () => {
+      const data = await viewProductDescription(id);
+      setProductDesc(data);
+    };
+
+    fetchProductDesc();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchProductColor = async () => {
+      const data = await viewProductColors(id);
+      setColor(data);
+    };
+
+    fetchProductColor();
   }, [id]);
 
   useEffect(() => {
@@ -46,6 +66,12 @@ const ProductPro = props => {
   const imageUrls = Array.isArray(product.product_image)
     ? product.product_image.map(
         img => `http://127.0.0.1:5000/static/products/${img.image_name}`
+      )
+    : [];
+
+    const descImageUrls = Array.isArray(productDesc.images)
+    ? productDesc.images.map(
+        img => `http://127.0.0.1:5000/static/descriptions/${img.image_name}`
       )
     : [];
 
@@ -112,7 +138,7 @@ const ProductPro = props => {
           <FaDollarSign className="mr-1" /> {discounted_price}
         </p>
         <p className="text-sm">
-          Brief product description goes here.{description}
+          {description}
         </p>
         <div className="my-4">
           <p className="mb-2 text-sm font-semibold">Color</p>

@@ -71,14 +71,17 @@ def view_product(product_id):
 
 
 # view product description
-@main.route('/product_desc/<string:product_name>', methods=['GET'], strict_slashes=False)
-def view_product_desc(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+@main.route('/product_desc/<int:product_id>', methods=['GET'], strict_slashes=False)
+def view_product_desc(product_id):
+    product = Product.query.get_or_404(product_id)
+    if not product:
+        return jsonify({'error': 'Product Not found'}), 404
+
     desc = Description.query.filter_by(product_id=product.id).first()
     if desc:
         return jsonify(desc.to_dict()), 200
-    return jsonify({'error': 'Not found Update it'}), 400
 
+    return jsonify({'error': 'Description Not found'}), 404
 
 # users cart
 @login_required
@@ -320,24 +323,6 @@ def view_reviews(product_id):
     return jsonify({"error": "Item not found"}), 404
 
 
-# @main.route('/reviews/<int:product_id>', methods=["GET"], strict_slashes=False)
-# def view_reviews(product_id):
-#     product = Product.query.get_or_404(product_id)
-#     if product:
-#         all_review = Review.query.filter_by(productid=product_id).all()
-#         # all_reviewimg = ReviewImage.query.filter_by(productid=product_id).all()
-#         reviews = [{
-#             "Rating": review.product_rating,
-#             "Review": review.product_review,
-#             "Timestamp": review.timestamp,
-#             "Image": [url_for('static'\
-#                             ,filename=f'reviews/{image.to_dict()}', _externel=True) for image in review.images],
-#             "user_id": review.user_id
-#         } for review in all_review]
-#         return jsonify(reviews)
-#     return jsonify({"error": "Item not found"}), 404
-
-
 @login_required
 @main.route('/shippingAddress', methods=["GET", "POST"], strict_slashes=False)
 def address():
@@ -359,15 +344,16 @@ def address():
 
 # view product colors available
 @login_required
-@main.route('/view_product_color/<string:product_name>', methods=["GET"], strict_slashes=False)
-def view_product_colors(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+@main.route('/view_product_color/<int:product_id>', methods=["GET"], strict_slashes=False)
+def view_product_colors(product_id):
+    product = Product.query.get_or_404(product_id)
     if product is None:
-        return jsonify({'error', 'Product does not exist'})
+        return jsonify({'error': 'Product does not exist'}), 404
+    
     if request.method == 'GET':
         product_colors = ProductColor.query.filter_by(product_id=product.id).all()
         colors = [color.to_dict() for color in product_colors]
-        return jsonify({'product_name': product.product_name, 'colors_available': colors})
+        return jsonify({'product_name': product.product_name, 'colors_available': colors}), 200
 
 
 @login_required

@@ -2,7 +2,12 @@ import { useEffect, useState, useRef } from "react";
 import { FaTrash, FaPlus, FaMinus, FaDollarSign } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import ShowImage from "../ShowImage.jsx";
-import { inputQuantity } from "../../services/userApi.js";
+import {
+  inputQuantity,
+  viewProductColors,
+  updateCartItemColor
+} from "../../services/userApi.js";
+import ColorDisplay from "./ColorDisplay";
 
 const Cart = ({
   productId,
@@ -12,14 +17,24 @@ const Cart = ({
   updateQuantity,
   addOneToCart,
   minusOneToCart,
-  removeItem,
+  removeItem
 }) => {
   const [lilQuantity, setLilQuantity] = useState(quantity);
+  const [color, setColor] = useState([]);
   const timeoutRef = useRef(null);
 
   useEffect(() => {
     setLilQuantity(quantity);
   }, [quantity]);
+
+  useEffect(() => {
+    const fetchProductColor = async () => {
+      const data = await viewProductColors(productId);
+      setColor(data);
+    };
+
+    fetchProductColor();
+  }, [productId]);
 
   const handleIncrement = () => {
     addOneToCart(productId);
@@ -29,7 +44,7 @@ const Cart = ({
     minusOneToCart(productId);
   };
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const newQuantity = Number(e.target.value);
     setLilQuantity(newQuantity);
 

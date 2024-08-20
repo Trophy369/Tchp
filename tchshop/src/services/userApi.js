@@ -26,23 +26,6 @@ export const addToCart = async (id, userId, quantity, shipping, color) => {
   }
 };
 
-// export const addToCart = async (id, userId, quantity) => {
-//   const requestOptions = {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ userId, quantity }),
-//     credentials: 'include',
-//   };
-  
-//   const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
-//   return response.json();
-// };
-
-// export const getCart = async (userId) => {
-//   const response = await axios.get(`${baseUrl}/cart/${userId}`, {withCredentials: true});
-//   return response.data;
-// };
-
 export const viewProduct = async (id) => {
   const requestOptions = {
     method: "GET",
@@ -53,6 +36,40 @@ export const viewProduct = async (id) => {
   const response = await fetch(`${baseUrl}/product/${id}`, requestOptions);
   return response.json();
 }
+
+export const viewProductDescription = async (id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  const response = await fetch(`${baseUrl}/product_desc/${id}`, requestOptions);
+  return response.json();
+};
+
+export const viewProductColors = async (id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  const response = await fetch(`${baseUrl}/view_product_color/${id}`, requestOptions);
+  return response.json();
+};
+
+export const updateCartItemColor = async (productId, color) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+    body: JSON.stringify({ color }),  // sending the color in the request body
+  };
+
+  const response = await fetch(`${baseUrl}/updateColor/${productId}`, requestOptions);
+  return response.json();
+};
 
 export const viewReview = async (id) => {
   const requestOptions = {
@@ -73,6 +90,17 @@ export const getCart = async () => {
   };
 
   const response = await fetch(`${baseUrl}/cart`, requestOptions);
+  return response.json();
+};
+
+export const clearCart = async () => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  const response = await fetch(`${baseUrl}/clearCart`, requestOptions);
   return response.json();
 };
 
