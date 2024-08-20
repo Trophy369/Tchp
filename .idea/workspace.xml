@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a066d651-436e-45cc-810e-a40e78cd8f07" name="Changes" comment="" />
+    <list default="true" id="a066d651-436e-45cc-810e-a40e78cd8f07" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop_backend/dev.db" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/dev.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop_backend/models/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/models/order.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop_backend/webapp/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/webapp/main/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,5 +55,28 @@
       <updated>1723812907463</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

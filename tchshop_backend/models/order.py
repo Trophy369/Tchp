@@ -9,7 +9,10 @@ class Order(db.Model):
     __tablename__ = "order"
     id = db.Column(db.Integer, primary_key=True)
     order_date = db.Column(db.DateTime, nullable=False)
-    total_price = db.Column(db.Integer, nullable=False)
+    shipping_price = db.Column(db.Integer, nullable=False)
+    billing_address = db.Column(db.String(90), nullable=False)
+    contacts = db.Column(db.String(200), nullable=False)
+    coupon_code = db.Column(db.String(20), unique=True)
     userid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, primary_key=True)
 
     def to_dict(self):

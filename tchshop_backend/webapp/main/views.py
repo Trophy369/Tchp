@@ -1,3 +1,5 @@
+import random
+
 from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session, send_from_directory
 from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
@@ -83,13 +85,12 @@ def add_to_cart(product_id):
     quantity = data.get('quantity', 1)
     shipping = data.get('shipping', 2)
     all_colors = ProductColor.query.filter_by(product_id=product_id).first()
-    color = data.get('color', f'{all_colors.color}')
+    color = data.get('color', f'{all_colors[random.choice(range(1, len(all_colors)))]}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
 
     # add or update shipping
     shipping_method = Shipping.query.filter_by(id=shipping).first()
-
 
     cart_len = 0
     try:
@@ -380,12 +381,15 @@ def checkout():
     if not cart_items:
         return jsonify(status="error", message="Your cart is empty"), 400
 
-        # Update the product's available quantity
+    # Update the product's available quantity
     for cart_item in cart_items:
         product = Product.query.get(cart_item.product_id)
         product.quantity -= cart_item.quantity
         method = Shipping.query.filter_by(method=cart_item.shipping).first()
-    total_price = sum((item.price * item.quantity) * 0.55 for item in cart_items)
-
-
-    pass
+        total_price = sum((product.discounted_price * cart_item.quantity))
+        total_shipping = sum((method.cost * cart_item.quantity) * 0.55)
+        user = User.query.get(current_user.id)
+        billing_address = f"{user.zipcode},{user.street}, {user.city}, {user.state}, {user.country}"
+        contacts = f"{user.email}, {user.phone}"
+        new_order = Order(order_date=datetime.utcnow(), shipping_price=total_shipping, billing_address=billing_address,\
+                          contacts=contacts, coupon_code=coupon_code)
