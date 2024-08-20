@@ -6,10 +6,10 @@ import { addToCart } from "../../services/userApi";
 // import { loggedUser } from "../services";
 import { useAuth } from "../authContext/AuthProvider";
 
-const ProductCard = ({ id, name, description, quantity, price, regPrice, product_image }) => {
+const ProductCard = ({ productId, name, description, quantity, price, regPrice, product_image }) => {
   return (
     <Link
-      to={{ pathname: `/viewproduct/${id}`, state: { name } }}
+      to={{ pathname: `/viewproduct/${productId}`, state: { name } }}
       className="overflow-hidden transition-transform transform border border-gray-200 rounded-lg group hover:scale-105"
     >
       <div className="flex flex-col h-full">

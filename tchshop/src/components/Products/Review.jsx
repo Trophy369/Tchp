@@ -1,11 +1,6 @@
-import Carousel from "./Carousel";
-import { viewReview } from "../../services/userApi";
-
 const Review = ({ item }) => {
 
     const {Image, Rating, Review, Timestamp} = item
-
-    console.log(Image)
 
     const imageUrls = Array.isArray(Image)
     ? Image.map(
