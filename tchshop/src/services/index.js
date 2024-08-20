@@ -5,12 +5,11 @@ const baseUrl = config.baseUrl;
 export const getUser = async () => {
   const requestOptions = {
     method: "GET",
-    mode: 'no-cors',
     headers: { "Content-Type": "application/json" },
     credentials: "include"
   };
  
-  const response = await fetch(`${baseUrl}/@me`, requestOptions);
+  const response = await fetch(`${baseUrl}/auth/@me`, requestOptions);
   return response.json();
 };
 

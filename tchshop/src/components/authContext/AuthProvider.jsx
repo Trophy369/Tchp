@@ -1,11 +1,32 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { signin } from "../../services";
+import { signin, getUser } from "../../services";
 import { getCart } from "../../services/userApi";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [itemTotal, setItemTotal] = useState(0);
+
+  // useEffect(() => {
+  //   const checkAuthStatus = async () => {
+  //     try {
+  //       const response = await getUser()
+  //       if (response.id) {
+  //         const data = await response;
+  //         setUser(data);
+  //       } else {
+  //         setUser(null);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error checking auth status:', error);
+  //       setUser(null);
+  //     }
+  //   };
+
+  //   checkAuthStatus();
+  // }, []);
+
+  console.log(user)
 
   useEffect(() => {
     if (user) {
@@ -18,28 +39,11 @@ const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // const userData = () => {
-  //   if (user) {
-  //     useEffect(() => {
-  //       const fetchProducts = async () => {
-  //         const data = await getCart(user.id);
-  //         setCart(data);
-  //       };
-
-  //       fetchProducts();
-  //     }, []);
-  //   }
-  // };
-
   const auth = async (email, password) => {
     const info = await signin(email, password);
     setUser(info);
     localStorage.setItem("user", JSON.stringify(info));
   };
-
-  // if (user !== null) {
-  //   console.log(user);
-  // }
 
   return (
     <AuthContext.Provider value={{ auth, user, itemTotal }}>

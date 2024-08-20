@@ -205,43 +205,41 @@ def addDescription(product_name):
     description_images = request.files.getlist('file')
     logging.info(f"len img description {len(description_images)}")
 
-    user = current_user.id
     product = Product.query.filter_by(product_name=product_name).first()
-    specifications = data['specifications']
+    if product is None:
+        return jsonify({'error': f'{product_name} does not exist'}), 403
 
-    if product:
-        product_description = Description(specifications=specifications, product_id=product.id)
-        db.session.add(product_description)
-        db.session.commit()
-        prod_description = Description.query.filter_by(product_id=product.id).first()
-        logging.info(f"description {prod_description}")
-        # return jsonify({'Message': "Successfully reviewed"}), 200
+    specifications = data.get('specifications')
 
-        if len(description_images) >= 1 and (len(description_images) <= 5):
-            # prod_reviews = Review.query.filter_by(productid=product.id).first()
-            # logging.info(f"prod review {prod_reviews}")
+    # Create and save the product description
+    product_description = Description(specifications=specifications, product_id=product.id)
+    db.session.add(product_description)
+    db.session.commit()
 
-            for uploaded_file in description_images:
-                name = secure_filename(uploaded_file.filename)
-                filename = product.product_name + '_' + name
+    # Retrieve the saved product description
+    prod_description = Description.query.filter_by(product_id=product.id).first()
+    logging.info(f"description {prod_description}")
 
-                if name != '':
-                    file_ext = os.path.splitext(filename)[1]
-                    if file_ext not in current_app.config['DESCRIPTION_UPLOAD_EXTENSIONS']:
-                        abort(400)
-                    prod_description_img = Description.query.filter_by(product_id=product.id).first()
+    # Handle the uploading of images if they are within the allowed range
+    if 1 <= len(description_images) <= 5:
+        for uploaded_file in description_images:
+            name = secure_filename(uploaded_file.filename)
+            filename = f"{product.product_name}_{name}"
 
-                    des_img = DescriptionImage(image_name=filename, description_id=prod_description_img.id, product_id=product.id)
-                    db.session.add(des_img)
-                    db.session.commit()
-                    # image.append(filename)
-                    # logging.info(f"all images: {image}")
+            if name != '':
+                file_ext = os.path.splitext(filename)[1]
+                if file_ext not in current_app.config['DESCRIPTION_UPLOAD_EXTENSIONS']:
+                    abort(400)
+
+                # Create and save the description image record
+                des_img = DescriptionImage(image_name=filename, description_id=prod_description.id, product_id=product.id)
+                db.session.add(des_img)
+                db.session.commit()
+
+                # Save the file to the specified path
                 uploaded_file.save(os.path.join(current_app.config['DESCRIPTION_UPLOAD_PATH'], filename))
-        #     image.append(filename)
-        # u = ReviewImage.query.filter_by(review_id=prod_reviews.id)
-        return jsonify({'Message': f'Description Successfully added for {product.product_name}'}), 201
-    db.session.rollback()
-    return jsonify({'error': 'review failed'}), 404
+
+    return jsonify({'Message': f'Description successfully added for {product.product_name}'}), 201
 
 
 # delete description of a product

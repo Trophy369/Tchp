@@ -42,29 +42,96 @@ export const createCategory = async category_name => {
   return response.json();
 };
 
-export const createproduct = async (
+export const createDescription = async (product_name, description) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ product_name, description }),
+    credentials: "include"
+  };
+
+  const response = await fetch(
+    `${baseUrl}/admin/addProductDescription/${product_name}`,
+    requestOptions
+  );
+  return response.json();
+};
+
+export const addProduct = async (
   product_name,
   description,
   quantity,
   regular_price,
-  discounted_price
+  discounted_price,
+  imageFile
 ) => {
+  const formData = new FormData();
+  formData.append("product_name", product_name);
+  formData.append("description", description);
+  formData.append("quantity", quantity);
+  formData.append("regular_price", regular_price);
+  formData.append("discounted_price", discounted_price);
+  formData.append("file", imageFile);
+
   const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      product_name,
-      description,
-      quantity,
-      regular_price,
-      discounted_price
-    }),
+    body: formData,
     credentials: "include"
   };
 
   const response = await fetch(`${baseUrl}/admin/addproduct`, requestOptions);
+
   return response.json();
 };
+
+export const addProductDescription = async (
+  product_name,
+  specifications,
+  descriptionImages // Array of File objects
+) => {
+  const formData = new FormData();
+  formData.append('specifications', specifications);
+
+  // Add each image to the form data
+  if (descriptionImages && descriptionImages.length > 0) {
+    descriptionImages.forEach((image, index) => {
+      formData.append('file', image);
+    });
+  }
+
+  const requestOptions = {
+    method: "POST",
+    body: formData,
+    credentials: "include"
+  };
+
+  const response = await fetch(`${baseUrl}/admin/addProductDescription/${product_name}`, requestOptions);
+  return response.json();
+};
+//old create product
+// export const createproduct = async (
+//   product_name,
+//   description,
+//   quantity,
+//   regular_price,
+//   discounted_price
+// ) => {
+//   const requestOptions = {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({
+//       product_name,
+//       description,
+//       quantity,
+//       regular_price,
+//       discounted_price
+//     }),
+//     credentials: "include"
+//   };
+
+//   const response = await fetch(`${baseUrl}/admin/addproduct`, requestOptions);
+//   return response.json();
+// };
 
 export const addProductColors = async (productName, colors) => {
   const requestOptions = {
@@ -79,7 +146,7 @@ export const addProductColors = async (productName, colors) => {
       `${baseUrl}/admin/addProductColor/${productName}`,
       requestOptions
     );
-    return response.json
+    return response.json;
   } catch (error) {
     console.error("Error:", error.message);
     throw error;

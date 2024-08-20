@@ -1,7 +1,27 @@
-// import {Outlet, Navigate} from "react-router-dom"
+import { Outlet, Navigate } from "react-router-dom";
+import { useAuth } from "../authContext/AuthProvider";
+import { useState, useEffect } from "react";
 
-// const UserRoutes = () => {
-//     return <Outlet /> : <Navigate to='/signin'/>
-// }
+const UserRoutes = () => {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
 
-// export default UserRoutes
+  useEffect(() => {
+    if (user) {
+      setLoading(false);
+    }
+  }, [user]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log(user)
+  if (user && user.roles !== null) {
+    return user.roles === 1 ? <Outlet /> : <Navigate to="/signin" />;
+  } else {
+    return <Navigate to="/signin" />;
+  }
+};
+
+export default UserRoutes;
