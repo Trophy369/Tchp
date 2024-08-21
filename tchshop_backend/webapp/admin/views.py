@@ -1,6 +1,6 @@
 import os
 import random
-
+import string
 from config import Config
 from flask import render_template, url_for, abort, redirect, request, flash, jsonify, current_app
 from . import admin
@@ -8,7 +8,7 @@ from models.user import Role, User, Cart
 from flask_login import login_required, current_user
 from models.product import Product, Category, Review, Shipping, ReviewImage, ProductImage, ProductColor,\
     DescriptionImage, Description, CartItem
-from models.order import Order
+from models.order import Order, Coupon
 from webapp.auth import has_role
 from webapp import db
 import re
@@ -546,7 +546,60 @@ def add_review(product_id):
     return jsonify({'error': 'review failed'}), 404
 
 
+@login_required
+@admin.route('/generateCoupon', methods=['GET', 'POST'], strict_slashes=False)
+@has_role('administrator')
+def generate():
+    data = request.json
+    email = data["email"]
+    percentage = data.get('percentage', 20)
+    user = User.query.filter_by(email=email).first()
 
+    if not user:
+        return jsonify({"error": "user does not exist"}), 404
+    if_user = Coupon.query.filter_by(user_id=user.id).first()
+    if if_user:
+        return jsonify({"message": "user already has a coupon"}), 404
+
+    def gen(length=6):
+        character = string.ascii_uppercase + string.digits
+        return ''.join(random.choice(character) for _ in range(length))
+    coupon = gen()
+    user_coupon = Coupon(code=coupon, user_id=user.id, percentage=percentage, status="minion")
+    db.session.add(user_coupon)
+    logging.info(f"coupon {type(coupon)}")
+    # user.coupons = coupon
+    db.session.commit()
+    users_coupon = Coupon.query.filter_by(user_id=user.id).first()
+    return jsonify({"success": f"{users_coupon.code}"}), 201
+
+
+# delete user coupon
+@login_required
+@admin.route('/deleteCoupon/<email>', methods=['DELETE'], strict_slashes=False)
+@has_role('administrator')
+def delete_user_coupon(email):
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"error": "user does not exist"}), 404
+
+    users_coupon = Coupon.query.filter_by(user_id=user.id, status='minion').first()
+    if not users_coupon:
+        return jsonify({"error": "user not minion"}), 404
+
+    logging.info(f"users coup {users_coupon.to_dict()}")
+    db.session.delete(users_coupon)
+    db.session.commit()
+    return jsonify({"success": "all coupons deleted"}), 200
+
+
+# delete all coupons
+@login_required
+@admin.route('/deleteCoupon', methods=['DELETE'], strict_slashes=False)
+@has_role('administrator')
+def delete_all_coupons():
+    coupons = Coupon.query.delete()
+    return jsonify({"success": "all coupons deleted"}), 200
 
 
 # START CART MODULE
