@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Adjust if using a different routing setup
+import { Link, useNavigate } from 'react-router-dom';
+import {useSelector} from "react-redux"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faShoppingCart, faScrewdriverWrench, faUser } from '@fortawesome/free-solid-svg-icons';
 import { signout } from "../../services";
 import { useAuth } from "../authContext/AuthProvider";
 
-const Navbar = (props) => {
-  const { user, itemTotal } = useAuth();
+const Navbar = () => {
+  const { user } = useAuth();
+  const numberOfItems = useSelector((state) => state.cart["Number of items"]);
   const history = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // State for user dropdown menu
@@ -76,7 +78,7 @@ const Navbar = (props) => {
           
           <Link to="/cart" className="relative mx-4">
             <FontAwesomeIcon icon={faShoppingCart} className="text-2xl text-white cursor-pointer" />
-            <span className="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full">{itemTotal}</span>
+            <span className="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full">{numberOfItems}</span>
           </Link>
 
         </div>
@@ -111,7 +113,7 @@ const Navbar = (props) => {
 
           <Link to="/cart" className="relative mx-4">
             <FontAwesomeIcon icon={faShoppingCart} className="text-2xl text-white cursor-pointer" />
-            <span className="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full">{itemTotal}</span>
+            <span className="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full">{numberOfItems}</span>
           </Link>
           
 

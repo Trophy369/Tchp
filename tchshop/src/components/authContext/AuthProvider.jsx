@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { signin, getUser } from "../../services";
 import { getCart } from "../../services/userApi";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartItems } from "../../reducers/cartReducer";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  const dispatch = useDispatch();
   const [user, setUser] = useState(null);
-  const [itemTotal, setItemTotal] = useState(0);
 
   // useEffect(() => {
   //   const checkAuthStatus = async () => {
@@ -26,13 +28,12 @@ const AuthProvider = ({ children }) => {
   //   checkAuthStatus();
   // }, []);
 
-  console.log(user)
+  console.log(user);
 
   useEffect(() => {
     if (user) {
       const fetchProducts = async () => {
-        const data = await getCart();
-        setItemTotal(data[0]['Number of items']);
+        dispatch(fetchCartItems())
       };
 
       fetchProducts();
@@ -46,7 +47,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ auth, user, itemTotal }}>
+    <AuthContext.Provider value={{ auth, user }}>
       {children}
     </AuthContext.Provider>
   );

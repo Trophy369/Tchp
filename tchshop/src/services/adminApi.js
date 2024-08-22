@@ -202,17 +202,20 @@ export const createReview = async formData => {
   }
 };
 
-// export const createReview = async (id) => {
-// const requestOptions = {
-//   method: "POST",
-//   headers: { "Content-Type": "application/json" },
-//   body: JSON.stringify(name),
-//   credentials: "include"
-// };
+export const generateCoupon = async (email) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+    credentials: "include"
+  };
 
-// const response = await fetch(`${baseUrl}/admin/addReview/${id}`, requestOptions);
-// return response.json();
-// };
+  const response = await fetch(
+    `${baseUrl}/admin/generateCoupon`,
+    requestOptions
+  );
+  return response.json();
+};
 
 export const createRole = async name => {
   const requestOptions = {
@@ -235,6 +238,18 @@ export const createShipping = async (cost, method, method_description) => {
   };
 
   const response = await fetch(`${baseUrl}/admin/addShipping`, requestOptions);
+  return response.json();
+};
+
+export const updateProdDesc = async (product_name, specifications) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ specifications }),
+    credentials: "include"
+  };
+
+  const response = await fetch(`${baseUrl}/admin/update_product_description/${product_name}`, requestOptions);
   return response.json();
 };
 
@@ -281,6 +296,19 @@ export const deleteCategory = async id => {
   return response.json();
 };
 
+export const deleteProdDesc = async product_name => {
+  const requestOptions = {
+    method: "DELETE",
+    credentials: "include"
+  };
+
+  const response = await fetch(
+    `${baseUrl}/admin/delete_product_description/${product_name}`,
+    requestOptions
+  );
+  return response.json();
+};
+
 export const deleteProduct = async id => {
   const requestOptions = {
     method: "DELETE",
@@ -315,6 +343,58 @@ export const deleteShipping = async method => {
 
   const response = await fetch(
     `${baseUrl}/admin/delete_shipping/${method}`,
+    requestOptions
+  );
+  return response.json();
+};
+
+export const deleteProdImg = async product_name => {
+  const requestOptions = {
+    method: "DELETE",
+    credentials: "include"
+  };
+
+  const response = await fetch(
+    `${baseUrl}/admin/delete_product_images/${product_name}`,
+    requestOptions
+  );
+  return response.json();
+};
+
+export const deleteProdCol = async product_name => {
+  const requestOptions = {
+    method: "DELETE",
+    credentials: "include"
+  };
+
+  const response = await fetch(
+    `${baseUrl}/admin/delete_product_color/${product_name}`,
+    requestOptions
+  );
+  return response.json();
+};
+
+export const deleteCoupon = async email => {
+  const requestOptions = {
+    method: "DELETE",
+    credentials: "include"
+  };
+
+  const response = await fetch(
+    `${baseUrl}/admin/deleteCoupon/${email}`,
+    requestOptions
+  );
+  return response.json();
+};
+
+export const deleteCoupons = async () => {
+  const requestOptions = {
+    method: "DELETE",
+    credentials: "include"
+  };
+
+  const response = await fetch(
+    `${baseUrl}/admin/deleteCoupon`,
     requestOptions
   );
   return response.json();

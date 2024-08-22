@@ -200,7 +200,7 @@ def addproduct():
 # add description to a product
 @login_required
 @admin.route('/addProductDescription/<string:product_name>', methods=['POST'], strict_slashes=False)
-@has_role('administrator')
+@has_role('administrator') 
 def addDescription(product_name):
     data = request.form
     description_images = request.files.getlist('file')

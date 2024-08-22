@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { FaTrash, FaPlus, FaMinus, FaDollarSign } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
+import { inputQuantityAsync, minusOneToCartAsync, plusOneToCartAsync, removeFromCartAsync } from "../../reducers/cartReducer";
 import ShowImage from "../ShowImage.jsx";
 import {
   inputQuantity,
@@ -13,12 +15,9 @@ const Cart = ({
   productId,
   name,
   price,
-  quantity,
-  updateQuantity,
-  addOneToCart,
-  minusOneToCart,
-  removeItem
+  quantity
 }) => {
+  const dispatch = useDispatch();
   const [lilQuantity, setLilQuantity] = useState(quantity);
   const [color, setColor] = useState([]);
   const timeoutRef = useRef(null);
@@ -37,11 +36,11 @@ const Cart = ({
   }, [productId]);
 
   const handleIncrement = () => {
-    addOneToCart(productId);
+    dispatch(plusOneToCartAsync(productId));
   };
 
   const handleDecrement = () => {
-    minusOneToCart(productId);
+    dispatch(minusOneToCartAsync(productId));
   };
 
   const handleChange = e => {
@@ -53,13 +52,12 @@ const Cart = ({
     }
 
     timeoutRef.current = setTimeout(() => {
-      updateQuantity(productId, newQuantity);
-      inputQuantity(productId, newQuantity);
+      dispatch(inputQuantityAsync(productId, newQuantity));
     }, 1000);
   };
 
   const handleRemove = () => {
-    removeItem(productId);
+    dispatch(removeFromCartAsync(productId));
   };
 
   return (

@@ -21,10 +21,10 @@ import AddProduct from "./components/Admin/AddProducts";
 import Product from "./components/Admin/Product";
 import CreateProduct from "./components/Admin/CreateProduct";
 import CreateRole from "./components/Admin/CreateRole";
+import Coupon from "./components/Admin/Coupon";
 import AssignRole from "./components/Admin/AssignRole";
 import CreateReview from "./components/Admin/CreateReview";
 import CreateCategory from "./components/Admin/CreateCategory";
-import AssignCategory from "./components/Admin/AssignCategory";
 import Dashboard from "./components/User/Dashboard";
 import Checkout from "./components/Cart/Checkout";
 import Faq from "./pages/Faq";
@@ -50,7 +50,7 @@ const router = createBrowserRouter(
         <Route path="/admin/createReview" element={<CreateReview />} />
         <Route path="/admin/createrole" element={<CreateRole />} />
         <Route path="/admin/assignrole" element={<AssignRole />} />
-        <Route path="/admin/assigncategory" element={<AssignCategory />} />
+        <Route path="/admin/coupons" element={<Coupon />} />
       </Route>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />

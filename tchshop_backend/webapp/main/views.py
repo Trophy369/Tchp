@@ -80,7 +80,7 @@ def view_product_desc(product_id):
     desc = Description.query.filter_by(product_id=product.id).first()
     if desc:
         return jsonify(desc.to_dict()), 200
-
+ 
     return jsonify({'error': 'Description Not found'}), 404
 
 # users cart

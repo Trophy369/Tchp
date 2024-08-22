@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import {useDispatch} from "react-redux"
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
 import { useParams } from "react-router-dom";
@@ -10,12 +11,15 @@ import {
   viewProductColors,
   getShipping
 } from "../../services/userApi";
+import { addToCartAsync } from "../../reducers/cartReducer";
+
 import { useAuth } from "../authContext/AuthProvider";
 import Reviews from "./Reviews"
 
 // Product component
 const ProductPro = props => {
   const { user } = useAuth();
+  const dispatch = useDispatch()
   const [color, setColor] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
@@ -83,7 +87,7 @@ const ProductPro = props => {
       return;
     }
     setError("");
-    addToCart(id, user.id, quantity, selectedShippingMethod)
+    dispatch(addToCartAsync(id, user.id, quantity, selectedShippingMethod))
     setNotification("Product added to cart");
     setTimeout(() => setNotification(""), 3000);
   };
