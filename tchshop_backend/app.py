@@ -8,7 +8,7 @@ import os
 from models.base_model import BaseModel
 from models.product import Product, Category, Review, CartItem, Description, DescriptionImage, ProductImage, Shipping, ReviewImage, ProductColor
 from models.user import Role, User, Cart
-from models.order import Order, OrderedProduct, SaleTransaction, Coupon
+from models.order import Order, OrderedProduct, Transaction, Coupon, Wallet
 from flask_cors import CORS
 
 
@@ -27,9 +27,9 @@ CORS(app, supports_credentials=True)
 def make_shell_context():
     # Base.metadata.create_all(bind=engine)
     return dict(db=db, BaseModel=BaseModel, Product=Product, Category=Category, Cart=Cart, CartItem=CartItem,
-                User=User, Role=Role, Review=Review, Order=Order, OrderedProduct=OrderedProduct, SaleTransaction=SaleTransaction,
+                User=User, Role=Role, Review=Review, Order=Order, OrderedProduct=OrderedProduct, Transaction=Transaction,
                 Shipping=Shipping, Description=Description, DescriptionImage=DescriptionImage, ProductImage=ProductImage, ReviewImage=ReviewImage
-                , ProductColor=ProductColor, Coupon=Coupon)
+                , ProductColor=ProductColor, Coupon=Coupon, Wallet=Wallet)
 
 
 @app.errorhandler(404)

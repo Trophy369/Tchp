@@ -8,7 +8,7 @@ from models.user import Role, User, Cart
 from flask_login import login_required, current_user
 from models.product import Product, Category, Review, Shipping, ReviewImage, ProductImage, ProductColor,\
     DescriptionImage, Description, CartItem
-from models.order import Order, Coupon
+from models.order import Order, Coupon, Wallet
 from webapp.auth import has_role
 from webapp import db
 import re
@@ -600,6 +600,39 @@ def delete_user_coupon(email):
 def delete_all_coupons():
     coupons = Coupon.query.delete()
     return jsonify({"success": "all coupons deleted"}), 200
+
+
+# add wallet addresses
+@login_required
+@admin.route('/addWallet', methods=['POST'], strict_slashes=False)
+@has_role('administrator')
+def add_wallet():
+    data = request.json
+    currency_type = data['currency_type']
+    address = data['address']
+    logging.info(f"{currency_type.upper()}")
+    if currency_type.upper() != "USDT" and currency_type.upper() != "USDC":
+        return jsonify({"error": "only USDT or USDC accepted"}), 400
+    if not isinstance(address, str) or len(address) < 12:
+        return jsonify({"error": "provide a valid address"}), 400
+    try:
+        new_wallet = Wallet(currency_type=currency_type, address=address)
+        db.session.add(new_wallet)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "addresses must be unique"}), 400
+    return jsonify({"success": f"{currency_type} wallet added"}), 200
+
+
+@login_required
+@admin.route('/viewWallets', methods=['GET'], strict_slashes=False)
+@has_role('administrator')
+def list_wallets():
+    wallets = Wallet.query.all()
+    all = [wallet.to_dict() for wallet in wallets]
+    return jsonify({"success": all}), 200
+
 
 
 # START CART MODULE

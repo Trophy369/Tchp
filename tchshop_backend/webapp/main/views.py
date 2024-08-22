@@ -4,7 +4,7 @@ from flask import render_template, url_for, flash, jsonify, redirect, request, m
 from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
 from webapp import db
-from models.order import Order, OrderedProduct, SaleTransaction, Coupon
+from models.order import Order, OrderedProduct, Transaction, Coupon, Wallet
 from flask_login import current_user, login_required
 from datetime import datetime
 from webapp.auth import has_role
@@ -47,6 +47,11 @@ def get_products():
         })
 
     return jsonify(product_list), 200
+
+# product by category
+# @main.route('/category/<cat_name>', methods=['GET'], strict_slashes=False)
+# def view_category(cat_name):
+#     products = Product.query.filter_by()
 
 
 # get a product
@@ -498,7 +503,7 @@ def use_coupon():
         product = Product.query.get(cart_item.product_id)
         product.quantity -= cart_item.quantity
         method = Shipping.query.filter_by(id=cart_item.shipping).first()
-        total_price += (product.discounted_price * cart_item.quantity) - ((product.discounted_price * cart_item.quantity) * int(coupon_user.percentage) / 100)
+        total_price += (product.discounted_price * cart_item.quantity) - ((product.discounted_price * cart_item.quantity) * (int(coupon_user.percentage) / 100))
         if cart_item.quantity >= 2:
             total_shipping += (method.cost * cart_item.quantity) * 0.85
         else:
@@ -515,10 +520,10 @@ def use_coupon():
     # all_order = Order.query.filter_by(userid=coupon_user.id).all()
 
 
-# payment pay
+# proceed to payment
 @login_required
-@main.route('/proceed', methods=["POST"], strict_slashes=False)
-def pay():
+@main.route('/proceed', methods=["GET"], strict_slashes=False)
+def proceed():
     total_price = session["total_price"]
     total_shipping = session["total_shipping"]
     session["tax"] = 5.6
@@ -527,4 +532,68 @@ def pay():
     session["grand_total"] = grand_total
     return jsonify({'total_price': total_price, 'total_shipping': total_shipping, 'tax': tax, 'grand_total': grand_total})
 
+
+# select payment method
+@login_required
+@main.route('/paymentMethods', methods=["POST"], strict_slashes=False)
+def select_method():
+    data = request.json
+    method = data["method"]
+    check = Wallet.query.filter_by(currency_type=method).first()
+    if not check:
+        return jsonify({"error": "not available consider another payment method"}), 400
+    if method.upper() == "USDT":
+        usdt_address = Wallet.query.filter_by(currency_type=method).all()
+        add = random.choice(usdt_address)
+        address = add.address
+        session["address"] = address
+        session["method"] = method
+        return redirect(url_for("main.pay")), 200
+
+        # return jsonify({"address": address, "crypto": method}), 200
+    elif method.upper() == "USDC":
+        usdc_address = Wallet.query.filter_by(currency_type=method).all()
+        add = random.choice(usdc_address)
+        address = add.address
+        session["address"] = address
+        session["method"] = method
+        return redirect(url_for("main.pay")), 200
+        # return jsonify({"address": address, "crypto": method}), 200
+
+
+"""
+    the appropriate random address selected from the above is passed here with the amount to be paid
+"""
+@login_required
+@main.route('/pay', methods=["GET"], strict_slashes=False)
+def pay():
+    if request.method == "GET" and current_user:
+        address = session["address"]
+        method = session["method"]
+        grand_total = session["grand_total"]
+        return jsonify({'address': address, 'type': method, 'grand_total': grand_total})
+
+
+# confirm pay
+@login_required
+@main.route('/confirmation', methods=["POST"], strict_slashes=False)
+def confirm_payment():
+    if request.method == "POST" and current_user:
+        grand_total = session["grand_total"]
+        # user_order = Order.query.filter_by(userid=current_user.id).all()
+        # for order in user_order
+        new_transaction = Transaction(order_date=datetime.utcnow(), userid=current_user.id, amount=grand_total, response='pending')
+        db.session.add(new_transaction)
+        try:
+            cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
+            for cart_item in cart_items:
+                db.session.delete(cart_item)
+            db.session.commit()
+            # session.pop("grand_total", None)
+            return jsonify({'success': 'payment processing'}), 201
+
+        except Exception as e:
+            # session.pop("grand_total", None)
+            db.session.rollback()
+            return jsonify({'error': f'{e}payment not successful'}), 400
 
