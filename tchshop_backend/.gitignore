@@ -1,5 +1,6 @@
 env/
 __py*/
 .env
+../.idea/
 # does not ignore the README.md file
 !README.md

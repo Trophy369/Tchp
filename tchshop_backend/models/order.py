@@ -44,14 +44,14 @@ class OrderedProduct(db.Model):
 class Coupon(db.Model):
     __tablename__ = "coupons"
     id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(15), unique=True)
+    code = db.Column(db.String(15))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     percentage = db.Column(db.String(3))
     status = db.Column(db.String(10))
 
     def to_dict(self):
         return {
-            "code": self.code or None,
+            "code": self.code,
             "user_id": self.user_id or None,
             "percentage": self.percentage or None,
             "status": self.status or None
@@ -66,7 +66,7 @@ class SaleTransaction(db.Model):
     response = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
-        return f"Order('{self.id}', '{self.orderid}', '{self.amount}', '{self.response}')"
+        return f"SaleTransaction('{self.id}', '{self.orderid}', '{self.amount}', '{self.response}')"
 
 
 

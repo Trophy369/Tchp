@@ -378,7 +378,10 @@ def checkout():
         product.quantity -= cart_item.quantity
         method = Shipping.query.filter_by(id=cart_item.shipping).first()
         total_price += product.discounted_price * cart_item.quantity
-        total_shipping += (method.cost * cart_item.quantity) * 0.55
+        if cart_item.quantity >= 2:
+            total_shipping += (method.cost * cart_item.quantity) * 0.85
+        else:
+            total_shipping += (method.cost * cart_item.quantity)
 
         billing_address = f"{user.zipcode},{user.street}, {user.city}, {user.state}, {user.country}"
         contacts = f"{user.email}, {user.phone}"
@@ -391,29 +394,73 @@ def checkout():
         db.session.add(items)
     try:
         db.session.commit()
+
+        session["total_price"] = round(total_price, 3)
+        session["total_shipping"] = round(total_shipping, 3)
+
+        logging.info(f'toatal price: {session["total_price"]}')
         return jsonify({"total_price": round(total_price, 3), "total_shipping": round(total_shipping, 3)}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": e}), 400
 
 
-@login_required
+# each users coupon code
+# @login_required
 @main.route('/coupon', methods=["GET"], strict_slashes=False)
 def coupon():
     user = Coupon.query.filter_by(user_id=current_user.id).first()
     if not user:
         return jsonify({"error": "no coupon for this user"}), 400
+    return jsonify({"users_coupon": user.code}), 200
 
 
-# @login_required
-# @main.route('/coupon', methods=["POST"], strict_slashes=False)
-# def generate_coupon():
-#     code = request.json
-#     user = User.query.get(current_user.id)
-#     count = user.coupons_count
-#     if not user:
-#         return jsonify({"error": "SignUp to claim coupon"}), 400
-#     if len(count) > 4:
-#     new_coup = Coupon()
+# use users coupon code
+@login_required
+@main.route('/useCoupon', methods=["POST"], strict_slashes=False)
+def use_coupon():
+    data = request.json
+    code = data["code"]
+    coupon_user = Coupon.query.filter_by(code=code).first()
+    if not coupon_user:
+        return jsonify({"error": "Invalid coupon code"}), 400
+
+    session.pop("total_price", None)
+    total_price = 0
+    total_shipping = 0
+    cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
+    # Update the product's available quantity
+    for cart_item in cart_items:
+        product = Product.query.get(cart_item.product_id)
+        product.quantity -= cart_item.quantity
+        method = Shipping.query.filter_by(id=cart_item.shipping).first()
+        total_price += (product.discounted_price * cart_item.quantity) - ((product.discounted_price * cart_item.quantity) * int(coupon_user.percentage) / 100)
+        if cart_item.quantity >= 2:
+            total_shipping += (method.cost * cart_item.quantity) * 0.85
+        else:
+            total_shipping += (method.cost * cart_item.quantity)
+    user_coupon = Coupon(code=code, user_id=current_user.id, percentage='', status="pending")
+    db.session.add(user_coupon)
+    db.session.commit()
+    session["total_price"] = round(total_price, 3)
+    session["total_shipping"] = round(total_shipping, 3)
+    # logging.info(f'toatal price: {session["total_price"]}')
+
+    return jsonify({"coupon_price": round(total_price, 3), "total_shipping": round(total_shipping, 3)}), 200
+
+    # all_order = Order.query.filter_by(userid=coupon_user.id).all()
+
+
+# payment pay
+@login_required
+@main.route('/proceed', methods=["POST"], strict_slashes=False)
+def pay():
+    total_price = session["total_price"]
+    total_shipping = session["total_shipping"]
+    session["tax"] = 5.6
+    tax = session["tax"]
+    grand_total = round(float(total_price) + float(total_shipping) + float(tax), 3)
+    session["grand_total"] = grand_total
+    return jsonify({'total_price': total_price, 'total_shipping': total_shipping, 'tax': tax, 'grand_total': grand_total})
 
 
