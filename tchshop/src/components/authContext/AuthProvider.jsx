@@ -28,7 +28,6 @@ const AuthProvider = ({ children }) => {
   //   checkAuthStatus();
   // }, []);
 
-  console.log(user);
 
 //   useEffect(() => {
 //     if (user) {

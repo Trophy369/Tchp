@@ -23,7 +23,6 @@ const Navbar = () => {
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
-  console.log(numberOfItems);
   return (
     <nav className="px-4 py-3 text-white bg-blue-500 z-sticky ">
       <div className="container flex items-center justify-between mx-auto">

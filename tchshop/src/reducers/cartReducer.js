@@ -96,19 +96,22 @@ export const {
   setLoading
 } = cartSlice.actions;
 
-export const addToCartAsync = (id, userId, quantity, shipping, color) => {
+export const addToCartAsync = (id, quantity, shipping, color) => {
   return async (dispatch, getState) => {
     dispatch(setLoading(true));
-    const state = getState().cart;
-    const existingItem = state.cart_details.find(item => item.id === id);
-
+    
     try {
+      const state = getState().cart;
+      const existingItem = state.cart_details?.find(item => item.id === id);
+
       if (existingItem) {
-        const newQuantity = existingItem.prod_quantity + 1;
+        // Item exists in the cart, update the quantity
+        const newQuantity = existingItem.prod_quantity + quantity;
         await handleQuantity(id, newQuantity);
         dispatch(addToCartSuccess({ id, prod_quantity: newQuantity }));
       } else {
-        const result = await addToCart(id, userId, quantity, shipping, color);
+        // Item does not exist in the cart, add it as a new item
+        const result = await addToCart(id, quantity, shipping, color);
         dispatch(addToCartSuccess(result));
       }
     } catch (error) {
@@ -118,6 +121,29 @@ export const addToCartAsync = (id, userId, quantity, shipping, color) => {
     }
   };
 };
+
+// export const addToCartAsync = (id, quantity, shipping, color) => {
+//   return async (dispatch, getState) => {
+//     dispatch(setLoading(true));
+//     const state = getState().cart;
+//     const existingItem = state.cart_details.find(item => item.id === id);
+
+//     try {
+//       if (existingItem) {
+//         const newQuantity = existingItem.prod_quantity + 1;
+//         await handleQuantity(id, newQuantity);
+//         dispatch(addToCartSuccess({ id, prod_quantity: newQuantity }));
+//       } else {
+//         const result = await addToCart(id, quantity, shipping, color);
+//         dispatch(addToCartSuccess(result));
+//       }
+//     } catch (error) {
+//       dispatch(addToCartFailure(error.message));
+//     } finally {
+//       dispatch(setLoading(false));
+//     }
+//   };
+// };
 
 export const removeFromCartAsync = productId => {
   return async dispatch => {

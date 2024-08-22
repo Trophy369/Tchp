@@ -15,7 +15,6 @@ import { Link } from "react-router-dom";
 const CartPage = ({}) => {
   const { user } = useAuth();
   const cart = useSelector((state) => state.cart.cart_details)
-  console.log(cart)
 
   const subtotal = cart
     .reduce((acc, item) => acc + item.discounted_price * item.prod_quantity, 0)

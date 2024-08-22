@@ -3,6 +3,9 @@ import ShowImage from "../ShowImage";
 import { deleteProduct } from "../../services/adminApi";
 import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import config from "../../config"
+
+const baseURL = config.baseUrl
 
 const ProductCard = ({ id, product_image, name, setProducts, products }) => {
   const handleRemove = async () => {
@@ -24,7 +27,7 @@ const ProductCard = ({ id, product_image, name, setProducts, products }) => {
     <tr key={id} className="border-b">
       <td className="flex items-center py-4 space-x-4">
         <ShowImage
-          url={`http://127.0.0.1:5000/static/products/default_img/${product_image}`}
+          url={`${baseURL}/static/products/default_img/${product_image}`}
           style={true}
         />
         <span className="truncate">{name}</span>

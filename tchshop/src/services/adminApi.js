@@ -42,16 +42,16 @@ export const createCategory = async category_name => {
   return response.json();
 };
 
-export const createDescription = async (product_name, description) => {
+export const createDescription = async (id, specifications) => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ product_name, description }),
+    body: JSON.stringify({ specifications }),
     credentials: "include"
   };
 
   const response = await fetch(
-    `${baseUrl}/admin/addProductDescription/${product_name}`,
+    `${baseUrl}/admin/addProductDescription/${id}`,
     requestOptions
   );
   return response.json();
@@ -85,9 +85,9 @@ export const addProduct = async (
 };
 
 export const addProductDescription = async (
-  product_name,
+  id,
   specifications,
-  descriptionImages // Array of File objects
+  descriptionImages
 ) => {
   const formData = new FormData();
   formData.append('specifications', specifications);
@@ -105,7 +105,7 @@ export const addProductDescription = async (
     credentials: "include"
   };
 
-  const response = await fetch(`${baseUrl}/admin/addProductDescription/${product_name}`, requestOptions);
+  const response = await fetch(`${baseUrl}/admin/addProductDescription/${id}`, requestOptions);
   return response.json();
 };
 //old create product
@@ -133,7 +133,7 @@ export const addProductDescription = async (
 //   return response.json();
 // };
 
-export const addProductColors = async (productName, colors) => {
+export const addProductColors = async (id, colors) => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -143,7 +143,7 @@ export const addProductColors = async (productName, colors) => {
 
   try {
     const response = await fetch(
-      `${baseUrl}/admin/addProductColor/${productName}`,
+      `${baseUrl}/admin/addProductColor/${id}`,
       requestOptions
     );
     return response.json;
@@ -153,7 +153,7 @@ export const addProductColors = async (productName, colors) => {
   }
 };
 
-export const handleUpload = async (productName, selectedFiles) => {
+export const handleUpload = async (id, selectedFiles) => {
   if (selectedFiles.length === 0) {
     setError("Please select at least one image.");
     return;
@@ -170,11 +170,46 @@ export const handleUpload = async (productName, selectedFiles) => {
     };
 
     const response = await fetch(
-      `${baseUrl}/admin/addProductImage/${productName}`,
+      `${baseUrl}/admin/addProductImage/${id}`,
       requestOptions
     );
     return response.json();
   } catch (err) {}
+};
+
+export const addWallet = async (currency_type, address) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ currency_type, address }),
+    credentials: "include"
+  };
+
+  try {
+    const response = await fetch(
+      `${baseUrl}/admin/addWallet`,
+      requestOptions
+    );
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error:", error.message);
+    throw error;
+  }
+};
+
+export const getWallet = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include"
+  };
+
+  const response = await fetch(`${baseUrl}/admin/viewWallets`, requestOptions);
+  return response.json();
 };
 
 export const createReview = async formData => {
@@ -241,7 +276,7 @@ export const createShipping = async (cost, method, method_description) => {
   return response.json();
 };
 
-export const updateProdDesc = async (product_name, specifications) => {
+export const updateProdDesc = async (id, specifications) => {
   const requestOptions = {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -249,7 +284,7 @@ export const updateProdDesc = async (product_name, specifications) => {
     credentials: "include"
   };
 
-  const response = await fetch(`${baseUrl}/admin/update_product_description/${product_name}`, requestOptions);
+  const response = await fetch(`${baseUrl}/admin/update_product_description/${id}`, requestOptions);
   return response.json();
 };
 
@@ -296,14 +331,14 @@ export const deleteCategory = async id => {
   return response.json();
 };
 
-export const deleteProdDesc = async product_name => {
+export const deleteProdDesc = async id => {
   const requestOptions = {
     method: "DELETE",
     credentials: "include"
   };
 
   const response = await fetch(
-    `${baseUrl}/admin/delete_product_description/${product_name}`,
+    `${baseUrl}/admin/delete_product_description/${id}`,
     requestOptions
   );
   return response.json();
@@ -348,27 +383,27 @@ export const deleteShipping = async method => {
   return response.json();
 };
 
-export const deleteProdImg = async product_name => {
+export const deleteProdImg = async (id) => {
   const requestOptions = {
     method: "DELETE",
     credentials: "include"
   };
 
   const response = await fetch(
-    `${baseUrl}/admin/delete_product_images/${product_name}`,
+    `${baseUrl}/admin/delete_product_images/${id}`,
     requestOptions
   );
   return response.json();
 };
 
-export const deleteProdCol = async product_name => {
+export const deleteProdCol = async id => {
   const requestOptions = {
     method: "DELETE",
     credentials: "include"
   };
 
   const response = await fetch(
-    `${baseUrl}/admin/delete_product_color/${product_name}`,
+    `${baseUrl}/admin/delete_product_color/${id}`,
     requestOptions
   );
   return response.json();

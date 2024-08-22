@@ -90,120 +90,56 @@ def view_product_desc(product_id):
 
 # users cart
 @login_required
-@main.route('/addToCart/<product_id>', methods=['POST'], strict_slashes=False)
+@main.route('/addToCart/<product_id>', methods=['GET', 'POST'], strict_slashes=False)
 def add_to_cart(product_id):
     data = request.json
-    user_id = current_user.id
-    user = User.query.get(user_id)
+    # id = data['userId']
+    id = current_user.id
+    user = User.query.get(id)
+    product_id = product_id
     product = Product.query.get(product_id)
     quantity = data.get('quantity', 1)
     shipping = data.get('shipping', 2)
     all_colors = ProductColor.query.filter_by(product_id=product_id).all()
+    logging.info(f"all colors: {all_colors}")
+    logging.info(f"len all colors: {len(all_colors)}")
 
-    # Select a color if not provided
     cs = len(all_colors)
-    color = data.get('color', f'{all_colors[random.choice(range(cs))].color}')
-    
-    # Check stock availability
-    if int(product.quantity) < int(quantity):
-        return jsonify({"Message": "Not enough Product in stock, reduce quantity"}), 400
+    color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
+    logging.info(f"Quantity first {quantity}")
+    logging.info(f"Data {data['quantity']}")
 
-    # Ensure the user has a cart
-    cart = Cart.query.filter_by(user_id=user_id).first()
-    if not cart:
-        cart = Cart(user_id=user_id)
-        db.session.add(cart)
+    # add or update shipping
+    shipping_method = Shipping.query.filter_by(id=shipping).first()
+
+    cart_len = 0
+    try:
+        if int(product.quantity) < int(quantity):
+            return jsonify({"Message": "Not enough Product in stock reduce quantity"})
+        # count = Cart.add_to_cart(cart_len=cart_len, quantity=quantity, product_id=product_id, shipping=int(shipping_method.method))
+        # logging.info(f"items to add to cart: {count}")
+        # cart = Cart.query.filter_by(user_id=current_user.id).first()
+        cart = current_user.carts
+        if not cart:
+            add = Cart(user_id=current_user.id)
+            db.session.add(add)
+            db.session.commit()
+        cart_item = CartItem.query.filter_by(cart_id=current_user.id, product_id=product.id).first()
+        if cart_item:
+            return jsonify({"Message": "Item already in cart"})
+        else:
+            add_cartitem = CartItem(cart_id=current_user.id, product_id=product.id, quantity=quantity, shipping=shipping, color=color)
+            db.session.add(add_cartitem)
+            db.session.commit()
+        all_items = CartItem.query.filter_by(cart_id=current_user.id).all()
+        cart_len += len(all_items)
+    except IntegrityError as e:
+        db.session.rollback()
         db.session.commit()
+        cart = Cart.query.filter_by(user_id=user.id).first()
+        return jsonify({"error": "Item already in cart", "Total Cart": cart_len})
 
-    # Check if the item is already in the cart
-    cart_item = CartItem.query.filter_by(cart_id=cart.id, product_id=product.id).first()
-    if cart_item:
-        return jsonify({"Message": "Item already in cart"}), 409
-    else:
-        # Add the item to the cart
-        add_cartitem = CartItem(
-            cart_id=cart.id, 
-            product_id=product.id, 
-            quantity=quantity, 
-            shipping=shipping, 
-            color=color
-        )
-        db.session.add(add_cartitem)
-        db.session.commit()
-
-    # Fetch updated cart details
-    updated_cart_items = CartItem.query.filter_by(cart_id=cart.id).all()
-    cart_len = len(updated_cart_items)
-
-    # Construct response with detailed cart item data
-    cart_items_response = []
-    for item in updated_cart_items:
-        cart_items_response.append({
-            "id": item.product.id,
-            "product_name": item.product.product_name,
-            "prod_quantity": item.quantity,
-            "price": item.product.price,  # or item.product.discounted_price if available
-            "color": item.color,
-            "shipping": item.shipping
-        })
-
-    return jsonify({
-        "Message": f"Product {product.product_name} added to User: {user.email} cart",
-        "total": cart_len,
-        "cart_items": cart_items_response
-    }), 200
-
-# @login_required
-# @main.route('/addToCart/<product_id>', methods=['GET', 'POST'], strict_slashes=False)
-# def add_to_cart(product_id):
-#     data = request.json
-#     # id = data['userId']
-#     id = current_user.id
-#     user = User.query.get(id)
-#     product_id = product_id
-#     product = Product.query.get(product_id)
-#     quantity = data.get('quantity', 1)
-#     shipping = data.get('shipping', 2)
-#     all_colors = ProductColor.query.filter_by(product_id=product_id).all()
-#     logging.info(f"all colors: {all_colors}")
-#     logging.info(f"len all colors: {len(all_colors)}")
-
-#     cs = len(all_colors)
-#     color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
-#     logging.info(f"Quantity first {quantity}")
-#     logging.info(f"Data {data['quantity']}")
-
-#     # add or update shipping
-#     shipping_method = Shipping.query.filter_by(id=shipping).first()
-
-#     cart_len = 0
-#     try:
-#         if int(product.quantity) < int(quantity):
-#             return jsonify({"Message": "Not enough Product in stock reduce quantity"})
-#         # count = Cart.add_to_cart(cart_len=cart_len, quantity=quantity, product_id=product_id, shipping=int(shipping_method.method))
-#         # logging.info(f"items to add to cart: {count}")
-#         # cart = Cart.query.filter_by(user_id=current_user.id).first()
-#         cart = current_user.carts
-#         if not cart:
-#             add = Cart(user_id=current_user.id)
-#             db.session.add(add)
-#             db.session.commit()
-#         cart_item = CartItem.query.filter_by(cart_id=current_user.id, product_id=product.id).first()
-#         if cart_item:
-#             return jsonify({"Message": "Item already in cart"})
-#         else:
-#             add_cartitem = CartItem(cart_id=current_user.id, product_id=product.id, quantity=quantity, shipping=shipping, color=color)
-#             db.session.add(add_cartitem)
-#             db.session.commit()
-#         all_items = CartItem.query.filter_by(cart_id=current_user.id).all()
-#         cart_len += len(all_items)
-#     except IntegrityError as e:
-#         db.session.rollback()
-#         db.session.commit()
-#         cart = Cart.query.filter_by(user_id=user.id).first()
-#         return jsonify({"error": "Item already in cart", "Total Cart": cart_len})
-
-#     return jsonify({"Message": f"Product {product.product_name} added to User: {user.email} cart ,'Total Cart': {cart_len}"}), 200
+    return jsonify({"Message": f"Product {product.product_name} added to User: {user.email} cart ,'total': {cart_len}"}), 200
 
 
 # cart items

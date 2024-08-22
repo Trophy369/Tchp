@@ -2,11 +2,11 @@ import config from '../config';
 
 const baseUrl = config.baseUrl;
 
-export const addToCart = async (id, userId, quantity, shipping, color) => {
+export const addToCart = async (id, quantity, shipping, color) => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId, quantity, shipping, color }),
+    body: JSON.stringify({ quantity, shipping, color }),
     credentials: 'include',
   };
   
@@ -19,6 +19,43 @@ export const addToCart = async (id, userId, quantity, shipping, color) => {
     }
 
     console.log("Product added to cart successfully:", result.Message);
+    return result;
+  } catch (error) {
+    console.error("Error:", error.message);
+    throw error;
+  }
+};
+
+export const useCoupon = async (code) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+    credentials: 'include',
+  };
+  
+  try {
+    const response = await fetch(`${baseUrl}/useCoupon`, requestOptions);
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error:", error.message);
+    throw error;
+  }
+};
+
+
+export const addShippingDetails = async (country, state, city, street, zipcode) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ country, state, city, street, zipcode }),
+    credentials: 'include',
+  };
+  
+  try {
+    const response = await fetch(`${baseUrl}/shippingAddress`, requestOptions);
+    const result = await response.json();
     return result;
   } catch (error) {
     console.error("Error:", error.message);
@@ -167,22 +204,21 @@ export const checkout = async () => {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
-    credentials: 'include', // Include credentials for authentication
+    credentials: 'include',
   };
 
   try {
     const response = await fetch(`${baseUrl}/checkout`, requestOptions);
     
     if (!response.ok) {
-      // Handle errors based on the response status
       const errorData = await response.json();
       throw new Error(errorData.message || 'An error occurred during checkout.');
     }
 
     const data = await response.json();
-    return data; // Return the data containing total_price and total_shipping
+    return data;
   } catch (error) {
     console.error('Checkout error:', error);
-    throw error; // Rethrow the error for further handling if needed
+    throw error;
   }
 };
