@@ -30,15 +30,16 @@ const AuthProvider = ({ children }) => {
 
   console.log(user);
 
-  useEffect(() => {
-    if (user) {
-      const fetchProducts = async () => {
-        dispatch(fetchCartItems())
-      };
+//   useEffect(() => {
+//     if (user) {
+//         const fetchProducts = async () => {
+//             console.log("Fetching cart items...");
+//             await dispatch(fetchCartItems());
+//         };
 
-      fetchProducts();
-    }
-  }, [user]);
+//         fetchProducts();
+//     }
+// }, [user, dispatch]);
 
   const auth = async (email, password) => {
     const info = await signin(email, password);

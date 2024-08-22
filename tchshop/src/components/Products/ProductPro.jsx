@@ -92,32 +92,6 @@ const ProductPro = props => {
     setTimeout(() => setNotification(""), 3000);
   };
 
-  // const handleIncrement = () => {
-  //   addOneToCart(productId);
-  // };
-
-  // const handleDecrement = () => {
-  //   minusOneToCart(productId);
-  // };
-
-  // const handleChange = e => {
-  //   const newQuantity = Number(e.target.value);
-  //   setLilQuantity(newQuantity);
-
-  //   if (timeoutRef.current) {
-  //     clearTimeout(timeoutRef.current);
-  //   }
-
-  //   timeoutRef.current = setTimeout(() => {
-  //     updateQuantity(productId, newQuantity);
-  //     inputQuantity(productId, newQuantity);
-  //   }, 1000);
-  // };
-
-  // const handleRemove = () => {
-  //   removeItem(productId);
-  // };
-
   return (
     <div className="p-4 md:p-8">
       {error && (

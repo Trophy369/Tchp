@@ -8,11 +8,10 @@ import { useAuth } from "../authContext/AuthProvider";
 
 const Navbar = () => {
   const { user } = useAuth();
-  const numberOfItems = useSelector((state) => state.cart["Number of items"]);
+  const numberOfItems = useSelector((state) => state.cart.total);
   const history = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // State for user dropdown menu
-
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
