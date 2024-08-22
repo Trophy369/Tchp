@@ -114,8 +114,6 @@ const Product = () => {
             Product Name
           </label>
           <input
-            type
-            is
             type="text"
             value={product.name}
             readOnly
