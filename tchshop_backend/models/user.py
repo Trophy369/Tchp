@@ -68,8 +68,8 @@ class User(db.Model):
     roles = db.relationship("Role", secondary=user_roles, backref=db.backref('users', lazy=True))
     carts = db.relationship('Cart', backref='users', lazy=True)
     reviews = db.relationship('Review', backref='users', lazy=True)
-    # carts = db.relationship('Cart', secondary=cart_product, backref=db.backref('users', lazy=True), uselist=False, cascade='all, delete-orphan')
     orders = db.relationship('Order', backref='users', lazy=True)
+    transactions = db.relationship('Transaction', backref='users', lazy=True)
 
     def __init__(self, email, firstname, lastname, agree, city, state, country, zipcode, street, phone):
         self.email = email

@@ -46,7 +46,7 @@ class Coupon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(15))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    percentage = db.Column(db.String(3))
+    percentage = db.Column(db.Integer)
     status = db.Column(db.String(10))
 
     def to_dict(self):
@@ -58,15 +58,42 @@ class Coupon(db.Model):
         }
 
 
-class SaleTransaction(db.Model):
+class Transaction(db.Model):
     __tablename__ = "transactions"
     id = db.Column(db.Integer, primary_key=True)
-    orderid = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    order_date = db.Column(db.DateTime, nullable=False)
+    # orderid = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    userid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     amount = db.Column(db.Integer, nullable=False)
     response = db.Column(db.String(50), nullable=False)
 
+    def to_dict(self):
+        return {
+            "order_date": self.order_date,
+            "userid": self.userid,
+            "orderid": self.orderid,
+            "amount": self.amount,
+            "response": self.response
+        }
+
     def __repr__(self):
-        return f"SaleTransaction('{self.id}', '{self.orderid}', '{self.amount}', '{self.response}')"
+        return f"SaleTransaction('{self.id}', '{self.amount}', '{self.response}')"
+
+
+class Wallet(db.Model):
+    __tablename__ = "wallets"
+    id = db.Column(db.Integer, primary_key=True)
+    currency_type = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(50), nullable=False, unique=True)
+
+    def to_dict(self):
+        return {
+            "currency_type": self.currency_type,
+            "address": self.address
+        }
+
+    def __repr__(self):
+        return f"Wallets('{self.id}', '{self.currency_type}', '{self.address}')"
 
 
 
