@@ -1,8 +1,10 @@
+import random
+
 from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session, send_from_directory
 from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
 from webapp import db
-from models.order import Order, OrderedProduct, SaleTransaction
+from models.order import Order, OrderedProduct, Transaction, Coupon, Wallet
 from flask_login import current_user, login_required
 from datetime import datetime
 from webapp.auth import has_role
@@ -14,28 +16,42 @@ import os
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
+
 # get all products
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
     products = Product.query.all()
-    # product_quantity = CartItem.query.filter_by()
-    # logging.info(f"product data{products}")
-    product_image = ProductImage.query.all()
+    
+    product_list = []
+    
+    for product in products:
+        # Construct the URL for the product image
+        if product.product_image:
+            # logging.error(f'image url {product.product_image}')
 
-    product_list = [
+            # Handle URL encoding of spaces and special characters if needed
+            image_filename = product.product_image.replace(' ', '%20')
+            image_url = f'{image_filename}'
+            # logging.error(f'image url {image_url}')
+        else:
+            image_url = None
+        
+        product_list.append({
+            'id': product.id,
+            'Product name': product.product_name,
+            'description': product.description,
+            'quantity': product.quantity,
+            'regular_price': product.regular_price,
+            'product_image': image_url,
+            'discounted_price': product.discounted_price
+        })
 
-                    {'id': product.id,
-                     'Product name': product.product_name,
-                     'description': product.description,
-                     'quantity': product.quantity,
-                     'regular_price': product.regular_price,
-                     'product_images': [url_for('static'\
-                            ,filename=f'products/{image.to_dict()}', _externel=True)
-                                        for image in product.images],
-                     # 'product_images': i,
-                     'discounted_price': product.discounted_price} for product in products
-                    ]
     return jsonify(product_list), 200
+
+# product by category
+# @main.route('/category/<cat_name>', methods=['GET'], strict_slashes=False)
+# def view_category(cat_name):
+#     products = Product.query.filter_by()
 
 
 # get a product
@@ -81,14 +97,17 @@ def add_to_cart(product_id):
     product = Product.query.get(product_id)
     quantity = data.get('quantity', 1)
     shipping = data.get('shipping', 2)
-    all_colors = ProductColor.query.filter_by(product_id=product_id).first()
-    color = data.get('color', f'{all_colors.color}')
+    all_colors = ProductColor.query.filter_by(product_id=product_id).all()
+    logging.info(f"all colors: {all_colors}")
+    logging.info(f"len all colors: {len(all_colors)}")
+
+    cs = len(all_colors)
+    color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
 
     # add or update shipping
     shipping_method = Shipping.query.filter_by(id=shipping).first()
-
 
     cart_len = 0
     try:
@@ -151,50 +170,6 @@ def cart():
     total_items = len(cart_items)
     logging.info(f"Cart details: {cart_details}")
     return jsonify({'Number of items': total_items, 'cart_details': cart_details}), 200
-
-# @login_required
-# @main.route('/cart/<id>', methods=['GET'], strict_slashes=False)
-# def cart(id):
-#     id = current_user.id
-#     user = Cart.query.filter_by(user_id=id).first()
-#     cart_items = CartItem.query.filter_by(cart_id=id).all()
-#     logging.info(f"User {user}")
-#     if not User.query.get(current_user.id):
-#         return jsonify({'message': 'Fack off!'}), 404
-#     if not CartItem.query.filter_by(cart_id=id).first():
-#         return jsonify({'message': 'Empty Cart!'}), 404
-
-#     cart = user.productid
-#     if not cart:
-#         return jsonify({'message': 'Cart not found!'}), 404
-
-#     # products = cart
-#     # logging.info(f"Cart products {products}")
-#     # pquantity = CartItem.query.filter_by(cart_id=current_user.id, product_id=user.productid).first()
-
-#     # product_list = [{'product_name': product.product_name, 'id': product.id, 'description': product.description,
-#     #                  'regular_price': product.regular_price, 'discounted_price': product.discounted_price} for product in products]
-#     cart_details = []
-#     for item in cart_items:
-#         product = Product.query.get(item.product_id)
-#         shipping = Shipping.query.filter_by(id=item.shipping).first()
-#         logging.info(f"Shipping: {shipping}")
-#         cart_details.append({
-#             'id': product.id,
-#             'product_name': product.product_name,
-#             'prod_quantity': item.quantity,
-#             'regular_price': product.regular_price,
-#             'discounted_price': product.discounted_price,
-#             'total_price': item.quantity * product.discounted_price,
-#             'shipping_method': shipping.name if shipping else None,
-#             'shipping_price': shipping.cost,
-#             'color': item.color,
-#             'delivery_date': shipping.deliveryTime if shipping else None
-#         })
-#     total_items = len(cart_items)#user.total_cart(id)
-#     logging.info(f"Cart details {cart_details}")
-#     return jsonify({'Number of items': total_items}, cart_details), 200
-
 
 @login_required
 @main.route('/removeFromCart/<product_id>', methods=['DELETE'], strict_slashes=False)
@@ -328,23 +303,53 @@ def delete_all_items():
 def view_reviews(product_id):
     product = Product.query.get_or_404(product_id)
     if product:
-        all_review = Review.query.filter_by(productid=product_id).all()
-        # all_reviewimg = ReviewImage.query.filter_by(productid=product_id).all()
-        reviews = [{
-            "Rating": review.product_rating,
-            "Review": review.product_review,
-            "Timestamp": review.timestamp,
-            "Image": [url_for(img.to_dict()) for img in review.images],
-            "user_id": review.user_id
-        } for review in all_review]
-        return jsonify(reviews)
+        all_reviews = Review.query.filter_by(productid=product_id).all()
+        base_url = '/static/reviews'
+
+        reviews = []
+        for review in all_reviews:
+            image_urls = [
+                f'{img["image_name"]}' for img in [image.to_dict() for image in review.images]
+            ]
+            logging.info(f"Image URLs for review {review.id}: {image_urls}")
+
+            reviews.append({
+                "Rating": review.product_rating,
+                "Review": review.product_review,
+                "Timestamp": review.timestamp,
+                "Image": image_urls,
+                "user_id": review.user_id
+            })
+
+        return jsonify(reviews), 200
     return jsonify({"error": "Item not found"}), 404
+
+
+# @main.route('/reviews/<int:product_id>', methods=["GET"], strict_slashes=False)
+# def view_reviews(product_id):
+#     product = Product.query.get_or_404(product_id)
+#     if product:
+#         all_review = Review.query.filter_by(productid=product_id).all()
+#         # all_reviewimg = ReviewImage.query.filter_by(productid=product_id).all()
+#         reviews = [{
+#             "Rating": review.product_rating,
+#             "Review": review.product_review,
+#             "Timestamp": review.timestamp,
+#             "Image": [url_for('static'\
+#                             ,filename=f'reviews/{image.to_dict()}', _externel=True) for image in review.images],
+#             "user_id": review.user_id
+#         } for review in all_review]
+#         return jsonify(reviews)
+#     return jsonify({"error": "Item not found"}), 404
 
 
 @login_required
 @main.route('/shippingAddress', methods=["GET", "POST"], strict_slashes=False)
 def address():
     user = User.query.get(current_user.id)
+    if request.method == 'GET' and not all([user.zipcode, user.street, user.city]):
+        return jsonify({'error': 'add shipping'}), 400
+
     if request.method == 'POST':
         data = request.json
         user.country = data['country']
@@ -353,24 +358,192 @@ def address():
         user.street = data['street']
         user.zipcode = data['zipcode']
         db.session.commit()
-        return jsonify(status="success", message="Shipping address added successfully"), 200
+        return jsonify(status="success", message="Shipping address added successfully"), 201
     return jsonify({"Shipping address": user.zipcode + ', ' + user.street + ', ' + user.state + ', ' + user.city + ', ' + user.country})
+
+
+# view product colors available
+@login_required
+@main.route('/view_product_color/<string:product_name>', methods=["GET"], strict_slashes=False)
+def view_product_colors(product_name):
+    product = Product.query.filter_by(product_name=product_name).first()
+    if product is None:
+        return jsonify({'error', 'Product does not exist'})
+    if request.method == 'GET':
+        product_colors = ProductColor.query.filter_by(product_id=product.id).all()
+        colors = [color.to_dict() for color in product_colors]
+        return jsonify({'product_name': product.product_name, 'colors_available': colors})
 
 
 @login_required
 @main.route('/checkout', methods=["GET"], strict_slashes=False)
 def checkout():
+
     cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
 
     if not cart_items:
         return jsonify(status="error", message="Your cart is empty"), 400
+    user = User.query.get(current_user.id)
 
-        # Update the product's available quantity
+    if not all([user.zipcode, user.street, user.city]):
+        return jsonify(status="error", error_type="missing_data",
+                       message="Update shipping"), 400
+
+    total_price = 0
+    total_shipping = 0
+    # Update the product's available quantity
     for cart_item in cart_items:
         product = Product.query.get(cart_item.product_id)
         product.quantity -= cart_item.quantity
-        method = Shipping.query.filter_by(method=cart_item.shipping).first()
-    total_price = sum((item.price * item.quantity) * 0.55 for item in cart_items)
+        method = Shipping.query.filter_by(id=cart_item.shipping).first()
+        total_price += product.discounted_price * cart_item.quantity
+        if cart_item.quantity >= 2:
+            total_shipping += (method.cost * cart_item.quantity) * 0.85
+        else:
+            total_shipping += (method.cost * cart_item.quantity)
+
+        billing_address = f"{user.zipcode},{user.street}, {user.city}, {user.state}, {user.country}"
+        contacts = f"{user.email}, {user.phone}"
+        new_order = Order(order_date=datetime.utcnow(), shipping_price=round(total_shipping, 3), billing_address=billing_address,\
+                          contacts=contacts, userid=user.id)
+        db.session.add(new_order)
+        db.session.commit()
+
+        items = OrderedProduct(orderid=new_order.id, productid=cart_item.product_id, quantity=cart_item.quantity)
+        db.session.add(items)
+    try:
+        db.session.commit()
+
+        session["total_price"] = round(total_price, 3)
+        session["total_shipping"] = round(total_shipping, 3)
+
+        logging.info(f'toatal price: {session["total_price"]}')
+        return jsonify({"total_price": round(total_price, 3), "total_shipping": round(total_shipping, 3)}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": e}), 400
 
 
-    pass
+# each users coupon code
+# @login_required
+@main.route('/coupon', methods=["GET"], strict_slashes=False)
+def coupon():
+    user = Coupon.query.filter_by(user_id=current_user.id).first()
+    if not user:
+        return jsonify({"error": "no coupon for this user"}), 400
+    return jsonify({"users_coupon": user.code}), 200
+
+
+# use users coupon code
+@login_required
+@main.route('/useCoupon', methods=["POST"], strict_slashes=False)
+def use_coupon():
+    data = request.json
+    code = data["code"]
+    coupon_user = Coupon.query.filter_by(code=code).first()
+    if not coupon_user:
+        return jsonify({"error": "Invalid coupon code"}), 400
+
+    session.pop("total_price", None)
+    total_price = 0
+    total_shipping = 0
+    cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
+    # Update the product's available quantity
+    for cart_item in cart_items:
+        product = Product.query.get(cart_item.product_id)
+        product.quantity -= cart_item.quantity
+        method = Shipping.query.filter_by(id=cart_item.shipping).first()
+        total_price += (product.discounted_price * cart_item.quantity) - ((product.discounted_price * cart_item.quantity) * (int(coupon_user.percentage) / 100))
+        if cart_item.quantity >= 2:
+            total_shipping += (method.cost * cart_item.quantity) * 0.85
+        else:
+            total_shipping += (method.cost * cart_item.quantity)
+    user_coupon = Coupon(code=code, user_id=current_user.id, percentage='', status="pending")
+    db.session.add(user_coupon)
+    db.session.commit()
+    session["total_price"] = round(total_price, 3)
+    session["total_shipping"] = round(total_shipping, 3)
+    # logging.info(f'toatal price: {session["total_price"]}')
+
+    return jsonify({"coupon_price": round(total_price, 3), "total_shipping": round(total_shipping, 3)}), 200
+
+    # all_order = Order.query.filter_by(userid=coupon_user.id).all()
+
+
+# proceed to payment
+@login_required
+@main.route('/proceed', methods=["GET"], strict_slashes=False)
+def proceed():
+    total_price = session["total_price"]
+    total_shipping = session["total_shipping"]
+    session["tax"] = 5.6
+    tax = session["tax"]
+    grand_total = round(float(total_price) + float(total_shipping) + float(tax), 3)
+    session["grand_total"] = grand_total
+    return jsonify({'total_price': total_price, 'total_shipping': total_shipping, 'tax': tax, 'grand_total': grand_total})
+
+
+# select payment method
+@login_required
+@main.route('/paymentMethods', methods=["POST"], strict_slashes=False)
+def select_method():
+    data = request.json
+    method = data["method"]
+    check = Wallet.query.filter_by(currency_type=method).first()
+    if not check:
+        return jsonify({"error": "not available consider another payment method"}), 400
+    if method.upper() == "USDT":
+        usdt_address = Wallet.query.filter_by(currency_type=method).all()
+        add = random.choice(usdt_address)
+        address = add.address
+        session["address"] = address
+        session["method"] = method
+        return redirect(url_for("main.pay")), 200
+
+        # return jsonify({"address": address, "crypto": method}), 200
+    elif method.upper() == "USDC":
+        usdc_address = Wallet.query.filter_by(currency_type=method).all()
+        add = random.choice(usdc_address)
+        address = add.address
+        session["address"] = address
+        session["method"] = method
+        return redirect(url_for("main.pay")), 200
+        # return jsonify({"address": address, "crypto": method}), 200
+
+
+"""
+    the appropriate random address selected from the above is passed here with the amount to be paid
+"""
+@login_required
+@main.route('/pay', methods=["GET"], strict_slashes=False)
+def pay():
+    if request.method == "GET" and current_user:
+        address = session["address"]
+        method = session["method"]
+        grand_total = session["grand_total"]
+        return jsonify({'address': address, 'type': method, 'grand_total': grand_total})
+
+
+# confirm pay
+@login_required
+@main.route('/confirmation', methods=["POST"], strict_slashes=False)
+def confirm_payment():
+    if request.method == "POST" and current_user:
+        grand_total = session["grand_total"]
+        # user_order = Order.query.filter_by(userid=current_user.id).all()
+        # for order in user_order
+        new_transaction = Transaction(order_date=datetime.utcnow(), userid=current_user.id, amount=grand_total, response='pending')
+        db.session.add(new_transaction)
+        try:
+            cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
+            for cart_item in cart_items:
+                db.session.delete(cart_item)
+            db.session.commit()
+            # session.pop("grand_total", None)
+            return jsonify({'success': 'payment processing'}), 201
+
+        except Exception as e:
+            # session.pop("grand_total", None)
+            db.session.rollback()
+            return jsonify({'error': f'{e}payment not successful'}), 400
+

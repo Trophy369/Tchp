@@ -10,9 +10,22 @@ export const addToCart = async (id, userId, quantity, shipping, color) => {
     credentials: 'include',
   };
   
-  const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
-  return response.json();
+  try {
+    const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to add to cart");
+    }
+
+    console.log("Product added to cart successfully:", result.Message);
+    return result;
+  } catch (error) {
+    console.error("Error:", error.message);
+    throw error;
+  }
 };
+
 // export const addToCart = async (id, userId, quantity) => {
 //   const requestOptions = {
 //     method: "POST",

@@ -9,20 +9,21 @@ import {
   viewReview,
   getShipping
 } from "../../services/userApi";
+import { useAuth } from "../authContext/AuthProvider";
+import Reviews from "./Reviews"
 
 // Product component
 const ProductPro = props => {
+  const { user } = useAuth();
   const [color, setColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
   const [error, setError] = useState("");
   const [product, setProduct] = useState([]);
-  const [review, setReview] = useState([]);
   const [shippingMethods, setShippingMethods] = useState([]);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const { id } = useParams();
   const [lilQuantity, setLilQuantity] = useState(quantity);
-  const timeoutRef = useRef(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -31,15 +32,6 @@ const ProductPro = props => {
     };
 
     fetchProduct();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchReview = async () => {
-      const data = await viewReview(id);
-      setReview(data);
-    };
-
-    fetchReview();
   }, [id]);
 
   useEffect(() => {
@@ -65,36 +57,36 @@ const ProductPro = props => {
       return;
     }
     setError("");
-    // addToCart(id)
+    addToCart(id, user.id, quantity, selectedShippingMethod)
     setNotification("Product added to cart");
     setTimeout(() => setNotification(""), 3000);
   };
 
-  const handleIncrement = () => {
-    addOneToCart(productId);
-  };
+  // const handleIncrement = () => {
+  //   addOneToCart(productId);
+  // };
 
-  const handleDecrement = () => {
-    minusOneToCart(productId);
-  };
+  // const handleDecrement = () => {
+  //   minusOneToCart(productId);
+  // };
 
-  const handleChange = e => {
-    const newQuantity = Number(e.target.value);
-    setLilQuantity(newQuantity);
+  // const handleChange = e => {
+  //   const newQuantity = Number(e.target.value);
+  //   setLilQuantity(newQuantity);
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+  //   if (timeoutRef.current) {
+  //     clearTimeout(timeoutRef.current);
+  //   }
 
-    timeoutRef.current = setTimeout(() => {
-      updateQuantity(productId, newQuantity);
-      inputQuantity(productId, newQuantity);
-    }, 1000);
-  };
+  //   timeoutRef.current = setTimeout(() => {
+  //     updateQuantity(productId, newQuantity);
+  //     inputQuantity(productId, newQuantity);
+  //   }, 1000);
+  // };
 
-  const handleRemove = () => {
-    removeItem(productId);
-  };
+  // const handleRemove = () => {
+  //   removeItem(productId);
+  // };
 
   return (
     <div className="p-4 md:p-8">
@@ -154,7 +146,7 @@ const ProductPro = props => {
           <input
             type="number"
             value={lilQuantity}
-            onChange={handleChange}
+            // onChange={handleChange}
             className="px-4 py-2 text-center border"
             min="1"
             max="28"
@@ -208,6 +200,7 @@ const ProductPro = props => {
           alt="Product Detail"
           className="w-full h-auto just"
         />
+        <Reviews />
       </div>
     </div>
   );

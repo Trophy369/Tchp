@@ -1,14 +1,14 @@
 import os
 import random
-
+import string
 from config import Config
 from flask import render_template, url_for, abort, redirect, request, flash, jsonify, current_app
 from . import admin
 from models.user import Role, User, Cart
 from flask_login import login_required, current_user
 from models.product import Product, Category, Review, Shipping, ReviewImage, ProductImage, ProductColor,\
-    DescriptionImage, Description
-from models.order import Order
+    DescriptionImage, Description, CartItem
+from models.order import Order, Coupon, Wallet
 from webapp.auth import has_role
 from webapp import db
 import re
@@ -161,21 +161,40 @@ def assign_role():
 @admin.route('/addproduct', methods=['POST'], strict_slashes=False)
 @has_role('administrator')
 def addproduct():
-    new_product = request.json
+    new_product = request.form
+    image = request.files['file']
     products = Product.query.filter_by(product_name=new_product['product_name']).first()
     if products:
         return jsonify({'error': 'product_name exists parameter'}), 403
-    prod_name = new_product['product_name']
-    new_product = Product(
-        product_name=new_product["product_name"],
-        quantity=new_product["quantity"],
-        regular_price=new_product["regular_price"],
-        discounted_price=new_product["discounted_price"],
-    )
+
+    product_name = new_product['product_name']
+
+    name = secure_filename(image.filename)
+    filename = product_name + '_' + name
+    logging.info(f"len img description {filename}")
+
+    if name != '':
+        file_ext = os.path.splitext(filename)[1]
+        if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+            abort(400)
+        # product_img = Product.query.filter_by(product_id=product.id).first()
+        image.save(os.path.join(current_app.config['SINGLE_PRODUCT_UPLOAD_PATH'], filename))
+        new_product = Product(
+            product_name=new_product["product_name"],
+            product_image=filename,
+            quantity=new_product["quantity"],
+            regular_price=new_product["regular_price"],
+            discounted_price=new_product["discounted_price"],
+            description=new_product["description"]
+        )
     db.session.add(new_product)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'{e}product not added'})
     db.session.close()
-    return jsonify({"Message": "Product  added successfully", "Product name": prod_name}), 201
+    return jsonify({"Message": "Product  added successfully", "Product name": product_name}), 201
 
 
 # add description to a product
@@ -187,43 +206,47 @@ def addDescription(product_name):
     description_images = request.files.getlist('file')
     logging.info(f"len img description {len(description_images)}")
 
-    user = current_user.id
     product = Product.query.filter_by(product_name=product_name).first()
+    if product is None:
+        return jsonify({'error': f'{product_name} does not exist'}), 403
+
+    # Retrieve the saved product description if it exist
+    prod_description = Description.query.filter_by(product_id=product.id).first()
+    if prod_description and len(description_images) == 0:
+        prod_description.specifications = data['specifications']
+        db.session.commit()
+        return jsonify({'Message': f'Description specification updated successfully'})
     specifications = data['specifications']
 
-    if product:
-        product_description = Description(specifications=specifications, product_id=product.id)
-        db.session.add(product_description)
-        db.session.commit()
-        prod_description = Description.query.filter_by(product_id=product.id).first()
-        logging.info(f"description {prod_description}")
-        # return jsonify({'Message': "Successfully reviewed"}), 200
+    # Create and save the product description
+    product_description = Description(specifications=specifications, product_id=product.id)
+    db.session.add(product_description)
+    db.session.commit()
 
-        if len(description_images) >= 1 and (len(description_images) <= 5):
-            # prod_reviews = Review.query.filter_by(productid=product.id).first()
-            # logging.info(f"prod review {prod_reviews}")
+    # Retrieve the saved product description
+    prod_description = Description.query.filter_by(product_id=product.id).first()
+    logging.info(f"description {prod_description}")
 
-            for uploaded_file in description_images:
-                name = secure_filename(uploaded_file.filename)
-                filename = product.product_name + '_' + name
+    # Handle the uploading of images if they are within the allowed range
+    if 1 <= len(description_images) <= 5:
+        for uploaded_file in description_images:
+            name = secure_filename(uploaded_file.filename)
+            filename = f"{product.product_name}_{name}"
 
-                if name != '':
-                    file_ext = os.path.splitext(filename)[1]
-                    if file_ext not in current_app.config['DESCRIPTION_UPLOAD_EXTENSIONS']:
-                        abort(400)
-                    prod_description_img = Description.query.filter_by(product_id=product.id).first()
+            if name != '':
+                file_ext = os.path.splitext(filename)[1]
+                if file_ext not in current_app.config['DESCRIPTION_UPLOAD_EXTENSIONS']:
+                    abort(400)
 
-                    des_img = DescriptionImage(image_name=filename, description_id=prod_description_img.id, product_id=product.id)
-                    db.session.add(des_img)
-                    db.session.commit()
-                    # image.append(filename)
-                    # logging.info(f"all images: {image}")
+                # Create and save the description image record
+                des_img = DescriptionImage(image_name=filename, description_id=prod_description.id, product_id=product.id)
+                db.session.add(des_img)
+                db.session.commit()
+
+                # Save the file to the specified path
                 uploaded_file.save(os.path.join(current_app.config['DESCRIPTION_UPLOAD_PATH'], filename))
-        #     image.append(filename)
-        # u = ReviewImage.query.filter_by(review_id=prod_reviews.id)
-        return jsonify({'Message': f'Description Successfully added for {product.product_name}'}), 201
-    db.session.rollback()
-    return jsonify({'error': 'review failed'}), 404
+
+    return jsonify({'Message': f'Description successfully added for {product.product_name}'}), 201
 
 
 # delete description of a product
@@ -233,8 +256,8 @@ def addDescription(product_name):
 def admin_delete_product_description_img(product_name):
     product = Product.query.filter_by(product_name=product_name).first()
 
-    if product is None:
-        return jsonify({'error', 'Product does not exist'})
+    if not product:
+        return jsonify({'error': 'Product does not exist'})
     if request.method == 'DELETE':
         product_description = DescriptionImage.query.filter_by(product_id=product.id).all()
         for image in product_description:
@@ -317,6 +340,7 @@ def admin_delete_product_images(product_name):
         return jsonify({'status': 'success', 'product_name': product.product_name, 'images_available': images})
     return jsonify({'error': 'delete failed'})
 
+
 # add product color
 @login_required
 @admin.route('/addProductColor/<string:product_name>', methods=['POST'], strict_slashes=False)
@@ -387,16 +411,27 @@ def admin_delete_product_colors(product_name):
 
 # delete product
 @login_required
-@admin.route('/delete_product/<id>', methods=["POST"], strict_slashes=False)
+@admin.route('/delete_product/<id>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
 def admin_delete_product(id):
-    products = Product.query.all()
+    cart_item = CartItem.query.filter_by(product_id=id).all()
+    colors = ProductColor.query.filter_by(product_id=id).all()
+
     delete_id = Product.query.get(id)
     if delete_id:
-        delete_id.delete_user_role(id=delete_id)
+        for prod in cart_item:
+            db.session.delete(prod)
+        # for col in colors:
+        #     db.session.delete(col)
+        admin_delete_product_description_img(delete_id.product_name)
+        admin_delete_product_colors(delete_id.product_name)
+        admin_delete_product_images(delete_id.product_name)
+        # delete_id.delete_user_role(id=delete_id)
+        db.session.delete(delete_id)
         db.session.commit()
-        flash(f"User {delete_id.product_name}'s Role deleted")
-        return redirect(url_for("admin.base"))
+        flash(f"User {delete_id.product_name}'s Product deleted")
+        return jsonify({"message": f"User {delete_id.product_name}'s Product deleted"})
+    return jsonify({"error": "Product not found"})
 
 # shipping
 # add_shipping methods and price
@@ -511,6 +546,92 @@ def add_review(product_id):
     return jsonify({'error': 'review failed'}), 404
 
 
+@login_required
+@admin.route('/generateCoupon', methods=['GET', 'POST'], strict_slashes=False)
+@has_role('administrator')
+def generate():
+    data = request.json
+    email = data["email"]
+    percentage = data.get('percentage', 20)
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({"error": "user does not exist"}), 404
+    if_user = Coupon.query.filter_by(user_id=user.id).first()
+    if if_user:
+        return jsonify({"message": "user already has a coupon"}), 404
+
+    def gen(length=6):
+        character = string.ascii_uppercase + string.digits
+        return ''.join(random.choice(character) for _ in range(length))
+    coupon = gen()
+    user_coupon = Coupon(code=coupon, user_id=user.id, percentage=percentage, status="minion")
+    db.session.add(user_coupon)
+    logging.info(f"coupon {type(coupon)}")
+    # user.coupons = coupon
+    db.session.commit()
+    users_coupon = Coupon.query.filter_by(user_id=user.id).first()
+    return jsonify({"success": f"{users_coupon.code}"}), 201
+
+
+# delete user coupon
+@login_required
+@admin.route('/deleteCoupon/<email>', methods=['DELETE'], strict_slashes=False)
+@has_role('administrator')
+def delete_user_coupon(email):
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"error": "user does not exist"}), 404
+
+    users_coupon = Coupon.query.filter_by(user_id=user.id, status='minion').first()
+    if not users_coupon:
+        return jsonify({"error": "user not minion"}), 404
+
+    logging.info(f"users coup {users_coupon.to_dict()}")
+    db.session.delete(users_coupon)
+    db.session.commit()
+    return jsonify({"success": "all coupons deleted"}), 200
+
+
+# delete all coupons
+@login_required
+@admin.route('/deleteCoupon', methods=['DELETE'], strict_slashes=False)
+@has_role('administrator')
+def delete_all_coupons():
+    coupons = Coupon.query.delete()
+    return jsonify({"success": "all coupons deleted"}), 200
+
+
+# add wallet addresses
+@login_required
+@admin.route('/addWallet', methods=['POST'], strict_slashes=False)
+@has_role('administrator')
+def add_wallet():
+    data = request.json
+    currency_type = data['currency_type']
+    address = data['address']
+    logging.info(f"{currency_type.upper()}")
+    if currency_type.upper() != "USDT" and currency_type.upper() != "USDC":
+        return jsonify({"error": "only USDT or USDC accepted"}), 400
+    if not isinstance(address, str) or len(address) < 12:
+        return jsonify({"error": "provide a valid address"}), 400
+    try:
+        new_wallet = Wallet(currency_type=currency_type, address=address)
+        db.session.add(new_wallet)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "addresses must be unique"}), 400
+    return jsonify({"success": f"{currency_type} wallet added"}), 200
+
+
+@login_required
+@admin.route('/viewWallets', methods=['GET'], strict_slashes=False)
+@has_role('administrator')
+def list_wallets():
+    wallets = Wallet.query.all()
+    all = [wallet.to_dict() for wallet in wallets]
+    return jsonify({"success": all}), 200
 
 
 

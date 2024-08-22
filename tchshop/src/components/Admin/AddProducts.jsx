@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import {
-  createproduct,
   deleteProduct,
   addProductColors, handleUpload
 } from "../../services/adminApi";
