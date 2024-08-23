@@ -157,6 +157,7 @@ def cart():
         cart_details.append({
             'id': product.id,
             'product_name': product.product_name,
+            'product_image': product.product_image,
             'prod_quantity': item.quantity,
             'regular_price': product.regular_price,
             'discounted_price': product.discounted_price,
@@ -440,7 +441,7 @@ def coupon():
 def use_coupon():
     data = request.json
     code = data["code"]
-    coupon_user = Coupon.query.filter_by(code=code).first()
+    coupon_user = Coupon.query.filter_by(code=code, percentage=20).first()
     if not coupon_user:
         return jsonify({"error": "Invalid coupon code"}), 400
 
