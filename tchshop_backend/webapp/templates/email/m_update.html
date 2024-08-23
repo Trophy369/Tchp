@@ -1,0 +1,26 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--</body>-->
+<!--</html>-->
+<div style="background-color:whitesmoke; color: #132238; margin: 10px; padding: 50px ">
+    {% for item in cart_items %}
+        <h3>Product name {{ item.product_name }},</h3>
+        <h3>Product name {{ item.product_image }},</h3>
+        <h3>Product name {{ item.prod_quantity }},</h3>
+    {% endfor %}
+
+    <p>You have successfully made  ${{ total_price, total_shipping, user }}
+
+    <h4>Proceed to Invest <a href="">Invest</a>.</h4>
+
+
+    <p style="text-align: right">Sincerely,</p>
+    <p style="text-align: right">The Team</p>
+    <p><small>Note: replies to this email address are not monitored.</small></p>
+</div>

@@ -1,5 +1,5 @@
 import random
-
+from webapp.email import send_coupon_email
 from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session, send_from_directory
 from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
@@ -102,6 +102,8 @@ def add_to_cart(product_id):
     logging.info(f"len all colors: {len(all_colors)}")
 
     cs = len(all_colors)
+    # color = data['color']
+    # if not color:
     color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
@@ -143,9 +145,9 @@ def add_to_cart(product_id):
 @login_required
 @main.route('/cart', methods=['GET'], strict_slashes=False)
 def cart():
-    user_id = current_user.id
-    user = Cart.query.filter_by(user_id=user_id).first()
-    cart_items = CartItem.query.filter_by(cart_id=user_id).all()
+    # user_id = current_user.id
+    # user = Cart.query.filter_by(user_id=user_id).first()
+    cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
     
     if not cart_items:
         return jsonify({'message': 'Empty Cart!'}), 404
@@ -377,7 +379,7 @@ def view_product_colors(product_name):
 
 
 @login_required
-@main.route('/checkout', methods=["GET"], strict_slashes=False)
+@main.route('/checkout', methods=["GET", "POST"], strict_slashes=False)
 def checkout():
 
     cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
@@ -417,6 +419,10 @@ def checkout():
 
         session["total_price"] = round(total_price, 3)
         session["total_shipping"] = round(total_shipping, 3)
+
+        total_price = session["total_price"]
+        total_shipping = session["total_shipping"]
+        send_coupon_email(total_price, total_shipping,  cart_items, user)
 
         logging.info(f'toatal price: {session["total_price"]}')
         return jsonify({"total_price": round(total_price, 3), "total_shipping": round(total_shipping, 3)}), 200
