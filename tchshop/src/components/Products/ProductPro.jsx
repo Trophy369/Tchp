@@ -6,7 +6,6 @@ import { FaDollarSign } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import Carousel from "./Carousel";
 import {
-  addToCart,
   viewProduct,
   viewProductDescription,
   viewProductColors,
@@ -61,8 +60,6 @@ const ProductPro = props => {
 
     fetchProductColors();
   }, [id]);
-
-  console.log(colors);
 
   useEffect(() => {
     const fetchShipping = async () => {

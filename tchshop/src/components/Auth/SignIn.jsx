@@ -1,4 +1,4 @@
-import {  useRef, useEffect } from "react";
+import {  useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useValid from "../hooks/useValid";
@@ -6,19 +6,7 @@ import {useAuth} from "../authContext/AuthProvider"
 
 const Signin = () => {
   const navigate = useNavigate()
-  const auth = useAuth()
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //     const data = await getUser();
-  //     setData(data)
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, []);
+  const {auth, user} = useAuth()
 
   const {
     value: enteredEmail,
@@ -46,27 +34,9 @@ const Signin = () => {
     const emailInput = enteredEmail;
     const passwordInput = passwordRef.current.value;
     resetEmailInput();
-    // validation
-    auth.auth(emailInput, passwordInput)
-    navigate("/")
+    await auth(emailInput, passwordInput)
+    user && user.roles === 2 ? navigate('/admin') : navigate('/') 
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!enteredEmailisValid) {
-  //     console.log("liner");
-  //     return;
-  //   }
-  //   const emailInput = enteredEmail;
-  //   const passwordInput = passwordRef.current.value;
-  //   resetEmailInput();
-  //   // validation
-  //   const info = await signin(emailInput, passwordInput);
-  //   navigate("/")
-  //   setData(info.data)
-  //   localStorage.setItem("user", JSON.stringify(info.data));
-  // };
 
   const emailInputClasses = emailInputHasError
     ? "text-center text-red-700"

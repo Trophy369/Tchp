@@ -16,6 +16,16 @@ import os
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
+# @login_required
+# @main.route('/@me')
+# def get_current_user():
+#     user = current_user.email
+
+#     if not user:
+#         return jsonify({"error": "Unauthorized"}), 401
+
+#     user = User.query.filter_by(email=user['email']).first()
+#     re
 
 # get all products
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
@@ -25,14 +35,9 @@ def get_products():
     product_list = []
     
     for product in products:
-        # Construct the URL for the product image
         if product.product_image:
-            # logging.error(f'image url {product.product_image}')
-
-            # Handle URL encoding of spaces and special characters if needed
             image_filename = product.product_image.replace(' ', '%20')
             image_url = f'{image_filename}'
-            # logging.error(f'image url {image_url}')
         else:
             image_url = None
         
