@@ -2,11 +2,11 @@ import config from '../config';
 
 const baseUrl = config.baseUrl;
 
-export const addToCart = async (id, userId, quantity, shipping, color) => {
+export const addToCart = async (id, quantity, shipping, color) => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId, quantity, shipping, color }),
+    body: JSON.stringify({ quantity, shipping, color }),
     credentials: 'include',
   };
   
@@ -26,22 +26,42 @@ export const addToCart = async (id, userId, quantity, shipping, color) => {
   }
 };
 
-// export const addToCart = async (id, userId, quantity) => {
-//   const requestOptions = {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ userId, quantity }),
-//     credentials: 'include',
-//   };
+export const useCoupon = async (code) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+    credentials: 'include',
+  };
   
-//   const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
-//   return response.json();
-// };
+  try {
+    const response = await fetch(`${baseUrl}/useCoupon`, requestOptions);
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error:", error.message);
+    throw error;
+  }
+};
 
-// export const getCart = async (userId) => {
-//   const response = await axios.get(`${baseUrl}/cart/${userId}`, {withCredentials: true});
-//   return response.data;
-// };
+
+export const addShippingDetails = async (country, state, city, street, zipcode) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ country, state, city, street, zipcode }),
+    credentials: 'include',
+  };
+  
+  try {
+    const response = await fetch(`${baseUrl}/shippingAddress`, requestOptions);
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error:", error.message);
+    throw error;
+  }
+};
 
 export const viewProduct = async (id) => {
   const requestOptions = {
@@ -53,6 +73,40 @@ export const viewProduct = async (id) => {
   const response = await fetch(`${baseUrl}/product/${id}`, requestOptions);
   return response.json();
 }
+
+export const viewProductDescription = async (id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  const response = await fetch(`${baseUrl}/product_desc/${id}`, requestOptions);
+  return response.json();
+};
+
+export const viewProductColors = async (id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  const response = await fetch(`${baseUrl}/view_product_color/${id}`, requestOptions);
+  return response.json();
+};
+
+export const updateCartItemColor = async (productId, color) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+    body: JSON.stringify({ color }),  // sending the color in the request body
+  };
+
+  const response = await fetch(`${baseUrl}/updateColor/${productId}`, requestOptions);
+  return response.json();
+};
 
 export const viewReview = async (id) => {
   const requestOptions = {
@@ -73,6 +127,17 @@ export const getCart = async () => {
   };
 
   const response = await fetch(`${baseUrl}/cart`, requestOptions);
+  return response.json();
+};
+
+export const clearCart = async () => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  const response = await fetch(`${baseUrl}/clearCart`, requestOptions);
   return response.json();
 };
 
@@ -133,4 +198,27 @@ export const assignShipping = async (productId) => {
 
   const response = await fetch(`${baseUrl}/assignShipping/${productId}`, requestOptions);
   return response.json();
+};
+
+export const checkout = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  try {
+    const response = await fetch(`${baseUrl}/checkout`, requestOptions);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'An error occurred during checkout.');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Checkout error:', error);
+    throw error;
+  }
 };

@@ -48,10 +48,30 @@ def get_products():
 
     return jsonify(product_list), 200
 
-# product by category
-# @main.route('/category/<cat_name>', methods=['GET'], strict_slashes=False)
-# def view_category(cat_name):
-#     products = Product.query.filter_by()
+
+# all product by category
+@main.route('/categories', methods=['GET'], strict_slashes=False)
+def view_categories():
+    categories = Category.query.filter_by()
+    all_cat = [category.to_dict() for category in categories]
+    return jsonify({'categories': all_cat}), 200
+
+
+# view all products under a category
+@main.route('/products/<category>', methods=['GET'], strict_slashes=False)
+def products_category(category):
+    all_products = Product.query.all()
+    cat_prods = []
+    for product in all_products:
+        for cat in product.prod_cat:
+            if category == cat.category_name:
+                cat_prods.append(product)
+            pass
+    category_products = [{
+        'product_name': prod.product_name,
+        'id': prod.id
+    } for prod in cat_prods]
+    return jsonify({'products': category_products}), 200
 
 
 # get a product
@@ -76,14 +96,17 @@ def view_product(product_id):
 
 
 # view product description
-@main.route('/product_desc/<string:product_name>', methods=['GET'], strict_slashes=False)
-def view_product_desc(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+@main.route('/product_desc/<int:product_id>', methods=['GET'], strict_slashes=False)
+def view_product_desc(product_id):
+    product = Product.query.get_or_404(product_id)
+    if not product:
+        return jsonify({'error': 'Product Not found'}), 404
+
     desc = Description.query.filter_by(product_id=product.id).first()
     if desc:
         return jsonify(desc.to_dict()), 200
-    return jsonify({'error': 'Not found Update it'}), 400
-
+ 
+    return jsonify({'error': 'Description Not found'}), 404
 
 # users cart
 @login_required
@@ -138,7 +161,7 @@ def add_to_cart(product_id):
         cart = Cart.query.filter_by(user_id=user.id).first()
         return jsonify({"error": "Item already in cart", "Total Cart": cart_len})
 
-    return jsonify({"Message": f"Product {product.product_name} added to User: {user.email} cart ,'Total Cart': {cart_len}"}), 200
+    return jsonify({"Message": f"Product {product.product_name} added to User: {user.email} cart ,'total': {cart_len}"}), 200
 
 
 # cart items
@@ -172,8 +195,10 @@ def cart():
     
     total_items = len(cart_items)
     logging.info(f"Cart details: {cart_details}")
-    return jsonify({'Number of items': total_items, 'cart_details': cart_details}), 200
+    return jsonify({'total': total_items, 'cart_details': cart_details}), 200
 
+
+# remove product from cart
 @login_required
 @main.route('/removeFromCart/<product_id>', methods=['DELETE'], strict_slashes=False)
 def remove_from_cart(product_id):
@@ -328,24 +353,6 @@ def view_reviews(product_id):
     return jsonify({"error": "Item not found"}), 404
 
 
-# @main.route('/reviews/<int:product_id>', methods=["GET"], strict_slashes=False)
-# def view_reviews(product_id):
-#     product = Product.query.get_or_404(product_id)
-#     if product:
-#         all_review = Review.query.filter_by(productid=product_id).all()
-#         # all_reviewimg = ReviewImage.query.filter_by(productid=product_id).all()
-#         reviews = [{
-#             "Rating": review.product_rating,
-#             "Review": review.product_review,
-#             "Timestamp": review.timestamp,
-#             "Image": [url_for('static'\
-#                             ,filename=f'reviews/{image.to_dict()}', _externel=True) for image in review.images],
-#             "user_id": review.user_id
-#         } for review in all_review]
-#         return jsonify(reviews)
-#     return jsonify({"error": "Item not found"}), 404
-
-
 @login_required
 @main.route('/shippingAddress', methods=["GET", "POST"], strict_slashes=False)
 def address():
@@ -367,15 +374,16 @@ def address():
 
 # view product colors available
 @login_required
-@main.route('/view_product_color/<string:product_name>', methods=["GET"], strict_slashes=False)
-def view_product_colors(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+@main.route('/view_product_color/<int:product_id>', methods=["GET"], strict_slashes=False)
+def view_product_colors(product_id):
+    product = Product.query.get_or_404(product_id)
     if product is None:
-        return jsonify({'error', 'Product does not exist'})
+        return jsonify({'error': 'Product does not exist'}), 404
+    
     if request.method == 'GET':
         product_colors = ProductColor.query.filter_by(product_id=product.id).all()
         colors = [color.to_dict() for color in product_colors]
-        return jsonify({'product_name': product.product_name, 'colors_available': colors})
+        return jsonify({'product_name': product.product_name, 'colors_available': colors}), 200
 
 
 @login_required
@@ -422,7 +430,6 @@ def checkout():
 
         total_price = session["total_price"]
         total_shipping = session["total_shipping"]
-        send_coupon_email(total_price, total_shipping,  cart_items, user)
 
         logging.info(f'toatal price: {session["total_price"]}')
         return jsonify({"total_price": round(total_price, 3), "total_shipping": round(total_shipping, 3)}), 200
@@ -435,6 +442,7 @@ def checkout():
 # @login_required
 @main.route('/coupon', methods=["GET"], strict_slashes=False)
 def coupon():
+    user = current_user
     user = Coupon.query.filter_by(user_id=current_user.id).first()
     if not user:
         return jsonify({"error": "no coupon for this user"}), 400
@@ -535,6 +543,7 @@ def pay():
 @login_required
 @main.route('/confirmation', methods=["POST"], strict_slashes=False)
 def confirm_payment():
+    user = current_user
     if request.method == "POST" and current_user:
         grand_total = session["grand_total"]
         # user_order = Order.query.filter_by(userid=current_user.id).all()
@@ -546,6 +555,9 @@ def confirm_payment():
             for cart_item in cart_items:
                 db.session.delete(cart_item)
             db.session.commit()
+
+            send_coupon_email(user)
+
             # session.pop("grand_total", None)
             return jsonify({'success': 'payment processing'}), 201
 

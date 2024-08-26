@@ -1,60 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import 'tailwindcss/tailwind.css';
-import axios from 'axios';
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
-import { getShipping } from '../../services/userApi';
+import React, { useState, useEffect, useRef } from "react";
+import "tailwindcss/tailwind.css";
+import axios from "axios";
+import PhoneInput from "react-phone-number-input";
+import { useSelector } from "react-redux";
+import "react-phone-number-input/style.css";
+import {
+  getShipping,
+  checkout,
+  addShippingDetails,
+  useCoupon
+} from "../../services/userApi";
 
 const dummyShippingMethods = [
   { id: 1, name: "Standard Shipping", deliveryTime: "5-7 days", cost: 5.99 },
   { id: 2, name: "Express Shipping", deliveryTime: "2-3 days", cost: 12.99 },
-  { id: 3, name: "Overnight Shipping", deliveryTime: "1 day", cost: 24.99 },
+  { id: 3, name: "Overnight Shipping", deliveryTime: "1 day", cost: 24.99 }
 ];
 
 const Checkout = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
+  const cartItems = useSelector(state => state.cart.cart_details);
   const [deliveryForm, setDeliveryForm] = useState({
-    country: '',
-    firstName: '',
-    lastName: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    phone: '',
+    country: "",
+    state: "",
+    city: "",
+    street: "",
+    zipcode: ""
   });
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const [errors, setErrors] = useState({});
-  const [shippingMethods, setShippingMethods] = useState([])
+  const [shippingMethods, setShippingMethods] = useState([]);
+  const [checkoutRes, setCheckoutRes] = useState([]);
+  const couponRef = useRef();
 
   useEffect(() => {
     const fetchShipping = async () => {
-      const shipReq = await getShipping()
-      setShippingMethods(shipReq)
-    }
+      const shipReq = await getShipping();
+      setShippingMethods(shipReq);
+    };
 
-    fetchShipping()
-  }, [])
-
-  useEffect(() => {
-    // Fetch countries from a public API
-    axios.get('https://restcountries.com/v3.1/all')
-      .then(response => {
-        const countryData = response.data.map(country => ({
-          name: country.name.common,
-          code: country.cca2,
-        }));
-        setCountries(countryData);
-      });
+    fetchShipping();
   }, []);
 
   useEffect(() => {
-    // Fetch states based on the selected country
+    const fetchCheckout = async () => {
+      const check = await checkout();
+      setCheckoutRes(check);
+    };
+
+    fetchCheckout();
+  }, []);
+
+  useEffect(() => {
+    axios.get("https://restcountries.com/v3.1/all").then(response => {
+      const countryData = response.data.map(country => ({
+        name: country.name.common,
+        code: country.cca2
+      }));
+
+      // Sort the country data alphabetically by name
+      const sortedCountries = countryData.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+      setCountries(sortedCountries);
+    });
+  }, []);
+
+  useEffect(() => {
     if (deliveryForm.country) {
-      axios.post('https://countriesnow.space/api/v0.1/countries/states', { country: deliveryForm.country })
+      axios
+        .post("https://countriesnow.space/api/v0.1/countries/states", {
+          country: deliveryForm.country
+        })
         .then(response => {
           setStates(response.data.data.states);
           setCities([]); // Reset cities when country changes
@@ -63,24 +84,46 @@ const Checkout = () => {
   }, [deliveryForm.country]);
 
   useEffect(() => {
-    // Fetch cities based on the selected state
     if (deliveryForm.state) {
-      axios.post('https://countriesnow.space/api/v0.1/countries/state/cities', {
-        country: deliveryForm.country,
-        state: deliveryForm.state,
-      })
+      axios
+        .post("https://countriesnow.space/api/v0.1/countries/state/cities", {
+          country: deliveryForm.country,
+          state: deliveryForm.state
+        })
         .then(response => {
           setCities(response.data.data);
         });
     }
   }, [deliveryForm.state]);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    setDeliveryForm({ ...deliveryForm, [name]: value });
+    setDeliveryForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const validateEmail = (email) => {
+  const handleDelivery = async () => {
+    try {
+      const result = await addShippingDetails(
+        deliveryForm.country,
+        deliveryForm.state,
+        deliveryForm.city,
+        deliveryForm.street,
+        deliveryForm.zipcode
+      );
+      console.log("Shipping details added successfully:", result);
+      setDeliveryForm({
+        country: "",
+        state: "",
+        city: "",
+        street: "",
+        zipcode: ""
+      });
+    } catch (error) {
+      console.error("Failed to add shipping details:", error);
+    }
+  };
+
+  const validateEmail = email => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
@@ -88,36 +131,57 @@ const Checkout = () => {
   const validateForm = () => {
     let formErrors = {};
 
-    if (!email || !validateEmail(email)) formErrors.email = "Valid email is required";
-    if (!deliveryForm.firstName) formErrors.firstName = "First name is required";
+    if (!email || !validateEmail(email))
+      formErrors.email = "Valid email is required";
+    if (!deliveryForm.firstName)
+      formErrors.firstName = "First name is required";
     if (!deliveryForm.lastName) formErrors.lastName = "Last name is required";
     if (!deliveryForm.address) formErrors.address = "Address is required";
     if (!deliveryForm.country) formErrors.country = "Country is required";
     if (!deliveryForm.state) formErrors.state = "State is required";
     if (!deliveryForm.city) formErrors.city = "City is required";
-    if (!deliveryForm.zipCode || !/^\d{3,6}$/.test(deliveryForm.zipCode)) formErrors.zipCode = "Valid zip code is required (3-6 digits)";
-    if (!deliveryForm.phone) formErrors.phone = "Phone number is required";
+    if (!deliveryForm.zipCode || !/^\d{3,6}$/.test(deliveryForm.zipCode))
+      formErrors.zipCode = "Valid zip code is required (3-6 digits)";
+    // if (!deliveryForm.phone) formErrors.phone = "Phone number is required";
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
 
-  const isDeliveryFormComplete = Object.values(deliveryForm).every(field => field && field.trim() !== '');
-  const subtotal = 100; // Example subtotal
-  const shippingCost = selectedShippingMethod ? shippingMethods.find(method => method.id === selectedShippingMethod)?.cost : 0;
-  const total = subtotal + shippingCost;
+  const isDeliveryFormComplete = Object.values(deliveryForm).every(
+    field => field && field.trim() !== ""
+  );
+  const subtotal = checkoutRes.total_price || 0;
+  const shippingCost = selectedShippingMethod
+    ? shippingMethods.find(method => method.id === selectedShippingMethod)?.cost
+    : 0;
+  const total = checkoutRes.total_price + checkoutRes.total_shipping;
+  // const total = subtotal + shippingCost;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     if (validateForm()) {
       // Submit the form
-      console.log("Form submitted", { email, deliveryForm, selectedShippingMethod });
+      console.log("Form submitted", {
+        email,
+        deliveryForm,
+        selectedShippingMethod
+      });
     }
+  };
+
+  const handleCoupon = async () => {
+    const code = couponRef.current.value;
+    console.log('coupon', code);
+    const data = await useCoupon(code);
+    console.log(data);
   };
 
   return (
     <div className="container p-4 mx-auto">
-      <h1 className="mb-8 text-3xl font-bold text-center text-black">Checkout</h1>
+      <h1 className="mb-8 text-3xl font-bold text-center text-black">
+        Checkout
+      </h1>
 
       {/* Contact Section */}
       <section className="mb-8">
@@ -127,7 +191,7 @@ const Checkout = () => {
           placeholder="Email"
           required
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           className="w-full p-2 border"
         />
         {errors.email && <p className="text-red-500">{errors.email}</p>}
@@ -136,6 +200,7 @@ const Checkout = () => {
       {/* Delivery Section */}
       <section className="mb-8">
         <legend className="mb-2 text-xl font-semibold">Delivery</legend>
+
         <select
           name="country"
           value={deliveryForm.country}
@@ -143,11 +208,14 @@ const Checkout = () => {
           className="w-full p-2 mb-2 border"
         >
           <option value="">Select Country</option>
-          {countries.map((country) => (
-            <option key={country.code} value={country.name}>{country.name}</option>
+          {countries.map(country => (
+            <option key={country.code} value={country.name}>
+              {country.name}
+            </option>
           ))}
         </select>
         {errors.country && <p className="text-red-500">{errors.country}</p>}
+
         <select
           name="state"
           value={deliveryForm.state}
@@ -155,11 +223,14 @@ const Checkout = () => {
           className="w-full p-2 mb-2 border"
         >
           <option value="">Select State</option>
-          {states.map((state) => (
-            <option key={state.name} value={state.name}>{state.name}</option>
+          {states.map(state => (
+            <option key={state.name} value={state.name}>
+              {state.name}
+            </option>
           ))}
         </select>
         {errors.state && <p className="text-red-500">{errors.state}</p>}
+
         <select
           name="city"
           value={deliveryForm.city}
@@ -167,32 +238,45 @@ const Checkout = () => {
           className="w-full p-2 mb-2 border"
         >
           <option value="">Select City</option>
-          {cities.map((city) => (
-            <option key={city} value={city}>{city}</option>
+          {cities.map(city => (
+            <option key={city} value={city}>
+              {city}
+            </option>
           ))}
         </select>
         {errors.city && <p className="text-red-500">{errors.city}</p>}
-        {["firstName", "lastName", "address", "zipCode"].map((key) => (
-          <div key={key} className="mb-2">
-            <input
-              name={key}
-              type="text"
-              placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
-              value={deliveryForm[key]}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            {errors[key] && <p className="text-red-500">{errors[key]}</p>}
-          </div>
-        ))}
-        <PhoneInput
-          placeholder="Phone"
-          type="phone"
-          value={deliveryForm.phone}
-          onChange={(value) => setDeliveryForm({ ...deliveryForm, phone: value })}
-          className="w-full p-2 mb-2 border"
-        />
-        {errors.phone && <p className="text-red-500">{errors.phone}</p>}
+
+        <div className="mb-2">
+          <input
+            name="street"
+            type="text"
+            placeholder="Street Address"
+            value={deliveryForm.street}
+            onChange={handleChange}
+            className="w-full p-2 border"
+          />
+          {errors.street && <p className="text-red-500">{errors.street}</p>}
+        </div>
+
+        <div className="mb-2">
+          <input
+            name="zipcode"
+            type="text"
+            placeholder="Zip Code"
+            value={deliveryForm.zipcode}
+            onChange={handleChange}
+            className="w-full p-2 border"
+          />
+          {errors.zipcode && <p className="text-red-500">{errors.zipcode}</p>}
+        </div>
+
+        <button
+          type="button"
+          onClick={handleDelivery}
+          className="w-full p-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+        >
+          Submit
+        </button>
       </section>
 
       {/* Shipping Method Section */}
@@ -213,8 +297,10 @@ const Checkout = () => {
                   className="mr-2 text-black form-checkbox border-ash-300"
                 />
                 <div>
-                  <span className="font-semibold">{method.name}</span>
-                  <div className="text-sm text-gray-600">Delivery Time: {method.deliveryTime}</div>
+                  <span className="font-semibold">{ship.name}</span>
+                  <div className="text-sm text-gray-600">
+                    Delivery Time: {ship.deliveryTime}
+                  </div>
                 </div>
               </label>
             ))}
@@ -226,16 +312,30 @@ const Checkout = () => {
       <section className="mb-8">
         <h2 className="mb-2 text-xl font-semibold">Order Summary</h2>
         <div className="p-4 border">
-          <div className="flex space-x-4">
-            <div className="relative">
-              <img src="https://via.placeholder.com/150" alt="Product" className="object-cover w-15 h-15" />
-              <div className="absolute top-0 right-0 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">1</div>
+          {cartItems.map(cartP => (
+            <div>
+              <div className="flex space-x-4">
+                <div className="relative">
+                  <img
+                    src={"https://via.placeholder.com/150"}
+                    alt="Product"
+                    className="object-cover w-15 h-15"
+                  />
+                  <div className="absolute top-0 right-0 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
+                    1
+                  </div>
+                </div>
+                <div className="flex justify-between w-full">
+                  <div className="text-lg font-semibold">
+                    {cartP.product_name}
+                  </div>
+                  <div className="text-lg font-semibold">
+                    ${cartP.discounted_price}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between w-full">
-              <div className="text-lg font-semibold">Product Name</div>
-              <div className="text-lg font-semibold">$100.00</div>
-            </div>
-          </div>
+          ))}
           <div className="mt-4">
             <div className="flex justify-between">
               <span className="font-semibold">Subtotal:</span>
@@ -243,7 +343,11 @@ const Checkout = () => {
             </div>
             <div className="flex justify-between mt-2">
               <span className="font-semibold">Shipping:</span>
-              <span>{isDeliveryFormComplete ? `$${shippingCost?.toFixed(2) || '0.00'}` : 'Enter shipping address'}</span>
+              <span>
+                {isDeliveryFormComplete
+                  ? `$${shippingCost?.toFixed(2) || "0.00"}`
+                  : "Enter shipping address"}
+              </span>
             </div>
             <div className="flex justify-between mt-2">
               <span className="font-semibold">Total:</span>
@@ -251,8 +355,18 @@ const Checkout = () => {
             </div>
             <div className="mt-4">
               <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Discount Code" className="w-full p-2 mb-2 border" />
-                <button type="submit" className="w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">Apply</button>
+                <input
+                  type="text"
+                  placeholder="Discount Code"
+                  ref={couponRef}
+                  className="w-full p-2 mb-2 border"
+                />
+                <button
+                  onClick={handleCoupon}
+                  className="w-full px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+                >
+                  Apply
+                </button>
               </form>
             </div>
           </div>

@@ -2,12 +2,12 @@
 """
 Route module for the app
 """
-from webapp import create_app, db
+from webapp import create_app, db, mail
 from flask import jsonify
 import os
 from models.base_model import BaseModel
 from models.product import Product, Category, Review, CartItem, Description, DescriptionImage, ProductImage, Shipping, ReviewImage, ProductColor
-from models.user import Role, User, Cart
+from models.user import Role, User, Cart, Vcode
 from models.order import Order, OrderedProduct, Transaction, Coupon, Wallet
 from flask_cors import CORS
 
@@ -29,7 +29,7 @@ def make_shell_context():
     return dict(db=db, BaseModel=BaseModel, Product=Product, Category=Category, Cart=Cart, CartItem=CartItem,
                 User=User, Role=Role, Review=Review, Order=Order, OrderedProduct=OrderedProduct, Transaction=Transaction,
                 Shipping=Shipping, Description=Description, DescriptionImage=DescriptionImage, ProductImage=ProductImage, ReviewImage=ReviewImage
-                , ProductColor=ProductColor, Coupon=Coupon, Wallet=Wallet)
+                , ProductColor=ProductColor, Coupon=Coupon, Wallet=Wallet, Vcode=Vcode)
 
 
 @app.errorhandler(404)

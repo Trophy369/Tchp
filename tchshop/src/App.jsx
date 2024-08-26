@@ -5,7 +5,7 @@ import {
   RouterProvider
 } from "react-router-dom";
 import DefaultLayout from "./layouts/DefaultLayout";
-import AdminRoutes from "./components/Auth/AdminRoutes"; 
+import AdminRoutes from "./components/Auth/AdminRoutes";
 import UserRoutes from "./components/Auth/UserRoutes";
 import HomePage from "./components/Home/HomePage";
 import CartPage from "./components/Cart/CartPage";
@@ -21,14 +21,19 @@ import AddProduct from "./components/Admin/AddProducts";
 import Product from "./components/Admin/Product";
 import CreateProduct from "./components/Admin/CreateProduct";
 import CreateRole from "./components/Admin/CreateRole";
+import Coupon from "./components/Admin/Coupon";
+import Wallets from "./components/Admin/Wallets";
 import AssignRole from "./components/Admin/AssignRole";
 import CreateReview from "./components/Admin/CreateReview";
 import CreateCategory from "./components/Admin/CreateCategory";
-import AssignCategory from "./components/Admin/AssignCategory";
 import Dashboard from "./components/User/Dashboard";
 import Checkout from "./components/Cart/Checkout";
 import Faq from "./pages/Faq";
-// import Colors from "./components/Admin/Colors"
+import Flipperzero from './components/collections/Flipperzero';
+import Hak5 from './components/collections/Hak5';
+import Pentesting from './components/collections/Pentesting';
+import Sdr from './components/collections/Sdr';
+import Rftools from './components/collections/Rftools';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -50,7 +55,8 @@ const router = createBrowserRouter(
         <Route path="/admin/createReview" element={<CreateReview />} />
         <Route path="/admin/createrole" element={<CreateRole />} />
         <Route path="/admin/assignrole" element={<AssignRole />} />
-        <Route path="/admin/assigncategory" element={<AssignCategory />} />
+        <Route path="/admin/coupons" element={<Coupon />} />
+        <Route path="/admin/wallets" element={<Wallets />} />
       </Route>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
@@ -59,6 +65,11 @@ const router = createBrowserRouter(
       <Route path="/shoppolicy/returns" element={<Returns />} />
       <Route path="/shoppolicy/warranty" element={<Warranty />} />
       <Route path="/faq" element={<Faq />} />
+      <Route path="collections/flipper-zero" element={<Flipperzero />} />
+      <Route path="collections/hak5" element={<Hak5 />} />
+      <Route path="collections/pentesting" element={<Pentesting />} />
+      <Route path="collections/sdr" element={<Sdr />} />
+      <Route path="collections/rf-tools" element={<Rftools />} />
     </Route>
   )
 );

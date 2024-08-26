@@ -1,15 +1,14 @@
-import Carousel from "./Carousel";
-import { viewReview } from "../../services/userApi";
+import config from "../../config"
+
+const baseURL = config.baseUrl
 
 const Review = ({ item }) => {
 
     const {Image, Rating, Review, Timestamp} = item
 
-    console.log(Image)
-
     const imageUrls = Array.isArray(Image)
     ? Image.map(
-        img => `http://127.0.0.1:5000/static/reviews/${img}`
+        img => `${baseURL}/static/reviews/${img}`
       )
     : [];
 

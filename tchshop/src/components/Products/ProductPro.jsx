@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import config from "../../config";
+import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
 import { useParams } from "react-router-dom";
@@ -6,16 +8,23 @@ import Carousel from "./Carousel";
 import {
   addToCart,
   viewProduct,
-  viewReview,
+  viewProductDescription,
+  viewProductColors,
   getShipping
 } from "../../services/userApi";
+import { addToCartAsync } from "../../reducers/cartReducer";
+
 import { useAuth } from "../authContext/AuthProvider";
-import Reviews from "./Reviews"
+import Reviews from "./Reviews";
+
+const baseURL = config.baseUrl;
 
 // Product component
 const ProductPro = props => {
   const { user } = useAuth();
-  const [color, setColor] = useState("");
+  const dispatch = useDispatch();
+  const [colors, setColors] = useState([]);
+  const [color, setColor] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
   const [error, setError] = useState("");
@@ -24,6 +33,7 @@ const ProductPro = props => {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const { id } = useParams();
   const [lilQuantity, setLilQuantity] = useState(quantity);
+  const [productDesc, setProductDesc] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,6 +43,26 @@ const ProductPro = props => {
 
     fetchProduct();
   }, [id]);
+
+  useEffect(() => {
+    const fetchProductDesc = async () => {
+      const data = await viewProductDescription(id);
+      setProductDesc(data);
+    };
+
+    fetchProductDesc();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchProductColors = async () => {
+      const data = await viewProductColors(id);
+      setColors(data.colors_available);
+    };
+
+    fetchProductColors();
+  }, [id]);
+
+  console.log(colors);
 
   useEffect(() => {
     const fetchShipping = async () => {
@@ -45,7 +75,13 @@ const ProductPro = props => {
 
   const imageUrls = Array.isArray(product.product_image)
     ? product.product_image.map(
-        img => `http://127.0.0.1:5000/static/products/${img.image_name}`
+        img => `${baseURL}/static/products/${img.image_name}`
+      )
+    : [];
+
+  const descImageUrls = Array.isArray(productDesc.images)
+    ? productDesc.images.map(
+        img => `${baseURL}/static/descriptions/${img.image_name}`
       )
     : [];
 
@@ -57,36 +93,10 @@ const ProductPro = props => {
       return;
     }
     setError("");
-    addToCart(id, user.id, quantity, selectedShippingMethod)
+    dispatch(addToCartAsync(id, quantity, selectedShippingMethod, color));
     setNotification("Product added to cart");
     setTimeout(() => setNotification(""), 3000);
   };
-
-  // const handleIncrement = () => {
-  //   addOneToCart(productId);
-  // };
-
-  // const handleDecrement = () => {
-  //   minusOneToCart(productId);
-  // };
-
-  // const handleChange = e => {
-  //   const newQuantity = Number(e.target.value);
-  //   setLilQuantity(newQuantity);
-
-  //   if (timeoutRef.current) {
-  //     clearTimeout(timeoutRef.current);
-  //   }
-
-  //   timeoutRef.current = setTimeout(() => {
-  //     updateQuantity(productId, newQuantity);
-  //     inputQuantity(productId, newQuantity);
-  //   }, 1000);
-  // };
-
-  // const handleRemove = () => {
-  //   removeItem(productId);
-  // };
 
   return (
     <div className="p-4 md:p-8">
@@ -111,30 +121,25 @@ const ProductPro = props => {
         <p className="flex items-center justify-center text-lg font-medium">
           <FaDollarSign className="mr-1" /> {discounted_price}
         </p>
-        <p className="text-sm">
-          Brief product description goes here.{description}
-        </p>
-        <div className="my-4">
-          <p className="mb-2 text-sm font-semibold">Color</p>
-          <div className="flex justify-center space-x-2">
-            {["Red", "Blue", "Green", "Yellow"].map(colorOption => (
-              <label key={colorOption} className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="color"
-                  value={colorOption}
-                  className="form-radio"
-                  checked={color === colorOption}
-                  onChange={() => setColor(colorOption)}
-                />
-                <span
-                  className="block w-6 h-6 ml-2"
-                  style={{ backgroundColor: colorOption.toLowerCase() }}
-                ></span>
-                <span className="ml-2">{colorOption}</span>
-              </label>
-            ))}
-          </div>
+        <p className="text-sm">{description}</p>
+        <div className="flex justify-center space-x-2">
+          {colors.map(colorOpt => (
+            <label key={colorOpt.color} className="inline-flex items-center">
+              <input
+                type="radio"
+                name="color"
+                value={colorOpt.color}
+                className="form-radio"
+                checked={color === colorOpt.color}
+                onChange={() => setColor(colorOpt.color)}
+              />
+              <span
+                className="block w-6 h-6 ml-2"
+                style={{ backgroundColor: colorOpt.color.toLowerCase() }}
+              ></span>
+              <span className="ml-2">{colorOpt.color}</span>
+            </label>
+          ))}
         </div>
         <div className="flex items-center justify-center my-4 space-x-2">
           <button

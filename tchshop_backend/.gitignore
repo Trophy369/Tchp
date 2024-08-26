@@ -2,5 +2,6 @@ env/
 __py*/
 .env
 ../.idea/
+config.py/
 # does not ignore the README.md file
 !README.md
