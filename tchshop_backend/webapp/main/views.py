@@ -16,17 +16,6 @@ import os
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
-# @login_required
-# @main.route('/@me')
-# def get_current_user():
-#     user = current_user.email
-
-#     if not user:
-#         return jsonify({"error": "Unauthorized"}), 401
-
-#     user = User.query.filter_by(email=user['email']).first()
-#     re
-
 # get all products
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():

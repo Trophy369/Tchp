@@ -8,7 +8,8 @@ import {
   getShipping,
   checkout,
   addShippingDetails,
-  useCoupon
+  useCoupon,
+  getShippingAddress
 } from "../../services/userApi";
 
 const dummyShippingMethods = [
@@ -33,6 +34,7 @@ const Checkout = () => {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const [errors, setErrors] = useState({});
   const [shippingMethods, setShippingMethods] = useState([]);
+  const [shippingAddress, setShippingAddress] = useState([]);
   const [checkoutRes, setCheckoutRes] = useState([]);
   const couponRef = useRef();
 
@@ -43,6 +45,15 @@ const Checkout = () => {
     };
 
     fetchShipping();
+  }, []);
+
+  useEffect(() => {
+    const fetchShippingAddress = async () => {
+      const shipAddress = await getShippingAddress();
+      setShippingAddress(shipAddress);
+    };
+
+    fetchShippingAddress();
   }, []);
 
   useEffect(() => {
@@ -198,7 +209,7 @@ const Checkout = () => {
       </section>
 
       {/* Delivery Section */}
-      <section className="mb-8">
+      {!shippingAddress && <section className="mb-8">
         <legend className="mb-2 text-xl font-semibold">Delivery</legend>
 
         <select
@@ -278,8 +289,8 @@ const Checkout = () => {
           Submit
         </button>
       </section>
-
-      {/* Shipping Method Section */}
+            }
+      {/* Shipping Method Section
       <section className="p-4 mb-8 border-2 border-black bg-light-brown-500/50">
         <h2 className="mb-2 text-xl font-semibold">Shipping Method</h2>
         {!isDeliveryFormComplete ? (
@@ -306,14 +317,14 @@ const Checkout = () => {
             ))}
           </div>
         )}
-      </section>
+      </section> */}
 
       {/* Order Summary Section */}
       <section className="mb-8">
         <h2 className="mb-2 text-xl font-semibold">Order Summary</h2>
         <div className="p-4 border">
           {cartItems.map(cartP => (
-            <div>
+            <div key={cartP.id}>
               <div className="flex space-x-4">
                 <div className="relative">
                   <img
@@ -344,8 +355,8 @@ const Checkout = () => {
             <div className="flex justify-between mt-2">
               <span className="font-semibold">Shipping:</span>
               <span>
-                {isDeliveryFormComplete
-                  ? `$${shippingCost?.toFixed(2) || "0.00"}`
+                {shippingAddress
+                  ? shippingAddress["Shipping address"]
                   : "Enter shipping address"}
               </span>
             </div>

@@ -5,6 +5,8 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -28,16 +30,27 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const auth = async (email, password) => {
+    setLoading(true); // Set loading to true when starting authentication
     try {
-      const info = await signin(email, password);
-      setUser(info);
-      localStorage.setItem("user", JSON.stringify(info));
+      const { data, error } = await signin(email, password);
+      if (error) {
+        throw new Error(error);
+      }
+      setUser(data); 
+      localStorage.setItem("user", JSON.stringify(data));
+      setError(null);
     } catch (error) {
       console.error("Authentication error:", error);
       setUser(null);
       localStorage.removeItem("user");
+      setError(error.message);
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
+    } finally {
+      setLoading(false);
     }
-  };
+  };  
 
   const logOut = async () => {
     await signout(() => {
@@ -48,7 +61,7 @@ const AuthProvider = ({ children }) => {
   
 
   return (
-    <AuthContext.Provider value={{ auth, user, logOut }}>
+    <AuthContext.Provider value={{ auth, user, error, loading, logOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -26,7 +26,8 @@ const ProductPro = props => {
   const [color, setColor] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [product, setProduct] = useState([]);
   const [shippingMethods, setShippingMethods] = useState([]);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
@@ -89,7 +90,9 @@ const ProductPro = props => {
       setError("Please select a color.");
       return;
     }
-    setError("");
+
+    setLoading(true)
+    setError(null);
     dispatch(addToCartAsync(id, quantity, selectedShippingMethod, color));
     setNotification("Product added to cart");
     setTimeout(() => setNotification(""), 3000);

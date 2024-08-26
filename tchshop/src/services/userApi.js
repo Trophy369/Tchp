@@ -2,6 +2,26 @@ import config from '../config';
 
 const baseUrl = config.baseUrl;
 
+export const fetchWithState = async (url, options) => {
+  const loadingState = { loading: true, error: null, data: null };
+
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+
+    if (!response.ok) {
+      const errorMessage = data.error || "An error occurred";
+      throw new Error(errorMessage);
+    }
+
+    // Return the success state
+    return { ...loadingState, loading: false, data };
+  } catch (error) {
+    console.error("Error:", error.message);
+    return { ...loadingState, loading: false, error: error.message };
+  }
+};
+
 export const addToCart = async (id, quantity, shipping, color) => {
   const requestOptions = {
     method: "POST",
@@ -10,20 +30,21 @@ export const addToCart = async (id, quantity, shipping, color) => {
     credentials: 'include',
   };
   
-  try {
-    const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
-    const result = await response.json();
+  return fetchWithState(`${baseUrl}/addToCart/${id}`, requestOptions)
+  // try {
+  //   const response = await fetch(`${baseUrl}/addToCart/${id}`, requestOptions);
+  //   const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(result.message || "Failed to add to cart");
-    }
+  //   if (!response.ok) {
+  //     throw new Error(result.message || "Failed to add to cart");
+  //   }
 
-    console.log("Product added to cart successfully:", result.Message);
-    return result;
-  } catch (error) {
-    console.error("Error:", error.message);
-    throw error;
-  }
+  //   console.log("Product added to cart successfully:", result.Message);
+  //   return result;
+  // } catch (error) {
+  //   console.error("Error:", error.message);
+  //   throw error;
+  // }
 };
 
 export const useCoupon = async (code) => {
@@ -126,8 +147,7 @@ export const getCart = async () => {
     credentials: 'include',
   };
 
-  const response = await fetch(`${baseUrl}/cart`, requestOptions);
-  return response.json();
+  return fetchWithState(`${baseUrl}/cart`, requestOptions)
 };
 
 export const clearCart = async () => {
@@ -188,6 +208,18 @@ export const getShipping = async () => {
   const response = await fetch(`${baseUrl}/shipping`, requestOptions);
   return response.json();
 };
+
+export const getShippingAddress = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  const response = await fetch(`${baseUrl}/shippingAddress`, requestOptions);
+  return response.json();
+};
+
 
 export const assignShipping = async (productId) => {
   const requestOptions = {
