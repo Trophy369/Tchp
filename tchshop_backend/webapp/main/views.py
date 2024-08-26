@@ -1,5 +1,5 @@
 import random
-
+from webapp.email import send_coupon_email
 from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session, send_from_directory
 from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
@@ -42,10 +42,30 @@ def get_products():
 
     return jsonify(product_list), 200
 
-# product by category
-# @main.route('/category/<cat_name>', methods=['GET'], strict_slashes=False)
-# def view_category(cat_name):
-#     products = Product.query.filter_by()
+
+# all product by category
+@main.route('/categories', methods=['GET'], strict_slashes=False)
+def view_categories():
+    categories = Category.query.filter_by()
+    all_cat = [category.to_dict() for category in categories]
+    return jsonify({'categories': all_cat}), 200
+
+
+# view all products under a category
+@main.route('/products/<category>', methods=['GET'], strict_slashes=False)
+def products_category(category):
+    all_products = Product.query.all()
+    cat_prods = []
+    for product in all_products:
+        for cat in product.prod_cat:
+            if category == cat.category_name:
+                cat_prods.append(product)
+            pass
+    category_products = [{
+        'product_name': prod.product_name,
+        'id': prod.id
+    } for prod in cat_prods]
+    return jsonify({'products': category_products}), 200
 
 
 # get a product
@@ -99,6 +119,8 @@ def add_to_cart(product_id):
     logging.info(f"len all colors: {len(all_colors)}")
 
     cs = len(all_colors)
+    # color = data['color']
+    # if not color:
     color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
@@ -140,9 +162,9 @@ def add_to_cart(product_id):
 @login_required
 @main.route('/cart', methods=['GET'], strict_slashes=False)
 def cart():
-    user_id = current_user.id
-    user = Cart.query.filter_by(user_id=user_id).first()
-    cart_items = CartItem.query.filter_by(cart_id=user_id).all()
+    # user_id = current_user.id
+    # user = Cart.query.filter_by(user_id=user_id).first()
+    cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
     
     if not cart_items:
         return jsonify({'message': 'Empty Cart!'}), 404
@@ -154,6 +176,7 @@ def cart():
         cart_details.append({
             'id': product.id,
             'product_name': product.product_name,
+            'product_image': product.product_image,
             'prod_quantity': item.quantity,
             'regular_price': product.regular_price,
             'discounted_price': product.discounted_price,
@@ -168,6 +191,8 @@ def cart():
     logging.info(f"Cart details: {cart_details}")
     return jsonify({'total': total_items, 'cart_details': cart_details}), 200
 
+
+# remove product from cart
 @login_required
 @main.route('/removeFromCart/<product_id>', methods=['DELETE'], strict_slashes=False)
 def remove_from_cart(product_id):
@@ -356,7 +381,7 @@ def view_product_colors(product_id):
 
 
 @login_required
-@main.route('/checkout', methods=["GET"], strict_slashes=False)
+@main.route('/checkout', methods=["GET", "POST"], strict_slashes=False)
 def checkout():
 
     cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
@@ -397,6 +422,9 @@ def checkout():
         session["total_price"] = round(total_price, 3)
         session["total_shipping"] = round(total_shipping, 3)
 
+        total_price = session["total_price"]
+        total_shipping = session["total_shipping"]
+
         logging.info(f'toatal price: {session["total_price"]}')
         return jsonify({"total_price": round(total_price, 3), "total_shipping": round(total_shipping, 3)}), 200
     except Exception as e:
@@ -408,6 +436,7 @@ def checkout():
 # @login_required
 @main.route('/coupon', methods=["GET"], strict_slashes=False)
 def coupon():
+    user = current_user
     user = Coupon.query.filter_by(user_id=current_user.id).first()
     if not user:
         return jsonify({"error": "no coupon for this user"}), 400
@@ -420,7 +449,7 @@ def coupon():
 def use_coupon():
     data = request.json
     code = data["code"]
-    coupon_user = Coupon.query.filter_by(code=code).first()
+    coupon_user = Coupon.query.filter_by(code=code, percentage=20).first()
     if not coupon_user:
         return jsonify({"error": "Invalid coupon code"}), 400
 
@@ -508,6 +537,7 @@ def pay():
 @login_required
 @main.route('/confirmation', methods=["POST"], strict_slashes=False)
 def confirm_payment():
+    user = current_user
     if request.method == "POST" and current_user:
         grand_total = session["grand_total"]
         # user_order = Order.query.filter_by(userid=current_user.id).all()
@@ -519,6 +549,9 @@ def confirm_payment():
             for cart_item in cart_items:
                 db.session.delete(cart_item)
             db.session.commit()
+
+            send_coupon_email(user)
+
             # session.pop("grand_total", None)
             return jsonify({'success': 'payment processing'}), 201
 

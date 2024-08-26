@@ -4,12 +4,14 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from faker import Faker
+from flask_mail import Mail
 from flask_session import Session
 
 
 db = SQLAlchemy()
 migrate = Migrate()
 faker = Faker()
+mail = Mail()
 # session = Session()
 
 
@@ -26,6 +28,7 @@ def create_app(object_name):
     app.config.from_object(object_name)
 
     db.init_app(app)
+    mail.init_app(app)
     migrate.init_app(app, db)
 
     CORS(app)  # Enable CORS for all origins

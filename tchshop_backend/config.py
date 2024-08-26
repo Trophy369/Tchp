@@ -24,9 +24,32 @@ class Config:
 
     SESSION_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SECURE = True
-    # ADMIN = os.environ.get('ADMIN') or "administrator@gmail.com"
+    ADMIN = os.environ.get('ADMIN') or "countliason@gmail.com"
+    # ADMINS = ['countliason@gmail.com']
+
+    # email config
+    MAIL_SERVER = "smtp.gmail.com"
+    # MAIL_SERVER = 'smtp-mail.outlook.com'
+
+    MAIL_PORT = 587
+    # MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_USERNAME = 'countliason@gmail.com'
+    MAIL_PASSWORD = 'jpgibmrqfsftbvte'
+    # MAIL_USERNAME = 'lindabosquet@outlook.com'
+    # MAIL_PASSWORD = 'bcxzyleomdgvwnxz'
+    MAIL_USE_TLS = True
+    # MAIL_USE_SSL = False
+
+    MAIL_DEFAULT_SENDER = 'countliason@gmail.com'
+    # MAIL_DEFAULT_SENDER = 'lindabosquet@outlook.com'
+    # MAIL_MAX_EMAILS = None
+    MAIL_SUPPRESS_SEND = True
+    # MAIL_ASCII_ATTACHMENTS = False
 
 
+# gap pwrs: bifv tqul npnf wkxx
+# oap : bcxz yleo mdgv wnxz
 class DevConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, "{}.db").format(os.environ.get('WEBAPP_ENV'))

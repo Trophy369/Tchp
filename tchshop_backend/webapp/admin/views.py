@@ -31,6 +31,7 @@ def base():
 
     return jsonify({"Message": "Admin route success"}), 201
 
+
 # create product category
 @login_required
 @admin.route('/create_category', methods=['POST'])
@@ -243,7 +244,7 @@ def addDescription(id):
     logging.info(f"description {prod_description}")
 
     # Handle the uploading of images if they are within the allowed range
-    if 1 <= len(description_images) <= 5:
+    if (1 <= len(description_images)) and (len(description_images) <= 5):
         for uploaded_file in description_images:
             name = secure_filename(uploaded_file.filename)
             filename = f"{product.product_name}_{name}"

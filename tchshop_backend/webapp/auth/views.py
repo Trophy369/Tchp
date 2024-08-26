@@ -6,8 +6,10 @@ from webapp.forms import SigninForm, SignupForm
 from flask_login import current_user, login_required
 from datetime import datetime
 from flask_login import login_user, logout_user, login_required
-from models.user import User
+from models.user import User, Vcode
 from webapp import db
+from webapp.email import send_async_email, send_password_reset_code
+
 
 @login_required
 @auth_views.route('/@me')
@@ -77,6 +79,7 @@ def signin():
 @auth_views.route('/logout', strict_slashes=False, methods=['GET', 'POST'])
 def logout():
     logout_user()
+<<<<<<< HEAD
     
     session.clear()
 
@@ -86,3 +89,79 @@ def logout():
     response.set_cookie('session', '', expires=0)
     
     return response
+=======
+    return jsonify({"message": "User logged out"}), 200
+
+
+@auth_views.route('/reset_password_request', methods=['GET'], strict_slashes=False)
+def reset_password_request():
+    if request.method == "GET":
+        if current_user.is_authenticated:
+            return redirect(url_for('main.get_products'))
+        return redirect(url_for('auth_views.reset_password_email')), 200
+
+
+# enter email address to get reset code
+@auth_views.route('/reset_password_email', methods=['POST'], strict_slashes=False)
+def reset_password_email():
+    if request.method == "POST":
+        data = request.json
+        email = data['email']
+        if email:
+            user = User.query.filter_by(email=email).first()
+            check = Vcode.query.filter_by(user_id=user.id).first()
+            if check:
+                user.revoke_token()
+            else:
+                pass
+            if user:
+                session['u_email'] = email
+                send_password_reset_code(user)
+                # return jsonify({'success': 'code sent via email'}), 200
+                return redirect(url_for('auth_views.confirm_vcode')), 201
+            db.session.rollback()
+            # return jsonify({"error": "failed to send code"}), 401
+
+    return jsonify({"error": "provide a registered email for password reset"}), 404
+
+
+# enter and verify code sent to email
+@auth_views.route('/confirm_vcode', methods=['POST'], strict_slashes=False)
+def confirm_vcode():
+    data = request.json
+    code = data['code']
+    email = session['u_email']
+
+    try:
+        user = User.query.filter_by(email=email).first()
+        reset_code = Vcode.query.filter_by(code=code).first()
+        if user and reset_code:
+            confirm = user.confirm(token=code)
+            if confirm:
+                user.revoke_token()
+                # return jsonify({'success': 'enter new password'}), 200
+                return redirect(url_for('auth_views.reset_password')), 200
+
+        user.revoke_token()
+        return jsonify({'error': 'code expired'}), 400
+
+    except Exception as e:
+        return jsonify({'error': f'{e}'}), 500
+
+
+# enter new password
+@auth_views.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    data = request.json
+    password1 = data['password']
+    password2 = data['confirm']
+    email = session['u_email']
+    user = User.query.filter_by(email=email).first()
+
+    if password1 == password2:
+        user.set_password(password1)
+        db.session.commit()
+        return redirect(url_for('auth_views.signin')), 201
+    return jsonify({'error': 'password reset failed try again'}), 401
+
+>>>>>>> dda984c7e9d69f32b0c9edf090e4ec259010dc46

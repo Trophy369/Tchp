@@ -20,6 +20,7 @@ class Category(db.Model):
     __tablename__ = "categories"
     id = db.Column(db.Integer, primary_key=True, nullable=False, index=True)
     category_name = db.Column(db.String(100), nullable=False, unique=True)
+
     # One-to-many relationship with Product
     # products = db.relationship('Product', backref='category')
 
@@ -131,7 +132,6 @@ class Product(db.Model):
     reviews = db.relationship('Review', backref='products', lazy='dynamic')
 
     cart_items = db.relationship('CartItem', backref='products', lazy=True)
-
 
     def to_dict(self):
         return {
