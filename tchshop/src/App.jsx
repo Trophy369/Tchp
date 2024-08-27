@@ -29,11 +29,7 @@ import CreateCategory from "./components/Admin/CreateCategory";
 import Dashboard from "./components/User/Dashboard";
 import Checkout from "./components/Cart/Checkout";
 import Faq from "./pages/Faq";
-import Flipperzero from './components/collections/Flipperzero';
-import Hak5 from './components/collections/Hak5';
-import Pentesting from './components/collections/Pentesting';
-import Sdr from './components/collections/Sdr';
-import Rftools from './components/collections/Rftools';
+import CategoryPage from './components/collections/CategoryPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -65,11 +61,8 @@ const router = createBrowserRouter(
       <Route path="/shoppolicy/returns" element={<Returns />} />
       <Route path="/shoppolicy/warranty" element={<Warranty />} />
       <Route path="/faq" element={<Faq />} />
-      <Route path="collections/flipper-zero" element={<Flipperzero />} />
-      <Route path="collections/hak5" element={<Hak5 />} />
-      <Route path="collections/pentesting" element={<Pentesting />} />
-      <Route path="collections/sdr" element={<Sdr />} />
-      <Route path="collections/rf-tools" element={<Rftools />} />
+      <Route path="collections/:name" element={<CategoryPage />} />
+      <Route path="/:refCode" element={<SignUp />}>
     </Route>
   )
 );

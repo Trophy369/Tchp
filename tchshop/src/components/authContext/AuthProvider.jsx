@@ -19,7 +19,8 @@ const AuthProvider = ({ children }) => {
           setUser(null);
           localStorage.removeItem("user");
         }
-      } catch (error) {
+      } 
+      catch (error) {
         console.error('Error checking auth status:', error);
         setUser(null);
         localStorage.removeItem("user");

@@ -79,8 +79,6 @@ def signin():
 @auth_views.route('/logout', strict_slashes=False, methods=['GET', 'POST'])
 def logout():
     logout_user()
-<<<<<<< HEAD
-    
     session.clear()
 
     response = jsonify({"message": "User logged out"})
@@ -89,9 +87,6 @@ def logout():
     response.set_cookie('session', '', expires=0)
     
     return response
-=======
-    return jsonify({"message": "User logged out"}), 200
-
 
 @auth_views.route('/reset_password_request', methods=['GET'], strict_slashes=False)
 def reset_password_request():
@@ -164,4 +159,3 @@ def reset_password():
         return redirect(url_for('auth_views.signin')), 201
     return jsonify({'error': 'password reset failed try again'}), 401
 
->>>>>>> dda984c7e9d69f32b0c9edf090e4ec259010dc46

@@ -9,8 +9,8 @@ export const fetchWithState = async (url, options) => {
     const response = await fetch(url, options);
     const data = await response.json();
 
-    if (!response.ok) {
-      const errorMessage = data.error || "An error occurred";
+    if (!response.ok && data.message === 'Empty Cart!') {
+      const errorMessage = data.message || "An error occurred";
       throw new Error(errorMessage);
     }
 
@@ -95,6 +95,26 @@ export const viewProduct = async (id) => {
   return response.json();
 }
 
+export const viewCategory = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  return fetchWithState(`${baseUrl}/categories`, requestOptions)
+}
+
+export const viewCategoryProducts = async (category) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  return fetchWithState(`${baseUrl}/products/${category}`, requestOptions)
+}
+
 export const viewProductDescription = async (id) => {
   const requestOptions = {
     method: "GET",
@@ -136,8 +156,7 @@ export const viewReview = async (id) => {
     credentials: 'include',
   };
 
-  const response = await fetch(`${baseUrl}/reviews/${id}`, requestOptions);
-  return response.json();
+  return fetchWithState(`${baseUrl}/reviews/${id}`, requestOptions)
 }
 
 export const getCart = async () => {
@@ -216,8 +235,7 @@ export const getShippingAddress = async () => {
     credentials: 'include',
   };
 
-  const response = await fetch(`${baseUrl}/shippingAddress`, requestOptions);
-  return response.json();
+  return fetchWithState(`${baseUrl}/shippingAddress`, requestOptions)
 };
 
 
@@ -241,6 +259,31 @@ export const checkout = async () => {
 
   try {
     const response = await fetch(`${baseUrl}/checkout`, requestOptions);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'An error occurred during checkout.');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Checkout error:', error);
+    throw error;
+  }
+};
+
+export const proceed = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  return fetchWithState(`${baseUrl}/proceed`, requestOptions)
+
+  try {
+    const response = await fetch(`${baseUrl}/proceed`, requestOptions);
     
     if (!response.ok) {
       const errorData = await response.json();

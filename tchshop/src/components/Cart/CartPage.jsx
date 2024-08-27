@@ -6,29 +6,40 @@ import { useAuth } from "../authContext/AuthProvider";
 import { clearCartAsync } from "../../reducers/cartReducer";
 import Cart from "./Cart";
 import { Link } from "react-router-dom";
+import ShowError from "../ShowError";
+import { fetchCartItems } from "../../reducers/cartReducer";
+
 
 const CartPage = ({}) => {
   const { user } = useAuth();
-  const dispatch = useDispatch()
-  const cart = useSelector(state => state.cart.cart_details);
+  const dispatch = useDispatch();
+  const { cart_details, loading, error } = useSelector(state => state.cart);
 
-  const subtotal = cart
+  useEffect(() => {
+    if (user !== null) {
+      dispatch(fetchCartItems());
+    }
+  }, [user, dispatch]);
+
+  const subtotal = cart_details
     .reduce((acc, item) => acc + item.discounted_price * item.prod_quantity, 0)
     .toFixed(2);
 
-  const updateQuantity = (productId, newQuantity) => {
-    setCart(
-      cart.map(item =>
-        item.id === productId ? { ...item, prod_quantity: newQuantity } : item
-      )
-    );
-  };
+  // const updateQuantity = (productId, newQuantity) => {
+  //   setCart(
+  //     cart.map(item =>
+  //       item.id === productId ? { ...item, prod_quantity: newQuantity } : item
+  //     )
+  //   );
+  // };
 
   const handleClearCart = () => {
     dispatch(clearCartAsync());
   };
 
-  return (
+  return error ? (
+    <ShowError errorMessage={error} />
+  ) : (
     <div className="container p-4 mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Your Cart</h1>
@@ -50,7 +61,7 @@ const CartPage = ({}) => {
             </tr>
           </thead>
           <tbody>
-            {cart.map(item => (
+            {cart_details.map(item => (
               <Cart
                 key={item.id}
                 productId={item.id}

@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 import Carousel from "./Carousel";
 import {
   viewProduct,
-  viewProductDescription,
   viewProductColors,
   getShipping
 } from "../../services/userApi";
@@ -15,6 +14,7 @@ import { addToCartAsync } from "../../reducers/cartReducer";
 
 import { useAuth } from "../authContext/AuthProvider";
 import Reviews from "./Reviews";
+import ProductDescription from "./ProductDescription";
 
 const baseURL = config.baseUrl;
 
@@ -33,7 +33,6 @@ const ProductPro = props => {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const { id } = useParams();
   const [lilQuantity, setLilQuantity] = useState(quantity);
-  const [productDesc, setProductDesc] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -42,15 +41,6 @@ const ProductPro = props => {
     };
 
     fetchProduct();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchProductDesc = async () => {
-      const data = await viewProductDescription(id);
-      setProductDesc(data);
-    };
-
-    fetchProductDesc();
   }, [id]);
 
   useEffect(() => {
@@ -74,12 +64,6 @@ const ProductPro = props => {
   const imageUrls = Array.isArray(product.product_image)
     ? product.product_image.map(
         img => `${baseURL}/static/products/${img.image_name}`
-      )
-    : [];
-
-  const descImageUrls = Array.isArray(productDesc.images)
-    ? productDesc.images.map(
-        img => `${baseURL}/static/descriptions/${img.image_name}`
       )
     : [];
 
@@ -197,6 +181,10 @@ const ProductPro = props => {
             </div>
           }
         </section>
+      </div>
+      <div className="my-4 text-center">
+        <p>Description.</p>
+        <ProductDescription />
       </div>
       <div className="my-4 text-center">
         <p>Additional product details go here.</p>
