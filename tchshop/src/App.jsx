@@ -11,7 +11,9 @@ import AdminRoutes from "./components/Auth/AdminRoutes";
 import UserRoutes from "./components/Auth/UserRoutes";
 import HomePage from "./components/Home/HomePage";
 import CartPage from "./components/Cart/CartPage";
+import Payment from "./components/Cart/Payment";
 import SignIn from "./components/Auth/SignIn";
+import ForgotPassword from "./components/Auth/ForgotPassword";
 import SignUp from "./components/Auth/SignUp";
 import UpdateProfile from "./components/User/UpdateProfile";
 import Shipping from "./pages/shoppolicy/Shipping";
@@ -43,6 +45,7 @@ const router = createBrowserRouter(
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/update" element={<UpdateProfile />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment" element={<Payment />} />
       </Route>
       {/* <Route path='/colors' element={<Colors />} /> */}
       <Route element={<AdminRoutes />}>
@@ -59,6 +62,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/viewproduct/:id" element={<ProductPro />} />
       <Route path="/shoppolicy/shipping" element={<Shipping />} />
       <Route path="/shoppolicy/returns" element={<Returns />} />

@@ -1,14 +1,13 @@
 import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import useValid from "../hooks/useValid";
+import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signInUserAsync } from "../../reducers/userReducer";
+import useValid from "../hooks/useValid";
 
 const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user, loading, error } = useSelector(state => state.user);
+  const { user, loading, error } = useSelector((state) => state.user);
 
   const {
     value: enteredEmail,
@@ -16,8 +15,8 @@ const Signin = () => {
     hasError: emailInputHasError,
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
-    reset: resetEmailInput
-  } = useValid(value => value.includes("@"));
+    reset: resetEmailInput,
+  } = useValid((value) => value.includes("@"));
 
   let formIsValid = false;
 
@@ -27,7 +26,7 @@ const Signin = () => {
 
   const passwordRef = useRef();
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!enteredEmailisValid) {
@@ -112,10 +111,20 @@ const Signin = () => {
         </form>
 
         <div className="text-center">
-          Don't have an account?
-          <Link to={"/signup"} className="text-blue-500">
-            Sign Up
-          </Link>
+          <p className="text-gray-700">
+            Don't have an account?{" "}
+            <Link to={"/signup"} className="text-blue-500 hover:underline">
+              Sign Up
+            </Link>
+          </p>
+          <p className="mt-4">
+            <Link
+              to={"/forgot-password"}
+              className="text-blue-500 hover:underline hover:text-indigo-700 transition duration-200 ease-in-out"
+            >
+              Forgot Password?
+            </Link>
+          </p>
         </div>
       </div>
     </div>

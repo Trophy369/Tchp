@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import config from "../../config";
 import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
@@ -16,11 +15,9 @@ import { useAuth } from "../authContext/AuthProvider";
 import Reviews from "./Reviews";
 import ProductDescription from "./ProductDescription";
 
-const baseURL = config.baseUrl;
 
 // Product component
-const ProductPro = props => {
-  const { user } = useAuth();
+const ProductPro = () => {
   const dispatch = useDispatch();
   const [colors, setColors] = useState([]);
   const [color, setColor] = useState([]);

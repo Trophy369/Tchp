@@ -1,7 +1,7 @@
 
 const Payment = () => {
 
-    return ()
+    return (<h1>Pay</h1>)
 }
 
 export default Payment

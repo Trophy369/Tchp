@@ -7,9 +7,9 @@ const ShowImage = ({ style, url }) => {
 
   if (style === "cart") {
     size = "object-cover w-16 h-16"; // Small image size
-  } else if (style === "order") {
+  } else if (style === "home") {
     size = "object-cover w-full h-48"; // Large image size
-  } else {
+  } else { 
     size = "object-cover w-15 h-15"; // Default or medium image size
   }
 

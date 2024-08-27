@@ -8,7 +8,6 @@ const OrderCart = ({cartP}) => {
           <ShowImage
             url={`static/products/default_img/${cartP.product_image}`}
             alt="Product"
-            style="order"
           />
           <div className="absolute top-0 right-0 px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
             {cartP.prod_quantity}
