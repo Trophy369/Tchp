@@ -46,7 +46,7 @@ class Coupon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(15))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    percentage = db.Column(db.Integer)
+    percentage = db.Column(db.Integer, default=20)
     status = db.Column(db.String(10))
 
     def to_dict(self):

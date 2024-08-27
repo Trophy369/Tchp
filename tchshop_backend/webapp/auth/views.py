@@ -3,27 +3,35 @@ import logging
 from flask import Flask, render_template, url_for, flash, redirect, request, make_response, jsonify, session
 from webapp.auth import auth_views
 from webapp.forms import SigninForm, SignupForm
-from flask_login import current_user, login_required
+from flask_login import current_user
 from datetime import datetime
 from flask_login import login_user, logout_user, login_required
 from models.user import User, Vcode
 from webapp import db
+from models.order import Coupon
 from webapp.email import send_async_email, send_password_reset_code
 
 
-@login_required
-@auth_views.route('/@me')
-def get_current_user():
-    user_id = session.get("userId")
-    if user_id:
-        user = User.query.get(user_id)
-        if user:
-            return jsonify({
-                "id": user.id,
-                "username": user.firstname,
-                "roles": len([role.to_dict() for role in user.roles])
-            }), 200
-    return jsonify({"error": "User not authenticated"}), 401
+# @auth_views.route('/@me')
+# user_id = session.get("userId")
+#     if user_id:
+#         user = User.query.get(user_id)
+#         if user:
+#             return jsonify({
+#                 "id": user.id,
+#                 "username": user.firstname,
+#                 "roles": len([role.to_dict() for role in user.roles])
+#             }), 200
+#     return jsonify({"error": "User not authenticated"}), 401
+    
+# def get_current_user():
+#     user = current_user.email
+
+#     if not user:
+#         return jsonify({'error': 'Unauthorized'}), 401
+    
+#     user = User.query.filter_by(email=user['email']).first()
+#     return jsonify({"Message": "Login Successful", "username": user.firstname, "id": user.id, "roles": len([role.to_dict() for role in user.roles])}), 200
 
 
 @auth_views.route('/signup', methods=['POST'], strict_slashes=False)
@@ -55,10 +63,26 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
+        if 'coupon' in session:
+            code = session['coupon']
+            user = User.query.filter_by(email=data['email']).first()
+            new_coupon = Coupon(code=code, user_id=user.id, percentage='', status="pending")
+            db.session.add(new_coupon)
+            coupon_owner = Coupon.query.filter_by(code=code, status='minion').first()
+            count = User.query.filter_by(id=coupon_owner.user_id).first()
+
+            # all pending refs of a user
+            owners_coupons = Coupon.query.filter_by(code=code, status='pending').all()
+            # each minions count updated
+            count.coupons_count = len(owners_coupons)
+            db.session.commit()
+        else:
+            pass
+            
         return jsonify({'message': 'User created successfully', 'user': new_user.firstname}), 201
 
 
-@auth_views.route('/signin', methods=['POST'], strict_slashes=False)
+@auth_views.route('/signin', methods=['GET', 'POST'], strict_slashes=False)
 def signin():
     data = request.json
     user = User.query.filter_by(email=data['email']).first()
@@ -75,8 +99,9 @@ def signin():
         return {"error": "Login failed Wrong password"}, 401
     return jsonify({"error": "Login failed"}), 401
 
-@login_required
+
 @auth_views.route('/logout', strict_slashes=False, methods=['GET', 'POST'])
+@login_required
 def logout():
     logout_user()
     session.clear()
@@ -94,7 +119,6 @@ def reset_password_request():
         if current_user.is_authenticated:
             return redirect(url_for('main.get_products'))
         return redirect(url_for('auth_views.reset_password_email')), 200
-
 
 # enter email address to get reset code
 @auth_views.route('/reset_password_email', methods=['POST'], strict_slashes=False)

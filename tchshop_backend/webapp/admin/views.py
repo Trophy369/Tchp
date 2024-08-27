@@ -675,6 +675,16 @@ def delete_all_coupons():
     return jsonify({"success": "all coupons deleted"}), 200
 
 
+# view all coupons
+@login_required
+@admin.route('/viewCoupons', methods=['GET'], strict_slashes=False)
+@has_role('administrator')
+def view_all_coupons():
+    coupons = Coupon.query.all()
+    c = [coup.to_dict() for coup in coupons]
+    return jsonify({"success": c}), 200
+
+
 # add wallet addresses
 @login_required
 @admin.route('/addWallet', methods=['POST'], strict_slashes=False)

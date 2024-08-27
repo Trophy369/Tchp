@@ -14,7 +14,7 @@ auth_views = Blueprint('auth_views',
                     )
 
 login_manager = LoginManager()
-login_manager.login_view = 'auth_views.signin'
+login_manager.login_view = 'signin'
 login_manager.session_protection = "basic"
 login_manager.login_message = "Please login to access this page"
 login_manager.login_message_category = "info"
