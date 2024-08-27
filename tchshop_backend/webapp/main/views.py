@@ -325,6 +325,23 @@ def delete_all_items():
     db.session.commit()
     return jsonify(status="success", message="Cart cleared", data={}), 200
 
+# reviews bombing
+@main.route('/reviews/<int:product_id>/<code>', methods=["GET"], strict_slashes=False)
+def rev_sesh(product_id, code):
+    #if its a new user, get the user that referred them. Save referrer in a cookie. Redirect to signup
+    if code:
+        try:
+            user = Coupon.query.filter_by(code=code, status='minion').first()
+            if user:
+                session['coupon'] = code
+        except:
+            pass
+
+    if current_user.is_authenticated:
+        return redirect(url_for('main.view_reviews', product_id=product_id)), 200
+    return redirect(url_for('auth_views.signup')), 200
+
+
 
 # view product reviews
 @main.route('/reviews/<int:product_id>', methods=["GET"], strict_slashes=False)
@@ -532,15 +549,16 @@ def select_method():
         session["address"] = address
         session["method"] = method
         return redirect(url_for("main.pay")), 200
+    
 
         # return jsonify({"address": address, "crypto": method}), 200
-    elif method.upper() == "USDC":
-        usdc_address = Wallet.query.filter_by(currency_type=method).all()
-        add = random.choice(usdc_address)
-        address = add.address
-        session["address"] = address
-        session["method"] = method
-        return redirect(url_for("main.pay")), 200
+    # elif method.upper() == "USDC":
+    #     usdc_address = Wallet.query.filter_by(currency_type=method).all()
+    #     add = random.choice(usdc_address)
+    #     address = add.address
+    #     session["address"] = address
+    #     session["method"] = method
+    #     return redirect(url_for("main.pay")), 200
         # return jsonify({"address": address, "crypto": method}), 200
 
 
