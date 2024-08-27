@@ -8,6 +8,7 @@ from datetime import datetime
 from flask_login import login_user, logout_user, login_required
 from models.user import User, Vcode
 from webapp import db
+from models.order import Coupon
 from webapp.email import send_async_email, send_password_reset_code
 
 
@@ -62,6 +63,22 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
+        if 'coupon' in session:
+            code = session['coupon']
+            user = User.query.filter_by(email=data['email']).first()
+            new_coupon = Coupon(code=code, user_id=user.id, percentage='', status="pending")
+            db.session.add(new_coupon)
+            coupon_owner = Coupon.query.filter_by(code=code, status='minion').first()
+            count = User.query.filter_by(id=coupon_owner.user_id).first()
+
+            # all pending refs of a user
+            owners_coupons = Coupon.query.filter_by(code=code, status='pending').all()
+            # each minions count updated
+            count.coupons_count = len(owners_coupons)
+            db.session.commit()
+        else:
+            pass
+            
         return jsonify({'message': 'User created successfully', 'user': new_user.firstname}), 201
 
 

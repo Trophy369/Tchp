@@ -449,6 +449,22 @@ def coupon():
     return jsonify({"users_coupon": user.code}), 200
 
 
+# each users coupon code
+# @login_required
+@main.route('/coupon/<code>', methods=["GET"], strict_slashes=False)
+def coupon_sesh(code):
+    #if its a new user, get the user that referred them. Save referrer in a cookie. Redirect to signup
+    if code:
+        try:
+            user = Coupon.query.filter_by(code=code, status='minion').first()
+            if user:
+                session['coupon'] = code
+        except:
+            pass
+
+    return redirect(url_for('auth_views.signup')), 200
+
+
 # use users coupon code
 @login_required
 @main.route('/useCoupon', methods=["POST"], strict_slashes=False)
@@ -473,8 +489,10 @@ def use_coupon():
             total_shipping += (method.cost * cart_item.quantity) * 0.85
         else:
             total_shipping += (method.cost * cart_item.quantity)
-    user_coupon = Coupon(code=code, user_id=current_user.id, percentage='', status="pending")
-    db.session.add(user_coupon)
+    users_c = Coupon.query.filter_by(code=code, user_id=current_user.id).first()
+    if users_c is None:
+        user_coupon = Coupon(code=code, user_id=current_user.id, percentage='', status="pending")
+        db.session.add(user_coupon)
     db.session.commit()
     session["total_price"] = round(total_price, 3)
     session["total_shipping"] = round(total_shipping, 3)
@@ -554,6 +572,9 @@ def confirm_payment():
             cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
             for cart_item in cart_items:
                 db.session.delete(cart_item)
+
+            users_c = Coupon.query.filter_by(user_id=current_user.id).first()
+            users_c.status = 'success'
             db.session.commit()
 
             send_coupon_email(user)
