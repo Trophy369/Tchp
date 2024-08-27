@@ -1,20 +1,8 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { useAuth } from "../authContext/AuthProvider";
-import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux';
 
 const UserRoutes = () => {
-  const { user, loading } = useAuth(); // Assume useAuth provides a loading state
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (!loading) {
-      setIsLoading(false);
-    }
-  }, [loading]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const { user } = useSelector((state) => state.user);
 
   if (user) {
     return user.roles === 1 ? <Outlet /> : <Navigate to="/signin" />;

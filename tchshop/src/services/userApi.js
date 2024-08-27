@@ -257,6 +257,7 @@ export const checkout = async () => {
     credentials: 'include',
   };
 
+  return fetchWithState(`${baseUrl}/checkout`, requestOptions)
   try {
     const response = await fetch(`${baseUrl}/checkout`, requestOptions);
     
@@ -296,4 +297,35 @@ export const proceed = async () => {
     console.error('Checkout error:', error);
     throw error;
   }
+};
+
+
+export const payment = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  return fetchWithState(`${baseUrl}/paymentMethods`, requestOptions)
+};
+
+export const pay = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  return fetchWithState(`${baseUrl}/pay`, requestOptions)
+};
+
+export const confirmation = async () => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include',
+  };
+
+  return fetchWithState(`${baseUrl}/pay`, requestOptions)
 };

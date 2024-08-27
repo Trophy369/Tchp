@@ -1,12 +1,14 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import useValid from "../hooks/useValid";
-import { useAuth } from "../authContext/AuthProvider";
+import { useSelector, useDispatch } from "react-redux";
+import { signInUserAsync } from "../../reducers/userReducer";
 
 const Signin = () => {
   const navigate = useNavigate();
-  const { auth, user, error, loading } = useAuth();
+  const dispatch = useDispatch();
+  const { user, loading, error } = useSelector(state => state.user);
 
   const {
     value: enteredEmail,
@@ -14,8 +16,8 @@ const Signin = () => {
     hasError: emailInputHasError,
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
-    reset: resetEmailInput,
-  } = useValid((value) => value.includes("@"));
+    reset: resetEmailInput
+  } = useValid(value => value.includes("@"));
 
   let formIsValid = false;
 
@@ -25,7 +27,7 @@ const Signin = () => {
 
   const passwordRef = useRef();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     if (!enteredEmailisValid) {
@@ -34,13 +36,18 @@ const Signin = () => {
     const emailInput = enteredEmail;
     const passwordInput = passwordRef.current.value;
     resetEmailInput();
-    await auth(emailInput, passwordInput);
+    dispatch(signInUserAsync(emailInput, passwordInput));
+  };
+
+  useEffect(() => {
     if (user) {
       user.roles === 2 ? navigate("/admin") : navigate("/");
     }
-  };
+  }, [user, navigate]);
 
-  const emailInputClasses = emailInputHasError ? "text-center text-red-700" : "";
+  const emailInputClasses = emailInputHasError
+    ? "text-center text-red-700"
+    : "";
 
   return (
     <div className="flex items-center justify-center px-4 py-6 bg-gray-50 sm:px-6 lg:px-8">

@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider
 } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import DefaultLayout from "./layouts/DefaultLayout";
 import AdminRoutes from "./components/Auth/AdminRoutes";
 import UserRoutes from "./components/Auth/UserRoutes";
@@ -29,7 +31,8 @@ import CreateCategory from "./components/Admin/CreateCategory";
 import Dashboard from "./components/User/Dashboard";
 import Checkout from "./components/Cart/Checkout";
 import Faq from "./pages/Faq";
-import CategoryPage from './components/collections/CategoryPage';
+import CategoryPage from "./components/collections/CategoryPage";
+import { checkAuthStatusAsync } from "./reducers/userReducer";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -62,12 +65,18 @@ const router = createBrowserRouter(
       <Route path="/shoppolicy/warranty" element={<Warranty />} />
       <Route path="/faq" element={<Faq />} />
       <Route path="collections/:name" element={<CategoryPage />} />
-      <Route path="/:refCode" element={<SignUp />}>
+      <Route path="/:refCode" element={<SignUp />} />
     </Route>
   )
 );
 
 const App = () => {
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(checkAuthStatusAsync());
+  }, [dispatch]);
+
   return <RouterProvider router={router} />;
 };
 export default App;

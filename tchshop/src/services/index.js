@@ -56,34 +56,46 @@ export const signup = async (email, password, remember) => {
   return response;
 };
 
-export const signout = async next => {
-  try {
-    const response = await fetch(`${baseUrl}/auth/logout`, {
-      method: "POST", // Assuming logout requires a POST method
-      credentials: "include" // Include credentials to ensure session cookies are sent
-    });
 
-    if (response.ok) {
-      // If the response is successful, call the next function
-      next();
-
-      // Optionally clear client-side user data
-      localStorage.removeItem("user"); // Clear stored user data (if any)
-
-      return response;
-    } else {
-      // Handle cases where logout is unsuccessful
-      const errorData = await response.json(); // Optional: get the response body for error details
-      console.error(
-        "Logout failed:",
-        response.status,
-        response.statusText,
-        errorData
-      );
-      return response;
-    }
-  } catch (error) {
-    console.error("Error during logout:", error);
-    throw error; // Re-throw the error after logging
-  }
+export const signout = async () => {
+  const requestOptions = {
+    method: "GET",
+    credentials: "include" 
+  };
+  return fetchWithState(`${baseUrl}/auth/logout`, requestOptions);
 };
+
+// export const signout = async (callback) => {
+//   try {
+//     const response = await fetch(`${baseUrl}/auth/logout`, {
+//       method: "POST", // Assuming logout requires a POST method
+//       credentials: "include", // Include credentials to ensure session cookies are sent
+//     });
+
+//     if (response.ok) {
+//       // If the response is successful, call the callback function
+//       if (callback && typeof callback === 'function') {
+//         callback();
+//       }
+
+//       // Optionally clear client-side user data
+//       localStorage.removeItem("user"); // Clear stored user data (if any)
+
+//       return response;
+//     } else {
+//       // Handle cases where logout is unsuccessful
+//       const errorData = await response.json(); // Optional: get the response body for error details
+//       console.error(
+//         "Logout failed:",
+//         response.status,
+//         response.statusText,
+//         errorData
+//       );
+//       throw new Error(`Logout failed: ${response.statusText}`);
+//     }
+//   } catch (error) {
+//     console.error("Error during logout:", error);
+//     throw error; // Re-throw the error after logging
+//   }
+// };
+

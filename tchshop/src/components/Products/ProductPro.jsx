@@ -63,7 +63,7 @@ const ProductPro = props => {
 
   const imageUrls = Array.isArray(product.product_image)
     ? product.product_image.map(
-        img => `${baseURL}/static/products/${img.image_name}`
+        img => `static/products/${img.image_name}`
       )
     : [];
 

@@ -11,8 +11,8 @@ import { fetchCartItems } from "../../reducers/cartReducer";
 
 
 const CartPage = ({}) => {
-  const { user } = useAuth();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const { cart_details, loading, error } = useSelector(state => state.cart);
 
   useEffect(() => {
@@ -68,6 +68,7 @@ const CartPage = ({}) => {
                 name={item.product_name}
                 quantity={item.prod_quantity}
                 price={item.discounted_price}
+                image={item.product_image}
               />
             ))}
           </tbody>
