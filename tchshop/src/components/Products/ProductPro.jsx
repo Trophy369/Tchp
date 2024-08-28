@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import config from "../../config";
 import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
@@ -8,7 +7,6 @@ import Carousel from "./Carousel";
 import {
   addToCart,
   viewProduct,
-  viewProductDescription,
   viewProductColors,
   getShipping
 } from "../../services/userApi";
@@ -16,24 +14,23 @@ import { addToCartAsync } from "../../reducers/cartReducer";
 
 import { useAuth } from "../authContext/AuthProvider";
 import Reviews from "./Reviews";
+import ProductDescription from "./ProductDescription";
 
-const baseURL = config.baseUrl;
 
 // Product component
-const ProductPro = props => {
-  const { user } = useAuth();
+const ProductPro = () => {
   const dispatch = useDispatch();
   const [colors, setColors] = useState([]);
   const [color, setColor] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [product, setProduct] = useState([]);
   const [shippingMethods, setShippingMethods] = useState([]);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
   const { id } = useParams();
   const [lilQuantity, setLilQuantity] = useState(quantity);
-  const [productDesc, setProductDesc] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -42,15 +39,6 @@ const ProductPro = props => {
     };
 
     fetchProduct();
-  }, [id]);
-
-  useEffect(() => {
-    const fetchProductDesc = async () => {
-      const data = await viewProductDescription(id);
-      setProductDesc(data);
-    };
-
-    fetchProductDesc();
   }, [id]);
 
   useEffect(() => {
@@ -75,13 +63,7 @@ const ProductPro = props => {
 
   const imageUrls = Array.isArray(product.product_image)
     ? product.product_image.map(
-        img => `${baseURL}/static/products/${img.image_name}`
-      )
-    : [];
-
-  const descImageUrls = Array.isArray(productDesc.images)
-    ? productDesc.images.map(
-        img => `${baseURL}/static/descriptions/${img.image_name}`
+        img => `static/products/${img.image_name}`
       )
     : [];
 
@@ -92,7 +74,9 @@ const ProductPro = props => {
       setError("Please select a color.");
       return;
     }
-    setError("");
+
+    setLoading(true)
+    setError(null);
     dispatch(addToCartAsync(id, quantity, selectedShippingMethod, color));
     setNotification("Product added to cart");
     setTimeout(() => setNotification(""), 3000);
@@ -197,6 +181,10 @@ const ProductPro = props => {
             </div>
           }
         </section>
+      </div>
+      <div className="my-4 text-center">
+        <p>Description.</p>
+        <ProductDescription />
       </div>
       <div className="my-4 text-center">
         <p>Additional product details go here.</p>

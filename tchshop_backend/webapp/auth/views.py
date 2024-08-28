@@ -104,8 +104,14 @@ def signin():
 @login_required
 def logout():
     logout_user()
-    return jsonify({"message": "User logged out"}), 200
+    session.clear()
 
+    response = jsonify({"message": "User logged out"})
+    response.set_cookie('session', '', expires=0)
+
+    response.set_cookie('session', '', expires=0)
+    
+    return response
 
 @auth_views.route('/reset_password_request', methods=['GET'], strict_slashes=False)
 def reset_password_request():
@@ -113,7 +119,6 @@ def reset_password_request():
         if current_user.is_authenticated:
             return redirect(url_for('main.get_products'))
         return redirect(url_for('auth_views.reset_password_email')), 200
-
 
 # enter email address to get reset code
 @auth_views.route('/reset_password_email', methods=['POST'], strict_slashes=False)

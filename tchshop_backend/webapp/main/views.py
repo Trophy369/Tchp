@@ -16,7 +16,6 @@ import os
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
-
 # get all products
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
@@ -54,7 +53,7 @@ def get_products():
 def view_categories():
     categories = Category.query.filter_by()
     all_cat = [category.to_dict() for category in categories]
-    return jsonify({'categories': all_cat}), 200
+    return jsonify(all_cat), 200
 
 
 # view all products under a category
@@ -71,7 +70,7 @@ def products_category(category):
         'product_name': prod.product_name,
         'id': prod.id
     } for prod in cat_prods]
-    return jsonify({'products': category_products}), 200
+    return jsonify(category_products), 200
 
 
 # get a product
@@ -127,7 +126,8 @@ def add_to_cart(product_id):
     cs = len(all_colors)
     # color = data['color']
     # if not color:
-    color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
+    color = data.get('color')
+    # color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
 
@@ -193,9 +193,7 @@ def cart():
             'delivery_date': shipping.deliveryTime if shipping else None
         })
     
-    total_items = len(cart_items)
-    logging.info(f"Cart details: {cart_details}")
-    return jsonify({'total': total_items, 'cart_details': cart_details}), 200
+    return jsonify({'cart_details': cart_details}), 200
 
 
 # remove product from cart

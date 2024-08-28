@@ -15,7 +15,8 @@ const Cart = ({
   productId,
   name,
   price,
-  quantity
+  quantity,
+  image
 }) => {
   const dispatch = useDispatch();
   const [lilQuantity, setLilQuantity] = useState(quantity);
@@ -63,8 +64,7 @@ const Cart = ({
   return (
     <tr key={productId} className="border-b">
       <td className="flex items-center py-2 space-x-4">
-        <ShowImage style={true} />
-        {/* <img src={item.imageUrl} alt={item.title} className="object-cover w-16 h-16"/> */}
+        <ShowImage style="cart" url={`static/products/default_img/${image}`}/>
         <span className="truncate">{name}</span>
       </td>
       <td className="hidden py-2 md:table-cell">
