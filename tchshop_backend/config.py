@@ -44,7 +44,7 @@ class Config:
     MAIL_DEFAULT_SENDER = 'countliason@gmail.com'
     # MAIL_DEFAULT_SENDER = 'lindabosquet@outlook.com'
     # MAIL_MAX_EMAILS = None
-    MAIL_SUPPRESS_SEND = False
+    MAIL_SUPPRESS_SEND = True
     # MAIL_ASCII_ATTACHMENTS = False
 
 

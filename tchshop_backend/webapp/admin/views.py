@@ -488,7 +488,7 @@ def admin_delete_product_colors(id):
 @has_role('administrator')
 def admin_delete_product(id):
     cart_item = CartItem.query.filter_by(product_id=id).all()
-    colors = ProductColor.query.filter_by(product_id=id).all()
+    # colors = ProductColor.query.filter_by(product_id=id).delete()
 
     delete_id = Product.query.get(id)
     if delete_id:
@@ -497,7 +497,7 @@ def admin_delete_product(id):
         # for col in colors:
         #     db.session.delete(col)
         admin_delete_product_description_img(delete_id.product_name)
-        admin_delete_product_colors(delete_id.product_name)
+        admin_delete_product_colors(delete_id.id)
         admin_delete_product_images(delete_id.product_name)
         # delete_id.delete_user_role(id=delete_id)
         db.session.delete(delete_id)

@@ -323,7 +323,7 @@ def delete_all_items():
     db.session.commit()
     return jsonify(status="success", message="Cart cleared", data={}), 200
 
-# reviews bombing
+# reviews with code
 @main.route('/reviews/<int:product_id>/<code>', methods=["GET"], strict_slashes=False)
 def rev_sesh(product_id, code):
     #if its a new user, get the user that referred them. Save referrer in a cookie. Redirect to signup
