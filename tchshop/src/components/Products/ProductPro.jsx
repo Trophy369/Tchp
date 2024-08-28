@@ -69,13 +69,13 @@ const ProductPro = props => {
 
   const imageUrls = Array.isArray(product.product_image)
     ? product.product_image.map(
-        img => `http://127.0.0.1:5000/static/products/${img.image_name}`
+        img => `http://127.0.0.1:1440/static/products/${img.image_name}`
       )
     : [];
 
     const descImageUrls = Array.isArray(productDesc.images)
     ? productDesc.images.map(
-        img => `http://127.0.0.1:5000/static/descriptions/${img.image_name}`
+        img => `http://127.0.0.1:1440/static/descriptions/${img.image_name}`
       )
     : [];
 

@@ -4,7 +4,7 @@ const Review = ({ item }) => {
 
     const imageUrls = Array.isArray(Image)
     ? Image.map(
-        img => `http://127.0.0.1:5000/static/reviews/${img}`
+        img => `http://127.0.0.1:1440/static/reviews/${img}`
       )
     : [];
 
