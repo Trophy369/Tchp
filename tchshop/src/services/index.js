@@ -54,30 +54,7 @@ export const signup = async (email, password, remember) => {
 };
 
 export const signout = async (next) => {
-  try {
-    const response = await fetch(`${baseUrl}/auth/logout`, {
-      method: 'POST', // Assuming logout requires a POST method
-      credentials: 'include' // Include credentials to ensure session cookies are sent
-    });
-
-    if (response.ok) {
-      // If the response is successful, call the next function
-      next();
-
-      // Optionally clear client-side user data
-      localStorage.removeItem('user'); // Clear stored user data (if any)
-
-      return response;
-    } else {
-      // Handle cases where logout is unsuccessful
-      const errorData = await response.json(); // Optional: get the response body for error details
-      console.error('Logout failed:', response.status, response.statusText, errorData);
-      return response;
-    }
-  } catch (error) {
-    console.error('Error during logout:', error);
-    throw error; // Re-throw the error after logging
-  }
+  const response = await fetch(`${baseUrl}/auth/logout`, {credentials: "include"});
+  next();
+  return response;
 };
-
-

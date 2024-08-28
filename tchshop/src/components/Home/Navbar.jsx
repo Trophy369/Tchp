@@ -12,7 +12,7 @@ import { signout } from "../../services";
 import { useAuth } from "../authContext/AuthProvider";
 
 const Navbar = () => {
-  const { user, logOut } = useAuth();
+  const { user } = useAuth();
   const numberOfItems = useSelector(state => state.cart.total);
   const history = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +23,6 @@ const Navbar = () => {
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
-
   return (
     <nav className="px-4 py-3 text-white bg-blue-500 z-sticky ">
       <div className="container flex items-center justify-between mx-auto">
@@ -99,47 +98,44 @@ const Navbar = () => {
 
         {/* Right side links (Login, Create Account, Cart) */}
         <div className="items-center hidden md:flex">
-        {user ? (
-            <Link
-              to="/"
-              className="px-2 py-2 mx-4 text-white rounded hover:bg-blue-700"
-            >
+          <Link
+            to="/signin"
+            className="px-2 py-2 mx-4 rounded hover:bg-blue-600"
+          >
+            Login
+          </Link>
+          <Link
+            to="/signup"
+            className="px-2 py-2 mx-4 text-white bg-blue-600 rounded hover:bg-blue-700"
+          >
+            Sign Up
+          </Link>
+          <Link
+            to="/"
+            className="px-2 py-2 mx-4 text-white rounded hover:bg-blue-700"
+          >
+            {user !== null && (
               <span
                 onClick={() =>
-                  logOut(() => {
+                  signout(() => {
                     history("/");
                   })
                 }
               >
                 Sign Out
               </span>
-            </Link>
-        ) : (
-          // <div className="items-center hidden md:flex">
-          <div>
-            <Link
-              to="/signin"
-              className="px-2 py-2 mx-4 rounded hover:bg-blue-600"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="px-2 py-2 mx-4 text-white bg-blue-600 rounded hover:bg-blue-700"
-            >
-              Sign Up
-            </Link>            
-          </div>
-        )}
-        <Link to="/cart" className="relative mx-4">
-              <FontAwesomeIcon
-                icon={faShoppingCart}
-                className="text-2xl text-white cursor-pointer"
-              />
-              <span className="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full">
-                {numberOfItems}
-              </span>
-            </Link>
+            )}
+          </Link>
+
+          <Link to="/cart" className="relative mx-4">
+            <FontAwesomeIcon
+              icon={faShoppingCart}
+              className="text-2xl text-white cursor-pointer"
+            />
+            <span className="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full">
+              {numberOfItems}
+            </span>
+          </Link>
         </div>
 
         {/* Mobile menu button */}

@@ -539,6 +539,8 @@ def proceed():
 def select_method():
     data = request.json
     method = data["method"]
+    session["method"] = method
+
     check = Wallet.query.filter_by(currency_type=method).first()
     if not check:
         return jsonify({"error": "not available consider another payment method"}), 400
@@ -547,7 +549,6 @@ def select_method():
         add = random.choice(usdt_address)
         address = add.address
         session["address"] = address
-        session["method"] = method
         return redirect(url_for("main.pay")), 200
     
 
@@ -568,7 +569,7 @@ def select_method():
 @login_required
 @main.route('/pay', methods=["GET"], strict_slashes=False)
 def pay():
-    if request.method == "GET" and current_user:
+    if current_user:
         address = session["address"]
         method = session["method"]
         grand_total = session["grand_total"]
@@ -581,7 +582,10 @@ def pay():
 def confirm_payment():
     user = current_user
     if request.method == "POST" and current_user:
+        if "grand_total" not in session:
+            return jsonify({'pending': 'payment already processing'}), 200
         grand_total = session["grand_total"]
+        
         # user_order = Order.query.filter_by(userid=current_user.id).all()
         # for order in user_order
         new_transaction = Transaction(order_date=datetime.utcnow(), userid=current_user.id, amount=grand_total, response='pending')
@@ -592,16 +596,22 @@ def confirm_payment():
                 db.session.delete(cart_item)
 
             users_c = Coupon.query.filter_by(user_id=current_user.id).first()
-            users_c.status = 'success'
+            if users_c:
+                users_c.status = 'success'
             db.session.commit()
 
-            send_coupon_email(user)
+            send_coupon_email(user, grand_total)
 
             # session.pop("grand_total", None)
+            session.clear()
             return jsonify({'success': 'payment processing'}), 201
-
         except Exception as e:
-            # session.pop("grand_total", None)
+            j = e
+            # logging.info(f'key error{j}')
+            # # session.pop("grand_total", None)
+            # if e:
+            #     return jsonify({'message': f'payment processing'}), 400
+
             db.session.rollback()
             return jsonify({'error': f'{e}payment not successful'}), 400
-
+        

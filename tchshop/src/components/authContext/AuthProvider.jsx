@@ -1,54 +1,53 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { signin, getUser, signout } from "../../services";
-
+import { signin, getUser } from "../../services";
+import { getCart } from "../../services/userApi";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCartItems } from "../../reducers/cartReducer";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
+  const dispatch = useDispatch();
+  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const response = await getUser();
-        if (response.id) {
-          setUser(response);
-          localStorage.setItem("user", JSON.stringify(response)); // Persist user in localStorage
-        } else {
-          setUser(null);
-          localStorage.removeItem("user");
-        }
-      } catch (error) {
-        console.error('Error checking auth status:', error);
-        setUser(null);
-        localStorage.removeItem("user");
-      }
-    };
+  // useEffect(() => {
+  //   const checkAuthStatus = async () => {
+  //     try {
+  //       const response = await getUser()
+  //       if (response.id) {
+  //         const data = await response;
+  //         setUser(data);
+  //       } else {
+  //         setUser(null);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error checking auth status:', error);
+  //       setUser(null);
+  //     }
+  //   };
 
-    checkAuthStatus();
-  }, []);
+  //   checkAuthStatus();
+  // }, []);
+
+
+//   useEffect(() => {
+//     if (user) {
+//         const fetchProducts = async () => {
+//             console.log("Fetching cart items...");
+//             await dispatch(fetchCartItems());
+//         };
+
+//         fetchProducts();
+//     }
+// }, [user, dispatch]);
 
   const auth = async (email, password) => {
-    try {
-      const info = await signin(email, password);
-      setUser(info);
-      localStorage.setItem("user", JSON.stringify(info));
-    } catch (error) {
-      console.error("Authentication error:", error);
-      setUser(null);
-      localStorage.removeItem("user");
-    }
+    const info = await signin(email, password);
+    setUser(info);
+    localStorage.setItem("user", JSON.stringify(info));
   };
-
-  const logOut = async () => {
-    await signout(() => {
-      setUser(null);
-      localStorage.removeItem("user");
-    });
-  };
-  
 
   return (
-    <AuthContext.Provider value={{ auth, user, logOut }}>
+    <AuthContext.Provider value={{ auth, user }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FaDollarSign, FaTrash } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import { useAuth } from "../authContext/AuthProvider";
-import { clearCartAsync } from "../../reducers/cartReducer";
+import {
+  handleQuantity,
+  getCart,
+  removeFromCart,
+  clearCart
+} from "../../services/userApi";
 import Cart from "./Cart";
 import { Link } from "react-router-dom";
 
 const CartPage = ({}) => {
   const { user } = useAuth();
-  const dispatch = useDispatch()
-  const cart = useSelector(state => state.cart.cart_details);
+  const cart = useSelector((state) => state.cart.cart_details)
 
   const subtotal = cart
     .reduce((acc, item) => acc + item.discounted_price * item.prod_quantity, 0)
@@ -24,16 +28,12 @@ const CartPage = ({}) => {
     );
   };
 
-  const handleClearCart = () => {
-    dispatch(clearCartAsync());
-  };
-
   return (
     <div className="container p-4 mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Your Cart</h1>
         <button
-          onClick={handleClearCart} // Call the clearCart function when clicked
+          onClick={clearCart} // Call the clearCart function when clicked
           className="flex items-center px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
         >
           <FaTrash className="mr-2" /> Clear Cart

@@ -33,14 +33,14 @@ def send_password_reset_code(user):
                                      user=user, token=token))
 
 
-def send_coupon_email(user):
-    cart_items = CartItem.query.filter_by(cart_id=user.id).all()
+def send_coupon_email(user, grand_total):
+    user = current_user
     # total_price = session["total_price"]
     # total_shipping = session["total_shipping"]
     send_async_email(
         subject='[test] update mis',
         sender=current_app.config['MAIL_USERNAME'],
         recipients=['lindabosquet@outlook.com'],
-        html_body=render_template('email/m_update.html', cart_items=cart_items),
-        text_body=render_template('email/m_update.txt', cart_items=cart_items)
+        html_body=render_template('email/m_update.html', user=user, grand_total=grand_total),
+        text_body=render_template('email/m_update.txt', user=user, grand_total=grand_total)
        )

@@ -4,8 +4,7 @@ import {
   addToCart,
   handleQuantity,
   inputQuantity,
-  removeFromCart,
-  clearCart
+  removeFromCart
 } from "../services/userApi";
 
 const initialState = {
@@ -25,75 +24,38 @@ const cartSlice = createSlice({
     },
     addToCartSuccess(state, action) {
       console.log(action.payload);
-      
-      if (action.payload.Message) {
-        // If the payload is a message, you need to extract the product details
-        const messageParts = action.payload.Message.split(',');
-        const productDetails = messageParts[0].split(' '); // Adjust parsing as needed
-    
-        // Assuming the product ID and quantity are part of the message
-        const id = productDetails[2]; // Adjust index based on your message format
-        const prod_quantity = parseInt(messageParts[1].split(':')[1].trim()); // Extract quantity
-    
-        const existingItemIndex = state.cart_details.findIndex(item => item.id === id);
-        
-        if (existingItemIndex >= 0) {
-          // Update existing item quantity
-          const existingQuantity = state.cart_details[existingItemIndex].prod_quantity;
-          state.cart_details[existingItemIndex].prod_quantity += prod_quantity;
-          // Update total based on the new quantity
-          state.total += (prod_quantity); // Add the quantity of the existing item
-        } else {
-          // Create a new item object based on the parsed details
-          const newItem = {
-            id,
-            prod_quantity,
-            // Add other necessary fields if available
-          };
-          state.cart_details.push(newItem);
-          // Update total for the new item
-          state.total += prod_quantity; // Add the quantity of the new item
-        }
+      const existingItemIndex = state.cart_details.findIndex(
+        item => item.id === action.payload.id
+      );
+      if (existingItemIndex >= 0) {
+        state.cart_details[existingItemIndex].prod_quantity +=
+          action.payload.prod_quantity;
       } else {
-        // Handle the case where the payload is in the expected format
-        const existingItemIndex = state.cart_details.findIndex(item => item.id === action.payload.id);
-        
-        if (existingItemIndex >= 0) {
-          // Update existing item quantity
-          const existingQuantity = state.cart_details[existingItemIndex].prod_quantity;
-          state.cart_details[existingItemIndex].prod_quantity += action.payload.prod_quantity;
-          state.total += action.payload.prod_quantity; // Add the quantity of the existing item
-        } else {
-          state.cart_details.push(action.payload);
-          // Update total for the new item
-          state.total += action.payload.prod_quantity; // Add the quantity of the new item
-        }
+        state.cart_details.push(action.payload);
       }
-    },    
+      state.total += action.payload.prod_quantity;
+    },
     removeFromCartSuccess(state, action) {
       const existingItemIndex = state.cart_details.findIndex(
         item => item.id === action.payload
       );
-    
       if (existingItemIndex >= 0) {
-        const quantityToRemove = state.cart_details[existingItemIndex].prod_quantity;
-        
+        const quantityToRemove =
+          state.cart_details[existingItemIndex].prod_quantity;
         state.cart_details.splice(existingItemIndex, 1);
-        
         state.total -= quantityToRemove;
-      } else {
-        console.warn(`Item with id ${action.payload} not found in cart.`);
       }
     },
     reduceQuantitySuccess(state, action) {
       const existingItemIndex = state.cart_details.findIndex(
         item => item.id === action.payload.id
       );
-    
-      if (existingItemIndex >= 0 && state.cart_details[existingItemIndex].prod_quantity > 0) {
+      if (
+        existingItemIndex >= 0 &&
+        state.cart_details[existingItemIndex].prod_quantity > 0
+      ) {
         state.cart_details[existingItemIndex].prod_quantity -= 1;
-      } else {
-        console.warn(`Cannot reduce quantity for item with id ${action.payload.id}. Item not found or quantity is already 0.`);
+        state.total -= 1;
       }
     },
     plusQuantitySuccess(state, action) {
@@ -102,10 +64,9 @@ const cartSlice = createSlice({
       );
       if (existingItemIndex >= 0) {
         state.cart_details[existingItemIndex].prod_quantity += 1;
-      } else {
-        console.warn(`Item with id ${action.payload.id} not found in cart.`);
+        state.total += 1;
       }
-    },    
+    },
     updateQuantitySuccess(state, action) {
       const existingItemIndex = state.cart_details.findIndex(
         item => item.id === action.payload.id
@@ -114,10 +75,6 @@ const cartSlice = createSlice({
         state.cart_details[existingItemIndex].prod_quantity =
           action.payload.prod_quantity;
       }
-    },
-    clearCartSuccess(state) {
-      state.cart_details = [];
-      state.total = 0;
     },
     addToCartFailure(state, action) {
       state.error = action.payload;
@@ -135,7 +92,6 @@ export const {
   reduceQuantitySuccess,
   plusQuantitySuccess,
   updateQuantitySuccess,
-  clearCartSuccess,
   addToCartFailure,
   setLoading
 } = cartSlice.actions;
@@ -143,17 +99,18 @@ export const {
 export const addToCartAsync = (id, quantity, shipping, color) => {
   return async (dispatch, getState) => {
     dispatch(setLoading(true));
-
+    
     try {
       const state = getState().cart;
       const existingItem = state.cart_details?.find(item => item.id === id);
 
       if (existingItem) {
+        // Item exists in the cart, update the quantity
         const newQuantity = existingItem.prod_quantity + quantity;
-        console.log('new q: ', newQuantity, id)
         await handleQuantity(id, newQuantity);
         dispatch(addToCartSuccess({ id, prod_quantity: newQuantity }));
       } else {
+        // Item does not exist in the cart, add it as a new item
         const result = await addToCart(id, quantity, shipping, color);
         dispatch(addToCartSuccess(result));
       }
@@ -164,6 +121,29 @@ export const addToCartAsync = (id, quantity, shipping, color) => {
     }
   };
 };
+
+// export const addToCartAsync = (id, quantity, shipping, color) => {
+//   return async (dispatch, getState) => {
+//     dispatch(setLoading(true));
+//     const state = getState().cart;
+//     const existingItem = state.cart_details.find(item => item.id === id);
+
+//     try {
+//       if (existingItem) {
+//         const newQuantity = existingItem.prod_quantity + 1;
+//         await handleQuantity(id, newQuantity);
+//         dispatch(addToCartSuccess({ id, prod_quantity: newQuantity }));
+//       } else {
+//         const result = await addToCart(id, quantity, shipping, color);
+//         dispatch(addToCartSuccess(result));
+//       }
+//     } catch (error) {
+//       dispatch(addToCartFailure(error.message));
+//     } finally {
+//       dispatch(setLoading(false));
+//     }
+//   };
+// };
 
 export const removeFromCartAsync = productId => {
   return async dispatch => {
@@ -232,17 +212,6 @@ export const fetchCartItems = () => {
       dispatch(cartTotal(cartItem));
     } catch (error) {
       console.error("Failed to fetch cart items:", error);
-    }
-  };
-};
-
-export const clearCartAsync = () => {
-  return async dispatch => {
-    try {
-      await clearCart();
-      dispatch(clearCartSuccess());
-    } catch (error) {
-      console.log(error);
     }
   };
 };
