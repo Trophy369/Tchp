@@ -35,6 +35,8 @@ import Checkout from "./components/Cart/Checkout";
 import Faq from "./pages/Faq";
 import CategoryPage from "./components/collections/CategoryPage";
 import { checkAuthStatusAsync } from "./reducers/userReducer";
+import { fetchCartItems } from "./reducers/cartReducer";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -76,10 +78,17 @@ const router = createBrowserRouter(
 
 const App = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   
   useEffect(() => {
     dispatch(checkAuthStatusAsync());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user !== null) {
+      dispatch(fetchCartItems());
+    }
+  }, [user, dispatch]);
 
   return <RouterProvider router={router} />;
 };

@@ -12,14 +12,14 @@ import { fetchCartItems } from "../../reducers/cartReducer";
 
 const CartPage = ({}) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
+  // const { user } = useSelector((state) => state.user);
   const { cart_details, loading, error } = useSelector(state => state.cart);
 
-  useEffect(() => {
-    if (user !== null) {
-      dispatch(fetchCartItems());
-    }
-  }, [user, dispatch]);
+  // useEffect(() => {
+  //   if (user !== null) {
+  //     dispatch(fetchCartItems());
+  //   }
+  // }, [user, dispatch]);
 
   const subtotal = cart_details
     .reduce((acc, item) => acc + item.discounted_price * item.prod_quantity, 0)
