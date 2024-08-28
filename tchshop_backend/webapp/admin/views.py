@@ -2,7 +2,7 @@ import os
 import random
 import string
 from config import Config
-from flask import render_template, url_for, abort, redirect, request, flash, jsonify, current_app
+from flask import render_template, url_for, abort, redirect, request, flash, jsonify, current_app, render_template_string
 from . import admin
 from models.user import Role, User, Cart
 from flask_login import login_required, current_user
@@ -619,6 +619,51 @@ def add_review(product_id):
     return jsonify({'error': 'review failed'}), 404
 
 
+
+# update reviews times
+@login_required
+@admin.route('/addReviewDates/<id>', methods=['GET', 'POST'], strict_slashes=False)
+@has_role('administrator')
+def update_review_dates(id):
+    # data = request.get_json()
+    # prod_reviews = Review.query.all()
+    product = Product.query.get(id)
+    if product:
+        # Read the datetime values from the file
+        datetime_list = []
+        try:
+            BASEDIR = os.path.dirname(os.path.abspath(__file__))
+            FILEPATH = os.path.join(BASEDIR, 'rev.txt')
+            # logging.info(f'{FILEPATH}')
+          
+            with open(FILEPATH, 'r') as file:
+                content = file.readlines()
+                # strip each newline from each line
+                new_list = [line.strip() for line in content]
+                datetime_list = new_list
+                # logging.info(f'{new_list}')
+            all_reviews = Review.query.filter_by(productid=id).all()
+            rev_len = len(datetime_list)
+            for review in all_reviews:
+                try:
+                    for i in range(len(all_reviews)):
+                        logging.info(f'{type(datetime.strptime(datetime_list[i], "%Y-%m-%d %H:%M:%S"))}')
+
+                        review.timestamp = datetime.strptime(datetime_list[random.choice(range(rev_len))], "%Y-%m-%d %H:%M:%S")
+                        return jsonify({"success": "Time updated successfully"}), 200
+                except Exception as e:
+                    return jsonify({"error": f"{e}"}), 404
+            db.session.commit()
+    
+            
+
+        except FileNotFoundError:
+            return "File not found.", 404
+        # reviews = []     
+    # return render_template_string('{{content}}', content=content), 200
+    
+    
+        
 @login_required
 @admin.route('/generateCoupon', methods=['GET', 'POST'], strict_slashes=False)
 @has_role('administrator')
