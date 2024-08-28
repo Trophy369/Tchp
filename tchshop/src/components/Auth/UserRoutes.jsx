@@ -1,14 +1,14 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { useAuth } from "../authContext/AuthProvider";
+import { useSelector } from 'react-redux';
 
 const UserRoutes = () => {
-  const { user } = useAuth();
+  const { user } = useSelector((state) => state.user);
 
-  if (user && user.roles !== null) {
+  if (user) {
     return user.roles === 1 ? <Outlet /> : <Navigate to="/signin" />;
-  } else {
-    return <Navigate to="/signin" />;
   }
+
+  return <Navigate to="/signin" />;
 };
 
 export default UserRoutes;

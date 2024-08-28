@@ -1,10 +1,14 @@
+import config from "../../config"
+
+const baseURL = config.baseUrl
+
 const Review = ({ item }) => {
 
     const {Image, Rating, Review, Timestamp} = item
 
     const imageUrls = Array.isArray(Image)
     ? Image.map(
-        img => `http://127.0.0.1:1440/static/reviews/${img}`
+        img => `${baseURL}/static/reviews/${img}`
       )
     : [];
 

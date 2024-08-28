@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -8,13 +8,17 @@ import {
   faScrewdriverWrench,
   faUser
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  signOutUserAsync
+} from "../../reducers/userReducer";
 import { signout } from "../../services";
-import { useAuth } from "../authContext/AuthProvider";
+import Categories from "./Categories";
 
 const Navbar = () => {
-  const { user } = useAuth();
-  const numberOfItems = useSelector(state => state.cart.total);
-  const history = useNavigate();
+  const dispatch = useDispatch()
+  const { user } = useSelector(state => state.user);
+  const numberOfItems = useSelector(state => state.cart.cart_details.length);
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false); // State for user dropdown menu
   const toggleNavbar = () => {
@@ -23,7 +27,16 @@ const Navbar = () => {
   const toggleUserMenu = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
-  console.log(numberOfItems);
+
+  const handleSignOut = async () => {
+    try {
+      await dispatch(signOutUserAsync()).unwrap();
+      signout(() => navigate('/'));
+    } catch (error) {
+      console.error('Failed to sign out:', error);
+    }
+  };
+
   return (
     <nav className="px-4 py-3 text-white bg-blue-500 z-sticky ">
       <div className="container flex items-center justify-between mx-auto">
@@ -52,39 +65,7 @@ const Navbar = () => {
           </Link>
           <div className="relative px-2 py-2 mx-4 rounded group">
             <span className="cursor-pointer hover:bg-blue-600">Products</span>
-            <div className="absolute hidden w-48 mt-1 bg-black rounded shadow-lg group-hover:block">
-              {/* Dropdown content */}
-              <Link
-                to="collections/flipper-zero"
-                className="block px-4 py-2 text-sm text-center hover:bg-gray-600"
-              >
-                Flipper-Zero
-              </Link>
-              <Link
-                to="collections/pentesting"
-                className="block px-4 py-2 text-sm text-center hover:bg-gray-600"
-              >
-                Pentesting
-              </Link>
-              <Link
-                to="collections/sdr"
-                className="block px-4 py-2 text-sm text-center hover:bg-gray-600"
-              >
-                SDR
-              </Link>
-              <Link
-                to="collections/rf-tools"
-                className="block px-4 py-2 text-sm text-center hover:bg-gray-600"
-              >
-                RF Tools
-              </Link>
-              <Link
-                to="collections/hak5"
-                className="block px-4 py-2 text-sm text-center hover:bg-gray-600"
-              >
-                Hak5
-              </Link>
-            </div>
+            <Categories />
           </div>
           <Link to="/faq" className="px-2 py-2 mx-4 rounded hover:bg-blue-600">
             FAQ
@@ -99,35 +80,48 @@ const Navbar = () => {
 
         {/* Right side links (Login, Create Account, Cart) */}
         <div className="items-center hidden md:flex">
-          <Link
-            to="/signin"
-            className="px-2 py-2 mx-4 rounded hover:bg-blue-600"
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="px-2 py-2 mx-4 text-white bg-blue-600 rounded hover:bg-blue-700"
-          >
-            Sign Up
-          </Link>
-          <Link
-            to="/"
-            className="px-2 py-2 mx-4 text-white rounded hover:bg-blue-700"
-          >
-            {user !== null && (
+          {user ? (
+            <Link
+              to="/"
+              className="px-2 py-2 mx-4 text-white rounded hover:bg-blue-700"
+            >
               <span
-                onClick={() =>
-                  signout(() => {
-                    history("/");
-                  })
-                }
+                onClick={handleSignOut}
               >
                 Sign Out
               </span>
-            )}
-          </Link>
-
+            </Link>
+          ) : (
+            // <Link
+            //   to="/"
+            //   className="px-2 py-2 mx-4 text-white rounded hover:bg-blue-700"
+            // >
+            //   <span
+            //     onClick={() =>
+            //       logOut(() => {
+            //         history("/");
+            //       })
+            //     }
+            //   >
+            //     Sign Out
+            //   </span>
+            // </Link>
+            // <div className="items-center hidden md:flex">
+            <div>
+              <Link
+                to="/signin"
+                className="px-2 py-2 mx-4 rounded hover:bg-blue-600"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="px-2 py-2 mx-4 text-white bg-blue-600 rounded hover:bg-blue-700"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
           <Link to="/cart" className="relative mx-4">
             <FontAwesomeIcon
               icon={faShoppingCart}
@@ -168,10 +162,7 @@ const Navbar = () => {
                 >
                   {user !== null && (
                     <span
-                      onClick={() =>
-                        signout(() => {
-                          history("/");
-                        })
+                      onClick={handleSignOut
                       }
                     >
                       Sign Out

@@ -1,0 +1,5 @@
+{% for item in cart_items %}
+    Product name {{ item.product_name }},
+    Product name {{ item.product_image }},
+    Product name {{ item.prod_quantity }},
+{% endfor %}

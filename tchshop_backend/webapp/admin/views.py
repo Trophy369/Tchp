@@ -31,6 +31,7 @@ def base():
 
     return jsonify({"Message": "Admin route success"}), 201
 
+
 # create product category
 @login_required
 @admin.route('/create_category', methods=['POST'])
@@ -161,61 +162,76 @@ def assign_role():
 @admin.route('/addproduct', methods=['POST'], strict_slashes=False)
 @has_role('administrator')
 def addproduct():
-    new_product = request.form
+    new_product_data = request.form
     image = request.files['file']
-    products = Product.query.filter_by(product_name=new_product['product_name']).first()
-    if products:
-        return jsonify({'error': 'product_name exists parameter'}), 403
+    existing_product = Product.query.filter_by(product_name=new_product_data['product_name']).first()
+    
+    if existing_product:
+        return jsonify({'error': 'Product with this name already exists'}), 403
 
-    product_name = new_product['product_name']
+    product_name = new_product_data['product_name']
 
+    # Save the uploaded image with a unique filename
     name = secure_filename(image.filename)
-    filename = product_name + '_' + name
-    logging.info(f"len img description {filename}")
+    filename = f"{product_name}_{name}"
+    logging.info(f"Saving image with filename: {filename}")
 
     if name != '':
         file_ext = os.path.splitext(filename)[1]
         if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
             abort(400)
-        # product_img = Product.query.filter_by(product_id=product.id).first()
+        
+        # Save the image file
         image.save(os.path.join(current_app.config['SINGLE_PRODUCT_UPLOAD_PATH'], filename))
+        
+        # Create a new Product instance
         new_product = Product(
-            product_name=new_product["product_name"],
+            product_name=product_name,
             product_image=filename,
-            quantity=new_product["quantity"],
-            regular_price=new_product["regular_price"],
-            discounted_price=new_product["discounted_price"],
-            description=new_product["description"]
+            quantity=new_product_data["quantity"],
+            regular_price=new_product_data["regular_price"],
+            discounted_price=new_product_data["discounted_price"],
+            description=new_product_data["description"]
         )
-    db.session.add(new_product)
-    try:
-        db.session.commit()
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': f'{e}product not added'})
-    db.session.close()
-    return jsonify({"Message": "Product  added successfully", "Product name": product_name}), 201
-
+        
+        db.session.add(new_product)
+        
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': f'Failed to add product: {str(e)}'}), 500
+        
+        # Return a success response with the product ID
+        return jsonify({
+            "Message": "Product added successfully",
+            "Product name": product_name,
+            "id": new_product.id
+        }), 201
+    
+    return jsonify({'error': 'Invalid image file'}), 400
 
 # add description to a product
 @login_required
-@admin.route('/addProductDescription/<string:product_name>', methods=['POST'], strict_slashes=False)
-@has_role('administrator') 
-def addDescription(product_name):
+@admin.route('/addProductDescription/<int:id>', methods=['POST'], strict_slashes=False)
+@has_role('administrator')
+def addDescription(id):
     data = request.form
     description_images = request.files.getlist('file')
     logging.info(f"len img description {len(description_images)}")
 
-    product = Product.query.filter_by(product_name=product_name).first()
+    # Find the product by ID
+    product = Product.query.get(id)
     if product is None:
-        return jsonify({'error': f'{product_name} does not exist'}), 403
+        return jsonify({'error': 'Product does not exist'}), 403
 
-    # Retrieve the saved product description if it exist
+    # Retrieve the saved product description if it exists
     prod_description = Description.query.filter_by(product_id=product.id).first()
     if prod_description and len(description_images) == 0:
         prod_description.specifications = data['specifications']
         db.session.commit()
-        return jsonify({'Message': f'Description specification updated successfully'})
+        return jsonify({'Message': 'Description specification updated successfully'})
+
     specifications = data['specifications']
 
     # Create and save the product description
@@ -228,7 +244,7 @@ def addDescription(product_name):
     logging.info(f"description {prod_description}")
 
     # Handle the uploading of images if they are within the allowed range
-    if 1 <= len(description_images) <= 5:
+    if (1 <= len(description_images)) and (len(description_images) <= 5):
         for uploaded_file in description_images:
             name = secure_filename(uploaded_file.filename)
             filename = f"{product.product_name}_{name}"
@@ -248,60 +264,87 @@ def addDescription(product_name):
 
     return jsonify({'Message': f'Description successfully added for {product.product_name}'}), 201
 
-
 # delete description of a product
 @login_required
-@admin.route('/delete_product_description/<string:product_name>', methods=["DELETE"], strict_slashes=False)
+@admin.route('/delete_product_description/<int:id>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
-def admin_delete_product_description_img(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+def admin_delete_product_description_img(id):
+    # Find the product by ID
+    product = Product.query.get(id)
 
     if not product:
-        return jsonify({'error': 'Product does not exist'})
+        return jsonify({'error': 'Product does not exist'}), 404
+
     if request.method == 'DELETE':
-        product_description = DescriptionImage.query.filter_by(product_id=product.id).all()
-        for image in product_description:
+        # Retrieve all description images associated with the product
+        product_description_images = DescriptionImage.query.filter_by(product_id=product.id).all()
+
+        # Delete each image record
+        for image in product_description_images:
             db.session.delete(image)
         db.session.commit()
-        product_description = DescriptionImage.query.filter_by(product_id=product.id).all()
-        images = [image.to_dict() for image in product_description]
-        return jsonify({'status': 'success', 'product_name': product.product_name, 'images_available': images})
-    return jsonify({'error': 'delete failed'})
 
+        # Verify if any images are left after deletion
+        remaining_images = DescriptionImage.query.filter_by(product_id=product.id).all()
+        images = [image.to_dict() for image in remaining_images]
+
+        return jsonify({
+            'status': 'success',
+            'product_name': product.product_name,
+            'images_available': images
+        }), 200
+
+    return jsonify({'error': 'Delete failed'}), 400
 
 # update product description detailed version
 @login_required
-@admin.route('/update_product_description/<string:product_name>', methods=["PUT"], strict_slashes=False)
+@admin.route('/update_product_description/<int:id>', methods=["PUT"], strict_slashes=False)
 @has_role('administrator')
-def admin_update_product_description_img(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+def admin_update_product_description_img(id):
+    # Retrieve the product using the product ID
+    product = Product.query.get(id)
     data = request.json
-    if product is None:
-        return jsonify({'error', 'Product does not exist'})
-    if request.method == 'PUT':
-        product_description = Description.query.filter_by(product_id=product.id).first()
-        product_description.specifications = data['specifications']
-        db.session.commit()
-        product_description = Description.query.filter_by(product_id=product.id).first()
-        return jsonify({'status': 'success', 'product_name': f'description updated for {product.product_name}', 'product_description': product_description.to_dict()})
-    db.session.rollback()
-    return jsonify({'error': 'update failed'})
 
+    if product is None:
+        return jsonify({'error': 'Product does not exist'}), 404
+
+    if request.method == 'PUT':
+        # Retrieve the existing product description
+        product_description = Description.query.filter_by(product_id=product.id).first()
+        
+        if not product_description:
+            return jsonify({'error': 'Description does not exist for this product'}), 404
+
+        # Update the specifications field
+        product_description.specifications = data.get('specifications')
+        db.session.commit()
+
+        # Fetch the updated product description
+        updated_description = Description.query.filter_by(product_id=product.id).first()
+
+        return jsonify({
+            'status': 'success',
+            'message': f'Description updated for {product.product_name}',
+            'product_description': updated_description.to_dict()
+        }), 200
+
+    db.session.rollback()
+    return jsonify({'error': 'Update failed'}), 400
 
 # add images to a product
 @login_required
-@admin.route('/addProductImage/<string:product_name>', methods=['POST'], strict_slashes=False)
+@admin.route('/addProductImage/<int:id>', methods=['POST'], strict_slashes=False)
 @has_role('administrator')
-def addImage(product_name):
+def addImage(id):
     product_images = request.files.getlist('file')
     logging.info(f"len img review {len(product_images)}")
 
-    product = Product.query.filter_by(product_name=product_name).first()
+    # Retrieve the product using the product ID
+    product = Product.query.get(id)
     if product is None:
-        return jsonify({'error': f'{product_name} does not exists'}), 403
+        return jsonify({'error': 'Product does not exist'}), 403
 
-    if len(product_images) >= 1 and (len(product_images) <= 7):
-        # prod_reviews = Review.query.filter_by(productid=product.id).first()
+    if len(product_images) >= 1 and len(product_images) <= 7:
         logging.info(f"prod {product}")
         for uploaded_file in product_images:
             name = secure_filename(uploaded_file.filename)
@@ -311,59 +354,74 @@ def addImage(product_name):
                 file_ext = os.path.splitext(filename)[1]
                 if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
                     abort(400)
+                
+                # Create and save the product image record
                 prod_img = ProductImage(image=filename, product_id=product.id)
                 db.session.add(prod_img)
                 db.session.commit()
-            uploaded_file.save(os.path.join(current_app.config['PRODUCT_IMAGE_UPLOAD_PATH'], filename))
-    #     image.append(filename)
-    u = ProductImage.query.filter_by(product_id=product.id).all()
-    logging.info(f"prod images {u}")
-    return jsonify({'Message': "Product Images(s) Successfully added"}), 200
 
+                # Save the file to the specified path
+                uploaded_file.save(os.path.join(current_app.config['PRODUCT_IMAGE_UPLOAD_PATH'], filename))
+
+    # Query all images associated with the product
+    product_images = ProductImage.query.filter_by(product_id=product.id).all()
+    logging.info(f"prod images {product_images}")
+
+    return jsonify({'Message': "Product Image(s) Successfully added"}), 200
 
 # delete product images
 @login_required
-@admin.route('/delete_product_images/<string:product_name>', methods=["DELETE"], strict_slashes=False)
+@admin.route('/delete_product_images/<int:id>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
-def admin_delete_product_images(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+def admin_delete_product_images(id):
+    product = Product.query.get(id)
 
     if product is None:
-        return jsonify({'error', 'Product does not exist'})
+        return jsonify({'error': 'Product does not exist'}), 404
+
     if request.method == 'DELETE':
+        # Retrieve and delete all product images associated with the product ID
         product_images = ProductImage.query.filter_by(product_id=product.id).all()
         for image in product_images:
             db.session.delete(image)
         db.session.commit()
+
+        # Verify if any images still exist for the product
         product_images = ProductImage.query.filter_by(product_id=product.id).all()
         images = [image.to_dict() for image in product_images]
-        return jsonify({'status': 'success', 'product_name': product.product_name, 'images_available': images})
-    return jsonify({'error': 'delete failed'})
 
+        return jsonify({'status': 'success', 'product_name': product.product_name, 'images_available': images})
+
+    return jsonify({'error': 'Delete failed'}), 400
 
 # add product color
 @login_required
-@admin.route('/addProductColor/<string:product_name>', methods=['POST'], strict_slashes=False)
+@admin.route('/addProductColor/<int:id>', methods=['POST'], strict_slashes=False)
 @has_role('administrator')
-def colors_available(product_name):
+def colors_available(id):
     data = request.get_json()
-    colors = data["name"]
+    colors = data.get("name")
     logging.info(f'{colors}, type{type(colors)}')
-    product = Product.query.filter_by(product_name=product_name).first()
 
+    product = Product.query.get(id)
 
-    # for i in data:
-    #     print(logging.info(f'{data[f"{i}"]}'))
-    present = ProductColor.query.filter_by(product_id=product.id).all()
-    if len(present) >= 6:
-        return jsonify({"error": "Consider clearing all product previous colors"}), 400
-    if not colors or not isinstance(colors, list):
-        return jsonify({"error": "Invalid JSON data"}), 400
     if product is None:
-        return jsonify({'error': f'{product_name} does not exists'}), 403
+        return jsonify({'error': 'Product does not exist'}), 404
+
+    # Check the number of existing colors for this product
+    present_colors = ProductColor.query.filter_by(product_id=product.id).all()
+    if len(present_colors) >= 6:
+        return jsonify({"error": "Consider clearing all previous colors for this product"}), 400
+
+    # Validate the colors input
+    if not colors or not isinstance(colors, list):
+        return jsonify({"error": "Invalid JSON data; 'name' should be a list of colors"}), 400
+
+    # Add new colors to the product
     for name in colors:
         product_color = ProductColor(color=name, number=random.choice(range(20)), product_id=product.id)
         db.session.add(product_color)
+
     try:
         db.session.commit()
         return jsonify({'message': 'Colors added successfully'}), 201
@@ -372,42 +430,57 @@ def colors_available(product_name):
         return jsonify({'error': str(e)}), 500
 
 
-    # logging.info(f"{colors}")
-
-
 # view products colors
 @login_required
-@admin.route('/view_product_color/<string:product_name>', methods=["GET"], strict_slashes=False)
+@admin.route('/view_product_color/<int:id>', methods=["GET"], strict_slashes=False)
 @has_role('administrator')
-def admin_view_product_colors(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+def admin_view_product_colors(id):
+    # Find the product by ID
+    product = Product.query.get(id)
+    
     if product is None:
-        return jsonify({'error', 'Product does not exist'})
+        return jsonify({'error': 'Product does not exist'}), 404
+    
     if request.method == 'GET':
+        # Retrieve colors for the product
         product_colors = ProductColor.query.filter_by(product_id=product.id).all()
         colors = [color.to_dict() for color in product_colors]
-        return jsonify({'product_name': product.product_name, 'colors_available': colors})
-
+        
+        return jsonify({
+            'product_name': product.product_name,
+            'product_id': product.id,
+            'colors_available': colors
+        }), 200
 
 # delete product colors
 @login_required
-@admin.route('/delete_product_color/<string:product_name>', methods=["DELETE"], strict_slashes=False)
+@admin.route('/delete_product_color/<int:id>', methods=["DELETE"], strict_slashes=False)
 @has_role('administrator')
-def admin_delete_product_colors(product_name):
-    product = Product.query.filter_by(product_name=product_name).first()
+def admin_delete_product_colors(id):
+    # Find the product by ID
+    product = Product.query.get(id)
 
     if product is None:
-        return jsonify({'error', 'Product does not exist'})
+        return jsonify({'error': 'Product does not exist'}), 404
+
     if request.method == 'DELETE':
+        # Retrieve and delete colors for the product
         product_colors = ProductColor.query.filter_by(product_id=product.id).all()
         for color in product_colors:
             db.session.delete(color)
         db.session.commit()
-        product_colors = ProductColor.query.filter_by(product_id=product.id).all()
-        # colors = [color.to_dict() for color in product_colors]
-        return jsonify({'status': 'success', 'product_name': product.product_name, 'colors_available': product_colors})
-    return jsonify({'error': 'delete failed'})
 
+        # Verify colors have been deleted
+        product_colors = ProductColor.query.filter_by(product_id=product.id).all()
+        
+        return jsonify({
+            'status': 'success',
+            'product_id': product.id,
+            'product_name': product.product_name,
+            'colors_available': [color.to_dict() for color in product_colors]  # Ensure to_dict() is defined
+        }), 200
+
+    return jsonify({'error': 'delete failed'}), 400
 
 # delete product
 @login_required
@@ -600,6 +673,16 @@ def delete_user_coupon(email):
 def delete_all_coupons():
     coupons = Coupon.query.delete()
     return jsonify({"success": "all coupons deleted"}), 200
+
+
+# view all coupons
+@login_required
+@admin.route('/viewCoupons', methods=['GET'], strict_slashes=False)
+@has_role('administrator')
+def view_all_coupons():
+    coupons = Coupon.query.all()
+    c = [coup.to_dict() for coup in coupons]
+    return jsonify({"success": c}), 200
 
 
 # add wallet addresses

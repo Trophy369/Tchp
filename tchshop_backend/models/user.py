@@ -7,11 +7,11 @@ from models.base_model import BaseModel
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Table, Boolean, Float
 from flask import current_app, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_login import AnonymousUserMixin, current_user
 from uuid import uuid4, UUID
 import logging
-
+import random
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
 cart_product = db.Table(
@@ -132,6 +132,55 @@ class User(db.Model):
     #         return True
     # return False
 
+    @staticmethod
+    def generate_confirmation_token():
+        """Generate a unique 6-digit code."""
+        return f"{random.randint(100000, 999999):06d}"
+
+    def store_generated_code(self):
+        token = self.generate_confirmation_token()
+        expiration_time = datetime.now() + timedelta(minutes=40)
+        users_code = Vcode(user_id=self.id, code=token, expires_at=expiration_time)
+        db.session.add(users_code)
+        db.session.commit()
+        return token
+
+    def revoke_token(self):
+        users_code = Vcode.query.filter_by(user_id=self.id).first()
+        db.session.delete(users_code)
+        db.session.commit()
+
+    def confirm(self, token):
+        users_code = Vcode.query.filter_by(user_id=self.id).first()
+        try:
+            if users_code:
+                code = users_code.code
+                expires_at = datetime.fromisoformat(str(users_code.expires_at))
+                if token == code and datetime.now() < expires_at:
+                    return True
+                self.revoke_token()
+                return False
+        except Exception as e:
+            return f"{e}"
+
+    # @staticmethod
+    # def get_reset_password_token():
+    #     """Generate a unique 6-digit code."""
+    #     return f"{random.randint(100000, 999999):06d}"
+
+    @staticmethod
+    def verify_reset_password_token(self, token):
+        users_code = Vcode.query.filter_by(user_id=current_user.id).first()
+        try:
+            if users_code:
+                code = users_code.code
+                expires_at = datetime.fromisoformat(str(users_code.expires_at))
+                if token == code and datetime.now() < expires_at:
+                    return True
+                self.revoke_token()
+                return False
+        except Exception as e:
+            return f"{e}"
 
     # get user by email
     def get_user_id_by_email(self, email):
@@ -233,3 +282,17 @@ class AnonymousUser(AnonymousUserMixin):
     @property
     def is_anonymous(self):
         return True
+
+
+class Vcode(db.Model):
+    __tablename__ = "vcodes"
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    code = db.Column(db.String(6), nullable=False)
+    expires_at = db.Column(db.String(), nullable=False)
+
+    def to_dict(self):
+        return {
+            'user_id': self.user_id,
+            'code': self.code,
+            'expires_at': self.expires_at
+        }

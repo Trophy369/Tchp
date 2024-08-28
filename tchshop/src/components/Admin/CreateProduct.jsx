@@ -50,9 +50,9 @@ const CreateProductComponent = () => {
         discountedPrice,
         file
       );
-      if (response["Product name"]) {
-        console.log(productName)
-        await addProductColors(productName, colors);
+      if (response.id) {
+        console.log(response)
+        await addProductColors(response.id, colors);
       }
       if (response.error) {
         setError(response.error);

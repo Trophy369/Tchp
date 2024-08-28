@@ -4,13 +4,18 @@ import {
   deleteProdDesc,
   updateProdDesc,
   deleteProdImg,
-  deleteProdCol
+  deleteProdCol,
+  handleUpload
 } from "../../services/adminApi";
 import {
   viewProductDescription,
-  viewProductColors
+  viewProductColors,
+  viewProduct
 } from "../../services/userApi";
 import { useLocation } from "react-router-dom";
+import config from "../../config";
+
+const baseURL = config.baseUrl;
 
 const Product = () => {
   const [productName, setProductName] = useState("");
@@ -18,6 +23,9 @@ const Product = () => {
   const [descriptionImages, setDescriptionImages] = useState([]);
   const [desc, setDesc] = useState([]);
   const [color, setColor] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const location = useLocation();
   const { product } = location.state || {};
 
@@ -31,6 +39,15 @@ const Product = () => {
   }, [product.id]);
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      const response = await viewProduct(product.id);
+      setProducts(response);
+    };
+
+    fetchProduct();
+  }, []);
+
+  useEffect(() => {
     const viewProdCol = async () => {
       const response = await viewProductColors(product.id);
       setColor(response);
@@ -39,10 +56,17 @@ const Product = () => {
     viewProdCol();
   }, [product.id]);
 
-  console.log()
-
-  const handleFileChange = e => {
+  const handleFileChanged = e => {
     setDescriptionImages(Array.from(e.target.files));
+  };
+
+  const handleFileChange = event => {
+    const files = Array.from(event.target.files);
+    setSelectedFiles(prevFiles => [...prevFiles, ...files]);
+    setPreviews(prevPreviews => [
+      ...prevPreviews,
+      ...files.map(file => URL.createObjectURL(file))
+    ]);
   };
 
   const handleSubmit = async e => {
@@ -50,7 +74,7 @@ const Product = () => {
 
     try {
       const response = await addProductDescription(
-        product.name,
+        product.id,
         specifications,
         descriptionImages
       );
@@ -64,7 +88,16 @@ const Product = () => {
     e.preventDefault();
 
     try {
-      const response = await updateProdDesc(product.name, specifications);
+      const response = await updateProdDesc(product.id, specifications);
+      console.log("Update Response:", response);
+    } catch (error) {
+      console.error("Update Error:", error);
+    }
+  };
+
+  const handleFiles = async () => {
+    try {
+      const response = await handleUpload(product.id, selectedFiles);
       console.log("Update Response:", response);
     } catch (error) {
       console.error("Update Error:", error);
@@ -73,7 +106,7 @@ const Product = () => {
 
   const handleDeleteDesc = async () => {
     try {
-      const response = await deleteProdDesc(product.name);
+      const response = await deleteProdDesc(product.id);
       console.log("Delete Description Response:", response);
     } catch (error) {
       console.error("Delete Description Error:", error);
@@ -82,7 +115,7 @@ const Product = () => {
 
   const handleDeleteImg = async () => {
     try {
-      const response = await deleteProdImg(product.name);
+      const response = await deleteProdImg(product.id);
       console.log("Delete Images Response:", response);
     } catch (error) {
       console.error("Delete Images Error:", error);
@@ -91,7 +124,7 @@ const Product = () => {
 
   const handleDeleteColor = async () => {
     try {
-      const response = await deleteProdCol(product.name);
+      const response = await deleteProdCol(product.id);
       console.log("Delete Color Response:", response);
     } catch (error) {
       console.error("Delete Color Error:", error);
@@ -99,8 +132,12 @@ const Product = () => {
   };
 
   const imageUrls = Array.isArray(desc.images)
-    ? desc.images.map(
-        img => `http://127.0.0.1:5000/static/descriptions/${img.image_name}`
+    ? desc.images.map(img => `${baseURL}/static/descriptions/${img.image_name}`)
+    : [];
+
+    const productImageUrls = Array.isArray(products.product_image)
+    ? products.product_image.map(
+        img => `${baseURL}/static/products/${img.image_name}`
       )
     : [];
 
@@ -141,7 +178,7 @@ const Product = () => {
           <input
             type="file"
             multiple
-            onChange={handleFileChange}
+            onChange={handleFileChanged}
             className="w-full px-4 py-2 border rounded"
             accept="image/*"
           />
@@ -165,10 +202,50 @@ const Product = () => {
         </button>
       </form>
 
+      <div>
+        <label className="block text-gray-700 text-sm font-semibold mb-2">
+          Upload New Images
+        </label>
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          className="w-full px-4 py-2 border rounded"
+          accept="image/*"
+        />
+      </div>
+      <div className="flex flex-wrap gap-2 mt-2">
+        {previews.map((preview, index) => (
+          <img
+            key={index}
+            src={preview}
+            alt={`preview-${index}`}
+            className="w-20 h-20 object-cover rounded"
+          />
+        ))}
+      </div>
+      <button
+        onClick={handleFiles}
+        className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors"
+      >
+        Upload Images
+      </button>
+
       {/* Product Description Card */}
       <div className="mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4">Product Description</h2>
         <p className="text-gray-800 mb-4">{desc.specifications}</p>
+        <div className="grid grid-cols-2 gap-4">
+            {imageUrls &&
+              imageUrls.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`description-${index}`}
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+              ))}
+          </div>
       </div>
 
       <div className="mt-8 space-y-4">
@@ -189,8 +266,8 @@ const Product = () => {
         <div className="mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Product Images</h2>
           <div className="grid grid-cols-2 gap-4">
-            {imageUrls &&
-              imageUrls.map((image, index) => (
+            {productImageUrls &&
+              productImageUrls.map((image, index) => (
                 <img
                   key={index}
                   src={image}
@@ -212,14 +289,18 @@ const Product = () => {
         <div className="mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Product Colors</h2>
           <div>
-            {color.colors_available && color.colors_available.length > 0
-              ? color.colors_available.map((color, index) => (
-                  <p key={index} className="text-gray-800 mb-4">{color}</p>
-                ))
-              : <p>No colors available</p>}
+            {color.colors_available && color.colors_available.length > 0 ? (
+              color.colors_available.map((color, index) => (
+                <p key={index} className="text-gray-800 mb-4">
+                  {color}
+                </p>
+              ))
+            ) : (
+              <p>No colors available</p>
+            )}
           </div>
         </div>
-       <button
+        <button
           onClick={handleDeleteColor}
           className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
         >
