@@ -8,15 +8,11 @@
 </head>
     <body>
         <div style="background-color:whitesmoke; color: #132238; margin: 10px; padding: 50px ">
-        {% for item in cart_items %}
-            <h3>Product name {{ item.product_name }},</h3>
-            <h3>Product name {{ item.product_image }},</h3>
-            <h3>Product name {{ item.prod_quantity }},</h3>
-        {% endfor %}
+        <h2><h3>User {{user.email}}, transactions: {{user.transactions}}</h3></h2>
 
-        <p>You have successfully made  ${{ total_price, total_shipping, user, cart_items }}
+        <p>You have successfully made  ${{ grand_total }}</p>
 
-        <h4>Proceed to Invest <a href="">Invest</a>.</h4>
+        <h4>Check transaction.</h4>
 
 
         <p style="text-align: right">Sincerely,</p>
