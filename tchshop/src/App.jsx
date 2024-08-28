@@ -34,6 +34,7 @@ import Dashboard from "./components/User/Dashboard";
 import Checkout from "./components/Cart/Checkout";
 import Faq from "./pages/Faq";
 import CategoryPage from "./components/collections/CategoryPage";
+import CreateShipping from "./components/Admin/CreateShipping";
 import { checkAuthStatusAsync } from "./reducers/userReducer";
 
 const router = createBrowserRouter(
@@ -59,6 +60,8 @@ const router = createBrowserRouter(
         <Route path="/admin/assignrole" element={<AssignRole />} />
         <Route path="/admin/coupons" element={<Coupon />} />
         <Route path="/admin/wallets" element={<Wallets />} />
+        <Route path="/admin/createShipping" element={<CreateShipping />} />
+
       </Route>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
