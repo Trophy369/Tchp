@@ -122,8 +122,7 @@ export const viewProductDescription = async (id) => {
     credentials: 'include',
   };
 
-  const response = await fetch(`${baseUrl}/product_desc/${id}`, requestOptions);
-  return response.json();
+  return fetchWithState(`${baseUrl}/product_desc/${id}`, requestOptions)
 };
 
 export const viewProductColors = async (id) => {
@@ -133,8 +132,7 @@ export const viewProductColors = async (id) => {
     credentials: 'include',
   };
 
-  const response = await fetch(`${baseUrl}/view_product_color/${id}`, requestOptions);
-  return response.json();
+  return fetchWithState(`${baseUrl}/view_product_color/${id}`, requestOptions)
 };
 
 export const updateCartItemColor = async (productId, color) => {
