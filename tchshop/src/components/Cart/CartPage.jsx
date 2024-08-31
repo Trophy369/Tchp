@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaDollarSign, FaTrash } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 import { useAuth } from "../authContext/AuthProvider";
-import {
-  handleQuantity,
-  getCart,
-  removeFromCart,
-  clearCart
-} from "../../services/userApi";
+import { clearCartAsync } from "../../reducers/cartReducer";
 import Cart from "./Cart";
 import { Link } from "react-router-dom";
 import ShowError from "../ShowError";
@@ -16,18 +11,9 @@ import { fetchCartItems } from "../../reducers/cartReducer";
 
 
 const CartPage = ({}) => {
-  const { user } = useAuth();
-  const cart = useSelector((state) => state.cart.cart_details)
-
   const dispatch = useDispatch();
   // const { user } = useSelector((state) => state.user);
   const { cart_details, loading, error } = useSelector(state => state.cart);
-
-  useEffect(() => {
-    if (user !== null) {
-      dispatch(fetchCartItems());
-    }
-  }, [user, dispatch]);
 
   // useEffect(() => {
   //   if (user !== null) {
@@ -58,7 +44,7 @@ const CartPage = ({}) => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Your Cart</h1>
         <button
-          onClick={clearCart} // Call the clearCart function when clicked
+          onClick={handleClearCart} // Call the clearCart function when clicked
           className="flex items-center px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
         >
           <FaTrash className="mr-2" /> Clear Cart

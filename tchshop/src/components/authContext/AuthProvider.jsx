@@ -1,8 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { signin, getUser } from "../../services";
-import { getCart } from "../../services/userApi";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCartItems } from "../../reducers/cartReducer";
+import { signin, getUser, signout } from "../../services";
+
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -61,6 +59,7 @@ const AuthProvider = ({ children }) => {
       localStorage.removeItem("user");
     });
   };
+  
 
   return (
     <AuthContext.Provider value={{ auth, user, error, loading, logOut }}>
