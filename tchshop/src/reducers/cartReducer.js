@@ -26,19 +26,6 @@ const cartSlice = createSlice({
       state.error = null;
     },
     addToCartSuccess(state, action) {
-<<<<<<< HEAD
-      console.log(action.payload);
-      const existingItemIndex = state.cart_details.findIndex(
-        item => item.id === action.payload.id
-      );
-      if (existingItemIndex >= 0) {
-        state.cart_details[existingItemIndex].prod_quantity +=
-          action.payload.prod_quantity;
-      } else {
-        state.cart_details.push(action.payload);
-      }
-      state.total += action.payload.prod_quantity;
-=======
       if (action.payload.Message) {
         // Parse the response to extract product details
         const messageParts = action.payload.Message.split(",");
@@ -75,45 +62,27 @@ const cartSlice = createSlice({
           state.cart_details.push(action.payload);
         }
       }
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
     },
     removeFromCartSuccess(state, action) {
       // Remove item from the cart
       state.cart_details = state.cart_details.filter(
         item => item.id !== action.payload
       );
-<<<<<<< HEAD
-      if (existingItemIndex >= 0) {
-        const quantityToRemove =
-          state.cart_details[existingItemIndex].prod_quantity;
-        state.cart_details.splice(existingItemIndex, 1);
-        state.total -= quantityToRemove;
-      }
-=======
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
     },
     reduceQuantitySuccess(state, action) {
       // Reduce the quantity of an item in the cart
       const existingItemIndex = state.cart_details.findIndex(
         item => item.id === action.payload.id
       );
-<<<<<<< HEAD
-=======
-
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
       if (
         existingItemIndex >= 0 &&
         state.cart_details[existingItemIndex].prod_quantity > 0
       ) {
         state.cart_details[existingItemIndex].prod_quantity -= 1;
-<<<<<<< HEAD
-        state.total -= 1;
-=======
       } else {
         console.warn(
           `Cannot reduce quantity for item with id ${action.payload.id}. Item not found or quantity is already 0.`
         );
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
       }
     },
     plusQuantitySuccess(state, action) {
@@ -138,14 +107,11 @@ const cartSlice = createSlice({
           action.payload.prod_quantity;
       }
     },
-<<<<<<< HEAD
-=======
     clearCartSuccess(state) {
       // Clear the cart
       state.cart_details = [];
       state.error = null;
     },
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
     addToCartFailure(state, action) {
       // Set error state when adding to cart fails
       state.error = action.payload;
@@ -215,15 +181,9 @@ export const addToCartAsync = (id, quantity, shipping, color) => {
         await handleQuantity(id, newQuantity);
         dispatch(addToCartSuccess({ id, prod_quantity: newQuantity }));
       } else {
-<<<<<<< HEAD
-        // Item does not exist in the cart, add it as a new item
-        const result = await addToCart(id, quantity, shipping, color);
-        dispatch(addToCartSuccess(result));
-=======
         const { data, error } = await addToCart(id, quantity, shipping, color);
         console.log(data);
         dispatch(addToCartSuccess(data));
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
       }
     } catch (error) {
       dispatch(addToCartFailure(error.message));
@@ -316,15 +276,6 @@ export const inputQuantityAsync = (productId, input) => {
   };
 };
 
-<<<<<<< HEAD
-export const fetchCartItems = () => {
-  return async dispatch => {
-    try {
-      const cartItem = await getCart();
-      dispatch(cartTotal(cartItem));
-    } catch (error) {
-      console.error("Failed to fetch cart items:", error);
-=======
 export const clearCartAsync = () => {
   return async dispatch => {
     try {
@@ -332,7 +283,6 @@ export const clearCartAsync = () => {
       dispatch(clearCartSuccess());
     } catch (error) {
       console.log(error);
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
     }
   };
 };

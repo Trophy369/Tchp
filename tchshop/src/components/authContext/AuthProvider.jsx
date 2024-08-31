@@ -6,46 +6,6 @@ import { fetchCartItems } from "../../reducers/cartReducer";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-<<<<<<< HEAD
-  const dispatch = useDispatch();
-  const [user, setUser] = useState(null);
-
-  // useEffect(() => {
-  //   const checkAuthStatus = async () => {
-  //     try {
-  //       const response = await getUser()
-  //       if (response.id) {
-  //         const data = await response;
-  //         setUser(data);
-  //       } else {
-  //         setUser(null);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error checking auth status:', error);
-  //       setUser(null);
-  //     }
-  //   };
-
-  //   checkAuthStatus();
-  // }, []);
-
-
-//   useEffect(() => {
-//     if (user) {
-//         const fetchProducts = async () => {
-//             console.log("Fetching cart items...");
-//             await dispatch(fetchCartItems());
-//         };
-
-//         fetchProducts();
-//     }
-// }, [user, dispatch]);
-
-  const auth = async (email, password) => {
-    const info = await signin(email, password);
-    setUser(info);
-    localStorage.setItem("user", JSON.stringify(info));
-=======
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -100,15 +60,10 @@ const AuthProvider = ({ children }) => {
       setUser(null);
       localStorage.removeItem("user");
     });
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
   };
 
   return (
-<<<<<<< HEAD
-    <AuthContext.Provider value={{ auth, user }}>
-=======
     <AuthContext.Provider value={{ auth, user, error, loading, logOut }}>
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
       {children}
     </AuthContext.Provider>
   );

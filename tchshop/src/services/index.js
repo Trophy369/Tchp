@@ -66,12 +66,6 @@ export const forgotPassword = async (email) => {
   return fetchWithState(`${baseUrl}/auth/reset_password_email`, requestOptions)
 };
 
-<<<<<<< HEAD
-export const signout = async (next) => {
-  const response = await fetch(`${baseUrl}/auth/logout`, {credentials: "include"});
-  next();
-  return response;
-=======
 export const verifyCode = async (code) => {
   const requestOptions = {
     method: "POST",
@@ -100,5 +94,4 @@ export const signout = async () => {
     credentials: "include" 
   };
   return fetchWithState(`${baseUrl}/auth/logout`, requestOptions);
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
 };

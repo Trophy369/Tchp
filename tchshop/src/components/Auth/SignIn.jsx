@@ -1,36 +1,13 @@
-<<<<<<< HEAD
-import {  useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-=======
 import { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signInUserAsync } from "../../reducers/userReducer";
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
 import useValid from "../hooks/useValid";
 
 const Signin = () => {
-<<<<<<< HEAD
-  const navigate = useNavigate()
-  const auth = useAuth()
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //     const data = await getUser();
-  //     setData(data)
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, []);
-=======
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector((state) => state.user);
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
 
   const {
     value: enteredEmail,
@@ -58,29 +35,6 @@ const Signin = () => {
     const emailInput = enteredEmail;
     const passwordInput = passwordRef.current.value;
     resetEmailInput();
-<<<<<<< HEAD
-    // validation
-    auth.auth(emailInput, passwordInput)
-    navigate("/")
-  };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!enteredEmailisValid) {
-  //     console.log("liner");
-  //     return;
-  //   }
-  //   const emailInput = enteredEmail;
-  //   const passwordInput = passwordRef.current.value;
-  //   resetEmailInput();
-  //   // validation
-  //   const info = await signin(emailInput, passwordInput);
-  //   navigate("/")
-  //   setData(info.data)
-  //   localStorage.setItem("user", JSON.stringify(info.data));
-  // };
-=======
     dispatch(signInUserAsync(emailInput, passwordInput));
   };
 
@@ -89,7 +43,6 @@ const Signin = () => {
       user.roles === 2 ? navigate("/admin") : navigate("/");
     }
   }, [user, navigate]);
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
 
   const emailInputClasses = emailInputHasError
     ? "text-center text-red-700"
