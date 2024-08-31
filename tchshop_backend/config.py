@@ -24,8 +24,7 @@ class Config:
 
     SESSION_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SECURE = True
-    ADMIN = os.environ.get('ADMIN') or "countliason@gmail.com"
-    # ADMINS = ['countliason@gmail.com']
+    ADMIN = os.environ.get('ADMIN') or "directhacktools@gmail.com"
 
     # email config
     MAIL_SERVER = "smtp.gmail.com"
@@ -35,7 +34,6 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     
-    # MAIL_PASSWORD = 'bcxzyleomdgvwnxz'
     MAIL_USE_TLS = True
     # MAIL_USE_SSL = False
 

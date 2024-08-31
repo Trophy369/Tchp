@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
@@ -12,12 +12,9 @@ import {
 } from "../../services/userApi";
 import { addToCartAsync } from "../../reducers/cartReducer";
 
-import { useAuth } from "../authContext/AuthProvider";
 import Reviews from "./Reviews";
 import ProductDescription from "./ProductDescription";
 
-
-// Product component
 const ProductPro = () => {
   const dispatch = useDispatch();
   const [colors, setColors] = useState([]);
@@ -28,9 +25,8 @@ const ProductPro = () => {
   const [error, setError] = useState(null);
   const [product, setProduct] = useState([]);
   const [shippingMethods, setShippingMethods] = useState([]);
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState(null); // Initialize as null
   const { id } = useParams();
-  const [lilQuantity, setLilQuantity] = useState(quantity);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -43,7 +39,7 @@ const ProductPro = () => {
 
   useEffect(() => {
     const fetchProductColors = async () => {
-      const data = await viewProductColors(id);
+      const {data} = await viewProductColors(id);
       setColors(data.colors_available);
     };
 
@@ -56,6 +52,9 @@ const ProductPro = () => {
     const fetchShipping = async () => {
       const shipReq = await getShipping();
       setShippingMethods(shipReq);
+      if (shipReq && shipReq.length > 0) {
+        setSelectedShippingMethod(shipReq[0].id);
+      }
     };
 
     fetchShipping();
@@ -75,11 +74,26 @@ const ProductPro = () => {
       return;
     }
 
-    setLoading(true)
+    setLoading(true);
     setError(null);
     dispatch(addToCartAsync(id, quantity, selectedShippingMethod, color));
     setNotification("Product added to cart");
     setTimeout(() => setNotification(""), 3000);
+  };
+
+  const handleChange = (event) => {
+    const value = parseInt(event.target.value);
+    if (value >= 1 && value <= 28) {
+      setQuantity(value);
+    }
+  };
+
+  const incrementQuantity = () => {
+    setQuantity((q) => Math.min(27, q + 1))
+  };
+
+  const decrementQuantity = () => {
+    setQuantity((q) => Math.max(1, q - 1))
   };
 
   return (
@@ -107,7 +121,7 @@ const ProductPro = () => {
         </p>
         <p className="text-sm">{description}</p>
         <div className="flex justify-center space-x-2">
-          {colors.map(colorOpt => (
+          {colors && colors.length > 0 ? (colors.map(colorOpt => (
             <label key={colorOpt.color} className="inline-flex items-center">
               <input
                 type="radio"
@@ -123,25 +137,25 @@ const ProductPro = () => {
               ></span>
               <span className="ml-2">{colorOpt.color}</span>
             </label>
-          ))}
+          ))) : <p>No Colors Found</p>}
         </div>
         <div className="flex items-center justify-center my-4 space-x-2">
           <button
-            onClick={() => setQuantity(q => Math.max(1, q - 1))}
+            onClick={decrementQuantity}
             className="px-4 py-2 bg-gray-300"
           >
             -
           </button>
           <input
             type="number"
-            value={lilQuantity}
-            // onChange={handleChange}
+            value={quantity}
+            onChange={handleChange}
             className="px-4 py-2 text-center border"
             min="1"
             max="28"
           />
           <button
-            onClick={() => setQuantity(q => Math.min(27, q + 1))}
+            onClick={incrementQuantity}
             className="px-4 py-2 bg-gray-300"
           >
             +
@@ -160,26 +174,24 @@ const ProductPro = () => {
         </p>
         <section className="p-4 mb-8 border-2 border-black bg-light-brown-500/50">
           <h2 className="mb-2 text-xl font-semibold">Shipping Method</h2>
-          {
-            <div className="space-y-4">
-              {shippingMethods.map(ship => (
-                <label key={ship.id} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedShippingMethod === ship.id}
-                    onChange={() => setSelectedShippingMethod(ship.id)}
-                    className="mr-2 text-black form-checkbox border-ash-300"
-                  />
-                  <div>
-                    <span className="font-semibold">{ship.name}</span>
-                    <div className="text-sm text-gray-600">
-                      Delivery Time: {ship.deliveryTime}
-                    </div>
+          <div className="space-y-4">
+            {shippingMethods.map(ship => (
+              <label key={ship.id} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={selectedShippingMethod === ship.id}
+                  onChange={() => setSelectedShippingMethod(ship.id)}
+                  className="mr-2 text-black form-checkbox border-ash-300"
+                />
+                <div>
+                  <span className="font-semibold">{ship.name}</span>
+                  <div className="text-sm text-gray-600">
+                    Delivery Time: {ship.deliveryTime}
                   </div>
-                </label>
-              ))}
-            </div>
-          }
+                </div>
+              </label>
+            ))}
+          </div>
         </section>
       </div>
       <div className="my-4 text-center">

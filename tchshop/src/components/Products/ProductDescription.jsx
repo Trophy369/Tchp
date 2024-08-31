@@ -3,8 +3,7 @@ import config from "../../config";
 import { useParams } from "react-router-dom";
 import { viewProductDescription } from "../../services/userApi";
 import ShowError from "../ShowError";
-
-const baseURL = config.baseUrl;
+import ShowImage from "../ShowImage";
 
 // Product component
 const ProductDescription = () => {
@@ -17,8 +16,7 @@ const ProductDescription = () => {
     const fetchProductDesc = async () => {
       try {
         const { data, error } = await viewProductDescription(id);
-
-        if (error === null && data.length > 0) {
+        if (data) {
           setProductDesc(data);
           setError(null);
         } else {
@@ -35,9 +33,7 @@ const ProductDescription = () => {
   }, [id]);
 
   const descImageUrls = Array.isArray(productDesc.images)
-    ? productDesc.images.map(
-        img => `${baseURL}/static/descriptions/${img.image_name}`
-      )
+    ? productDesc.images.map(img => `static/descriptions/${img.image_name}`)
     : [];
 
   return error ? (
@@ -45,6 +41,13 @@ const ProductDescription = () => {
   ) : (
     <div>
       <h1>description</h1>
+      {descImageUrls.map((src, index) => (
+        <div key={index} className="flex-shrink-0 w-full">
+          <ShowImage url={src} alt={`Slide ${index}`} style="carousel" />
+        </div>
+      ))}
+      <h2>{productDesc.specifications}</h2>
+      <p>end of product description</p>
     </div>
   );
 };
