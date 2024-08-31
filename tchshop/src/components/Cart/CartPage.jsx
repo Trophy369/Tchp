@@ -16,12 +16,11 @@ import { fetchCartItems } from "../../reducers/cartReducer";
 
 
 const CartPage = ({}) => {
-<<<<<<< HEAD
   const { user } = useAuth();
   const cart = useSelector((state) => state.cart.cart_details)
-=======
+
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
+  // const { user } = useSelector((state) => state.user);
   const { cart_details, loading, error } = useSelector(state => state.cart);
 
   useEffect(() => {
@@ -29,7 +28,12 @@ const CartPage = ({}) => {
       dispatch(fetchCartItems());
     }
   }, [user, dispatch]);
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
+
+  // useEffect(() => {
+  //   if (user !== null) {
+  //     dispatch(fetchCartItems());
+  //   }
+  // }, [user, dispatch]);
 
   const subtotal = cart_details
     .reduce((acc, item) => acc + item.discounted_price * item.prod_quantity, 0)
@@ -43,9 +47,7 @@ const CartPage = ({}) => {
   //   );
   // };
 
-<<<<<<< HEAD
-  return (
-=======
+
   const handleClearCart = () => {
     dispatch(clearCartAsync());
   };
@@ -53,7 +55,6 @@ const CartPage = ({}) => {
   return error ? (
     <ShowError errorMessage={error} />
   ) : (
->>>>>>> 6c8515be898ddd2e8ff2c16370f7a63a0ff542c1
     <div className="container p-4 mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Your Cart</h1>
