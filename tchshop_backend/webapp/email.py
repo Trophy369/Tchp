@@ -2,28 +2,27 @@ from flask_mail import Message
 from . import mail
 from flask import current_app, render_template, session
 from flask_login import current_user
+from threading import Thread
 from models.product import CartItem
 
 
-# def send_email(subject, sender, recipients, html_body):
-#     msg = Message(subject, sender=sender, recipients=recipients)
-#     # msg.body = text_body
-#     msg.html = html_body
-#     mail.send(msg)
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
 
-def send_async_email(subject, sender, recipients, text_body, html_body):
+def send_email(subject, sender, recipients, text_body, html_body):
     """Background task to send an email with Flask-Mail."""
     app = current_app._get_current_object()
     msg = Message(subject, sender=sender, recipients=recipients)
     msg.body = text_body
     msg.html = html_body
-    with app.app_context():
-        mail.send(msg)
+    Thread(target=send_async_email, args=(app, msg)).start()
+    
 
 
 def send_password_reset_code(user):
     token = user.store_generated_code()
-    send_async_email(
+    send_email(
         f'{token} is your reset code',
         sender=current_app.config['ADMIN'],
         recipients=[user.email],
@@ -37,7 +36,7 @@ def send_coupon_email(user, grand_total):
     user = current_user
     # total_price = session["total_price"]
     # total_shipping = session["total_shipping"]
-    send_async_email(
+    send_email(
         subject='[test] update mis',
         sender=current_app.config['MAIL_USERNAME'],
         recipients=['lindabosquet@outlook.com'],

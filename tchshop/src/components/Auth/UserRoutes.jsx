@@ -6,9 +6,9 @@ const UserRoutes = () => {
 
   if (user) {
     return user.roles === 1 ? <Outlet /> : <Navigate to="/signin" />;
+  } else {
+    return <Navigate to="/signin" />;
   }
-
-  return <Navigate to="/signin" />;
 };
 
 export default UserRoutes;

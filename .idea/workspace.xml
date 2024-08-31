@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a066d651-436e-45cc-810e-a40e78cd8f07" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/tchshop/.eslintrc.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/postcss.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/public/vite.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/App.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/assets/cip.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/AddProducts.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/AdminDash.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/AssignRole.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/Colors.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/Coupon.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/CreateCategory.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/CreateProduct.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/CreateReview.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/CreateRole.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/CreateShipping.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/Product.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/ProductCard.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Admin/Wallets.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Auth/AdminRoutes.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Auth/SignIn.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/src/components/Auth/SignIn.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Auth/SignUp.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Auth/UserRoutes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/src/components/Auth/UserRoutes.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Cart/Cart.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Cart/CartPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/src/components/Cart/CartPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Cart/Checkout.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Cart/ColorDisplay.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Home/Footer.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Home/Hero.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Home/HomePage.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Home/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/src/components/Home/Navbar.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Home/Search.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Home/ShopPolicy.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Plot.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Products/Carousel.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Products/Product.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Products/ProductCard.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Products/ProductPro.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/src/components/Products/ProductPro.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Products/Products.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Products/Review.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/Products/Reviews.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/ShowImage.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/User/Dashboard.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/User/UpdateProfile.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/authContext/AuthProvider.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/src/components/authContext/AuthProvider.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/collections/Flipperzero.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/collections/Hak5.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/collections/Pentesting.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/collections/Rftools.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/collections/Sdr.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/components/hooks/useValid.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/layouts/DefaultLayout.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/main.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/pages/Faq.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/pages/Returns.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/pages/shoppolicy/Shipping.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/pages/shoppolicy/Warranty.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/reducers/cartReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/src/reducers/cartReducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/services/adminApi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/services/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop/src/services/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/services/userApi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/src/store.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/tailwind.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop/vite.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop_backend/dev.db" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/dev.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop_backend/webapp/auth/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/webapp/auth/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop_backend/webapp/auth/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/webapp/auth/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tchshop_backend/webapp/main/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/tchshop_backend/webapp/main/views.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2kk1kuQFVlTWkOf6E6CDJqxGAcy" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "Merging main",
+    "last_opened_file_path": "/Users/user/Desktop/Tchp/tchshop_backend/webapp/templates/email/auth"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tchshop_backend/webapp/templates/email/auth" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tchshop_backend/webapp/templates/email" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-5a2391486177-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13763.11" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a066d651-436e-45cc-810e-a40e78cd8f07" name="Changes" comment="" />
+      <created>1723812907463</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1723812907463</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

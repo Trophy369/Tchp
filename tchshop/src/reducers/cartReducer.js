@@ -4,8 +4,7 @@ import {
   addToCart,
   handleQuantity,
   inputQuantity,
-  removeFromCart,
-  clearCart
+  removeFromCart
 } from "../services/userApi";
 
 // Initial state of the cart
@@ -75,7 +74,6 @@ const cartSlice = createSlice({
       const existingItemIndex = state.cart_details.findIndex(
         item => item.id === action.payload.id
       );
-
       if (
         existingItemIndex >= 0 &&
         state.cart_details[existingItemIndex].prod_quantity > 0
@@ -95,8 +93,7 @@ const cartSlice = createSlice({
 
       if (existingItemIndex >= 0) {
         state.cart_details[existingItemIndex].prod_quantity += 1;
-      } else {
-        console.warn(`Item with id ${action.payload.id} not found in cart.`);
+        state.total += 1;
       }
     },
     updateQuantitySuccess(state, action) {
@@ -138,7 +135,6 @@ export const {
   reduceQuantitySuccess,
   plusQuantitySuccess,
   updateQuantitySuccess,
-  clearCartSuccess,
   addToCartFailure,
   setLoading,
   setError
@@ -174,12 +170,13 @@ export const fetchCartItems = () => {
 export const addToCartAsync = (id, quantity, shipping, color) => {
   return async (dispatch, getState) => {
     dispatch(setLoading(true));
-
+    
     try {
       const state = getState().cart;
       const existingItem = state.cart_details?.find(item => item.id === id);
 
       if (existingItem) {
+        // Item exists in the cart, update the quantity
         const newQuantity = existingItem.prod_quantity + quantity;
         await handleQuantity(id, newQuantity);
         dispatch(addToCartSuccess({ id, prod_quantity: newQuantity }));
@@ -195,6 +192,29 @@ export const addToCartAsync = (id, quantity, shipping, color) => {
     }
   };
 };
+
+// export const addToCartAsync = (id, quantity, shipping, color) => {
+//   return async (dispatch, getState) => {
+//     dispatch(setLoading(true));
+//     const state = getState().cart;
+//     const existingItem = state.cart_details.find(item => item.id === id);
+
+//     try {
+//       if (existingItem) {
+//         const newQuantity = existingItem.prod_quantity + 1;
+//         await handleQuantity(id, newQuantity);
+//         dispatch(addToCartSuccess({ id, prod_quantity: newQuantity }));
+//       } else {
+//         const result = await addToCart(id, quantity, shipping, color);
+//         dispatch(addToCartSuccess(result));
+//       }
+//     } catch (error) {
+//       dispatch(addToCartFailure(error.message));
+//     } finally {
+//       dispatch(setLoading(false));
+//     }
+//   };
+// };
 
 export const removeFromCartAsync = productId => {
   return async dispatch => {
