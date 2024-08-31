@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signInUserAsync } from "../../reducers/userReducer";
@@ -7,7 +7,9 @@ import useValid from "../hooks/useValid";
 const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user, loading, error } = useSelector((state) => state.user);
+  const { user, loading, error } = useSelector(state => state.user);
+
+  console.log("state error:", error);
 
   const {
     value: enteredEmail,
@@ -15,8 +17,8 @@ const Signin = () => {
     hasError: emailInputHasError,
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
-    reset: resetEmailInput,
-  } = useValid((value) => value.includes("@"));
+    reset: resetEmailInput
+  } = useValid(value => value.includes("@"));
 
   let formIsValid = false;
 
@@ -26,7 +28,7 @@ const Signin = () => {
 
   const passwordRef = useRef();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
 
     if (!enteredEmailisValid) {
@@ -45,11 +47,11 @@ const Signin = () => {
   }, [user, navigate]);
 
   const emailInputClasses = emailInputHasError
-    ? "text-center text-red-700"
-    : "";
+    ? "border-red-500"
+    : "border-gray-300";
 
   return (
-    <div className="flex items-center justify-center px-4 py-6 bg-gray-50 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-center min-h-screen px-4 py-6 bg-gray-50 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
           <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
@@ -58,21 +60,21 @@ const Signin = () => {
         </div>
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <div className="-space-y-px rounded-md shadow-sm">
-            <div className={emailInputClasses}>
+            <div>
               <label htmlFor="email" className="sr-only">
                 Email
               </label>
               <input
                 id="email"
                 type="email"
-                className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className={`relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 ${emailInputClasses} rounded-none appearance-none rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
                 onChange={emailChangeHandler}
                 onBlur={emailBlurHandler}
                 value={enteredEmail}
                 placeholder="email"
               />
               {emailInputHasError && (
-                <p className="text-center text-red-700">
+                <p className="mt-2 text-sm text-center text-red-700">
                   Email must contain '@'
                 </p>
               )}
@@ -94,10 +96,40 @@ const Signin = () => {
           </div>
 
           {/* Display loading spinner or text */}
-          {loading && <p className="text-center text-blue-700">Loading...</p>}
+          {loading && (
+            <button
+              type="button"
+              className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md cursor-not-allowed shadow hover:bg-indigo-400 transition ease-in-out duration-150"
+              disabled
+              aria-busy="true"
+              aria-label="Loading"
+            >
+              <svg
+                className="animate-spin h-5 w-5 mr-3 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-11 11h4l-3 3 3 3h-4a8 8 0 018-8z"
+                ></path>
+              </svg>
+              Authenticating...
+            </button>
+          )}
 
           {/* Display error message */}
-          {error && <p className="text-center text-red-700">{error}</p>}
+          {error && <p className="mt-4 text-sm text-center text-red-700">{error}</p>}
 
           <div>
             <button

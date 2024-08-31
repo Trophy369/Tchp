@@ -14,8 +14,8 @@ export const getUser = async () => {
   return response.json();
 };
 
-export const listproducts = async () => {
-  const response = await fetch(`${baseUrl}/listproducts`, {
+export const listproducts = async (limit, offset) => {
+  const response = await fetch(`${baseUrl}/listproducts?limit=${limit}&offset=${offset}`, {
     credentials: "include"
   });
   return response.json();
@@ -29,7 +29,7 @@ export const signin = async (email, password) => {
     credentials: "include"
   };
 
-  return fetchWithState(`${baseUrl}/auth/signin`, requestOptions)
+  return fetchWithState(`${baseUrl}/auth/signin`, requestOptions);
 
   // const response = await fetch(`${baseUrl}/auth/signin`, requestOptions);
   // if (response.ok) {
@@ -52,10 +52,21 @@ export const signup = async (email, password, remember) => {
     credentials: "include"
   };
 
-  return fetchWithState(`${baseUrl}/auth/signup`, requestOptions)
+  return fetchWithState(`${baseUrl}/auth/signup`, requestOptions);
 };
 
-export const forgotPassword = async (email) => {
+export const signup2 = async (email, password, coupon) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+    credentials: "include"
+  };
+
+  return fetchWithState(`${baseUrl}/auth/signup/${coupon}`, requestOptions);
+};
+
+export const forgotPassword = async email => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -63,18 +74,18 @@ export const forgotPassword = async (email) => {
     credentials: "include"
   };
 
-  return fetchWithState(`${baseUrl}/auth/reset_password_email`, requestOptions)
+  return fetchWithState(`${baseUrl}/auth/reset_password_email`, requestOptions);
 };
 
-export const verifyCode = async (code) => {
+export const verifyCode = async code => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ code }),
-    credentials: "include",
+    credentials: "include"
   };
 
-  return fetchWithState(`${baseUrl}/auth/confirm_vcode`, requestOptions)
+  return fetchWithState(`${baseUrl}/auth/confirm_vcode`, requestOptions);
 };
 
 export const resetPassword = async (password, confirm) => {
@@ -85,15 +96,13 @@ export const resetPassword = async (password, confirm) => {
     credentials: "include" // Include cookies for session handling
   };
 
-  return fetchWithState(`${baseUrl}/auth/reset_password`, requestOptions)
+  return fetchWithState(`${baseUrl}/auth/reset_password`, requestOptions);
 };
 
 export const signout = async () => {
   const requestOptions = {
     method: "GET",
-    credentials: "include" 
+    credentials: "include"
   };
   return fetchWithState(`${baseUrl}/auth/logout`, requestOptions);
 };
-
-

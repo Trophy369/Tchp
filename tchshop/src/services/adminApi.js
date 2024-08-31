@@ -18,7 +18,7 @@ export const getCategory = async category_id => {
 
 export const getShipping = async () => {
   const requestOptions = {
-    method: "POST",
+    method: "GET",
     headers: { "Content-Type": "application/json" },
     credentials: "include"
   };
@@ -264,11 +264,11 @@ export const createRole = async name => {
   return response.json();
 };
 
-export const createShipping = async (cost, method, method_description) => {
+export const createShipping = async (cost, name, deliveryTime) => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cost, method, method_description }),
+    body: JSON.stringify({cost, name, deliveryTime}),
     credentials: "include"
   };
 

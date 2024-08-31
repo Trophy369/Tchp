@@ -12,6 +12,7 @@ const AdminDash = () => {
       <Link to="/admin/assignrole" className="flex justify-center mx-auto mt-2 text-white bg-blue-600 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-lg w-48">Assign Role</Link>
       <Link to="/admin/Coupons" className="flex justify-center mx-auto mt-2 text-white bg-blue-600 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-lg w-48">Coupon</Link>
       <Link to="/admin/wallets" className="flex justify-center mx-auto mt-2 text-white bg-blue-600 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-lg w-48">Wallets</Link>
+      <p>K9AAM1</p>
     </>
   );
 };

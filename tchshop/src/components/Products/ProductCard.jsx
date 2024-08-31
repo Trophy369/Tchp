@@ -1,13 +1,7 @@
 import { Link } from "react-router-dom";
-import config from "../../config"
 import ShowImage from "../ShowImage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
-import { addToCart } from "../../services/userApi";
-// import { loggedUser } from "../services";
-import { useAuth } from "../authContext/AuthProvider";
-
-const baseURL = config.baseUrl
 
 const ProductCard = ({ productId, name, description, quantity, price, regPrice, product_image }) => {
   return (
