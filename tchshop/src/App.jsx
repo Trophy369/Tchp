@@ -37,6 +37,7 @@ import CategoryPage from "./components/collections/CategoryPage";
 import { checkAuthStatusAsync } from "./reducers/userReducer";
 import { fetchCartItems } from "./reducers/cartReducer";
 import SignUp2 from "./components/Auth/SignUp2";
+import CreateShipping from './components/Admin/CreateShipping';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
