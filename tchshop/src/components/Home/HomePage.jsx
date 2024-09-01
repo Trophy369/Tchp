@@ -8,7 +8,7 @@ const HomePage = () => {
   return (
     <>
         <Hero />
-        {/* <Search /> */}
+        <Search />
         <Products />
         <ShopPolicy />
     </>
