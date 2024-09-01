@@ -19,10 +19,10 @@ const CreateShipping = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const cost = costRef.current.value
-    const method = methodRef.current.value;
-    const method_description = methodDescRef.current.value;
+    const name = methodRef.current.value;
+    const deliveryTime = methodDescRef.current.value;
 
-    const data = await createShipping(cost, method, method_description);
+    const data = await createShipping(cost, name, deliveryTime);
     console.log(data)
    }
 
@@ -36,11 +36,11 @@ const CreateShipping = () => {
           <input type="text" required ref={costRef}/>
         </div>
         <div>
-          <label htmlFor="method">Shipping Method:</label>
+          <label htmlFor="method">Shipping Name:</label>
           <input type="text" required ref={methodRef}/>
         </div>
         <div>
-          <label htmlFor="description">Shipping Method Description:</label>
+          <label htmlFor="description">Shipping Time:</label>
           <input type="text" required ref={methodDescRef}/>
         </div>
         <button type="submit">Add Shipping Method</button>

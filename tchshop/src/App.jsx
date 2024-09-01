@@ -37,7 +37,7 @@ import CategoryPage from "./components/collections/CategoryPage";
 import CreateShipping from "./components/Admin/CreateShipping";
 import { checkAuthStatusAsync } from "./reducers/userReducer";
 import { fetchCartItems } from "./reducers/cartReducer";
-
+import SignUp2 from "./components/Auth/SignUp2";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -63,7 +63,6 @@ const router = createBrowserRouter(
         <Route path="/admin/coupons" element={<Coupon />} />
         <Route path="/admin/wallets" element={<Wallets />} />
         <Route path="/admin/createShipping" element={<CreateShipping />} />
-
       </Route>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
@@ -74,17 +73,19 @@ const router = createBrowserRouter(
       <Route path="/shoppolicy/warranty" element={<Warranty />} />
       <Route path="/faq" element={<Faq />} />
       <Route path="collections/:name" element={<CategoryPage />} />
-      <Route path="/:refCode" element={<SignUp />} />
+      <Route path="/:refCode" element={<SignUp2 />} />
     </Route>
   )
 );
 
 const App = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
-  
+  const { user } = useSelector(state => state.user);
+
   useEffect(() => {
-    dispatch(checkAuthStatusAsync());
+    if (user !== null) {
+      dispatch(checkAuthStatusAsync());
+    }
   }, [dispatch]);
 
   useEffect(() => {

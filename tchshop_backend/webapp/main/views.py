@@ -17,24 +17,56 @@ import os
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
 # get all products
+# @main.route('/listproducts', methods=['GET'], strict_slashes=False)
+# def get_products():
+#     products = Product.query.all()
+    
+#     product_list = []
+    
+#     for product in products:
+#         # Construct the URL for the product image
+#         if product.product_image:
+#             # logging.error(f'image url {product.product_image}')
+
+#             # Handle URL encoding of spaces and special characters if needed
+#             image_filename = product.product_image.replace(' ', '%20')
+#             image_url = f'{image_filename}'
+#             # logging.error(f'image url {image_url}')
+#         else:
+#             image_url = None
+        
+#         product_list.append({
+#             'id': product.id,
+#             'Product name': product.product_name,
+#             'description': product.description,
+#             'quantity': product.quantity,
+#             'regular_price': product.regular_price,
+#             'product_image': image_url,
+#             'discounted_price': product.discounted_price
+#         })
+
+#     return jsonify(product_list), 200
+
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
-    products = Product.query.all()
-    
+    # Get the 'limit' and 'offset' query parameters from the request
+    limit = request.args.get('limit', default=16, type=int)  # Default to 16 items per page
+    offset = request.args.get('offset', default=0, type=int)  # Default to start from the first item
+
+    # Query the products from the database with limit and offset
+    products = Product.query.offset(offset).limit(limit).all()
+
     product_list = []
-    
+
     for product in products:
         # Construct the URL for the product image
         if product.product_image:
-            # logging.error(f'image url {product.product_image}')
-
             # Handle URL encoding of spaces and special characters if needed
             image_filename = product.product_image.replace(' ', '%20')
             image_url = f'{image_filename}'
-            # logging.error(f'image url {image_url}')
         else:
             image_url = None
-        
+
         product_list.append({
             'id': product.id,
             'Product name': product.product_name,
@@ -46,6 +78,7 @@ def get_products():
         })
 
     return jsonify(product_list), 200
+
 
 
 # all product by category
@@ -372,19 +405,35 @@ def view_reviews(product_id):
 @main.route('/shippingAddress', methods=["GET", "POST"], strict_slashes=False)
 def address():
     user = User.query.get(current_user.id)
-    if request.method == 'GET' and not all([user.zipcode, user.street, user.city]):
-        return jsonify({'error': 'add shipping'}), 400
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    if request.method == 'GET':
+        if not all([user.zipcode, user.street, user.city, user.state, user.country]):
+            return jsonify({'error': 'Shipping address not complete or missing. Please add a shipping address.'}), 400
+
+        address_parts = [str(part) for part in [user.zipcode, user.street, user.state, user.city, user.country] if part]
+        formatted_address = ', '.join(address_parts)
+
+        return jsonify({"shipping_address": formatted_address}), 200
 
     if request.method == 'POST':
         data = request.json
-        user.country = data['country']
-        user.state = data['state']
-        user.city = data['city']
-        user.street = data['street']
-        user.zipcode = data['zipcode']
+        
+        required_fields = ['country', 'state', 'city', 'street', 'zipcode']
+        if not all(field in data and data[field] for field in required_fields):
+            return jsonify({'error': 'All fields (country, state, city, street, zipcode) are required.'}), 400
+
+        user.country = data.get('country')
+        user.state = data.get('state')
+        user.city = data.get('city')
+        user.street = data.get('street')
+        user.zipcode = data.get('zipcode')
+
         db.session.commit()
         return jsonify(status="success", message="Shipping address added successfully"), 201
-    return jsonify({"Shipping address": user.zipcode + ', ' + user.street + ', ' + user.state + ', ' + user.city + ', ' + user.country})
+
 
 
 # view product colors available

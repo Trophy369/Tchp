@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { signup } from "../../services";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { signup2 } from "../../services";
 
-const SignUp = () => {
+const SignUp2 = () => {
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
   const [remember, setRemember] = useState(false);
-  const [signed, setSigned] = useState(null)
+  const [signed2, setSigned2] = useState(null)
+  const {refCode} = useParams()
 
 
   const handleSubmit = async e => {
@@ -15,9 +16,9 @@ const SignUp = () => {
     const emailInput = emailRef.current.value;
     const passwordInput = passwordRef.current.value;
 
-    const {data} = await signup(emailInput, passwordInput);
+    const {data} = await signup2(emailInput, passwordInput, refCode);
     if (data.message === "User created successfully") {
-      setSigned(data)
+      setSigned2(data)
     }
   };
 
@@ -25,7 +26,7 @@ const SignUp = () => {
     if (signed) {
       navigate("/signin");
     }
-  }, [signed, navigate]);
+  }, [signed2, navigate]);
 
   return (
     <section className="flex items-center justify-center px-4 py-12 bg-gray-50 sm:px-6 lg:px-8">
@@ -103,4 +104,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUp2;

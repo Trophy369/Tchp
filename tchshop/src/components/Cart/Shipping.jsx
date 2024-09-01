@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-    getShipping,
-    addShippingDetails,
-  } from "../../services/userApi";
+import { getShipping, addShippingDetails } from "../../services/userApi";
 import axios from "axios";
 
-
 const Shipping = () => {
-  const [email, setEmail] = useState("");
   const [deliveryForm, setDeliveryForm] = useState({
     country: "",
     state: "",
@@ -19,94 +14,112 @@ const Shipping = () => {
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
+  // Fetch countries on component mount
   useEffect(() => {
-    axios.get("https://restcountries.com/v3.1/all").then(response => {
-      const countryData = response.data.map(country => ({
-        name: country.name.common,
-        code: country.cca2
-      }));
+    const fetchCountries = async () => {
+      try {
+        const response = await axios.get("https://restcountries.com/v3.1/all");
+        const countryData = response.data.map(country => ({
+          name: country.name.common,
+          code: country.cca2
+        }));
 
-      // Sort the country data alphabetically by name
-      const sortedCountries = countryData.sort((a, b) =>
-        a.name.localeCompare(b.name)
-      );
+        // Sort countries alphabetically
+        const sortedCountries = countryData.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
 
-      setCountries(sortedCountries);
-    });
+        setCountries(sortedCountries);
+      } catch (error) {
+        console.error("Failed to fetch countries:", error);
+      }
+    };
+
+    fetchCountries();
   }, []);
 
+  // Fetch states when the country changes
   useEffect(() => {
-    if (deliveryForm.country) {
-      axios
-        .post("https://countriesnow.space/api/v0.1/countries/states", {
-          country: deliveryForm.country
-        })
-        .then(response => {
-          setStates(response.data.data.states);
+    const fetchStates = async () => {
+      if (deliveryForm.country) {
+        try {
+          const response = await axios.post(
+            "https://countriesnow.space/api/v0.1/countries/states",
+            { country: deliveryForm.country }
+          );
+          setStates(response.data.data.states || []);
           setCities([]); // Reset cities when country changes
-        });
-    }
+        } catch (error) {
+          console.error("Failed to fetch states:", error);
+        }
+      }
+    };
+
+    fetchStates();
   }, [deliveryForm.country]);
 
+  // Fetch cities when the state changes
   useEffect(() => {
-    if (deliveryForm.state) {
-      axios
-        .post("https://countriesnow.space/api/v0.1/countries/state/cities", {
-          country: deliveryForm.country,
-          state: deliveryForm.state
-        })
-        .then(response => {
-          setCities(response.data.data);
-        });
-    }
+    const fetchCities = async () => {
+      if (deliveryForm.state) {
+        try {
+          const response = await axios.post(
+            "https://countriesnow.space/api/v0.1/countries/state/cities",
+            {
+              country: deliveryForm.country,
+              state: deliveryForm.state
+            }
+          );
+          setCities(response.data.data || []);
+        } catch (error) {
+          console.error("Failed to fetch cities:", error);
+        }
+      }
+    };
+
+    fetchCities();
   }, [deliveryForm.state]);
 
-  const validateEmail = email => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
+  // Validate form fields
   const validateForm = () => {
     let formErrors = {};
 
-    if (!email || !validateEmail(email))
-      formErrors.email = "Valid email is required";
-    if (!deliveryForm.firstName)
-      formErrors.firstName = "First name is required";
-    if (!deliveryForm.lastName) formErrors.lastName = "Last name is required";
-    if (!deliveryForm.address) formErrors.address = "Address is required";
+    if (!deliveryForm.street) formErrors.street = "Street address is required";
     if (!deliveryForm.country) formErrors.country = "Country is required";
     if (!deliveryForm.state) formErrors.state = "State is required";
     if (!deliveryForm.city) formErrors.city = "City is required";
-    if (!deliveryForm.zipCode || !/^\d{3,6}$/.test(deliveryForm.zipCode))
-      formErrors.zipCode = "Valid zip code is required (3-6 digits)";
+    if (!deliveryForm.zipcode || !/^\d{3,6}$/.test(deliveryForm.zipcode))
+      formErrors.zipcode = "Valid zip code is required (3-6 digits)";
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
-
-  const isDeliveryFormComplete = Object.values(deliveryForm).every(
-    field => field && field.trim() !== ""
-  );
 
   const handleChange = e => {
     const { name, value } = e.target;
     setDeliveryForm(prev => ({ ...prev, [name]: value }));
   };
 
+  // Handle form submission
   const handleDelivery = async () => {
+    if (!validateForm()) {
+      return; // Exit if form is not valid
+    }
+
+    setLoading(true);
     try {
-      if (validateForm()) {
-        const result = await addShippingDetails(
-          deliveryForm.country,
-          deliveryForm.state,
-          deliveryForm.city,
-          deliveryForm.street,
-          deliveryForm.zipcode
-        );
-        console.log("Shipping details added successfully:", result);
-      }
+      const result = await addShippingDetails(
+        deliveryForm.country,
+        deliveryForm.state,
+        deliveryForm.city,
+        deliveryForm.street,
+        deliveryForm.zipcode
+      );
+      console.log("Shipping details added successfully:", result);
+      
+      // Clear form after successful submission
       setDeliveryForm({
         country: "",
         state: "",
@@ -114,23 +127,16 @@ const Shipping = () => {
         street: "",
         zipcode: ""
       });
+      setErrors({});
     } catch (error) {
       console.error("Failed to add shipping details:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <section className="mb-8">
-      <legend className="mb-2 text-xl font-semibold">Contact</legend>
-      <input
-        type="email"
-        placeholder="Email"
-        required
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        className="w-full p-2 border"
-      />
-      {errors.email && <p className="text-red-500">{errors.email}</p>}
       <legend className="mb-2 text-xl font-semibold">Delivery</legend>
 
       <select
@@ -206,8 +212,9 @@ const Shipping = () => {
         type="button"
         onClick={handleDelivery}
         className="w-full p-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+        disabled={loading}
       >
-        Submit
+        {loading ? "Processing..." : "Submit"}
       </button>
     </section>
   );
