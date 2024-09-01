@@ -38,7 +38,7 @@ const ProductPro = () => {
 
   useEffect(() => {
     const fetchProductColors = async () => {
-      const {data} = await viewProductColors(id);
+      const data = await viewProductColors(id);
       setColors(data.colors_available);
     };
 
@@ -118,7 +118,7 @@ const ProductPro = () => {
         </p>
         <p className="text-sm">{description}</p>
         <div className="flex justify-center space-x-2">
-          {colors && colors.length > 0 ? (colors.map(colorOpt => (
+          {colors.map(colorOpt => (
             <label key={colorOpt.color} className="inline-flex items-center">
               <input
                 type="radio"
@@ -134,7 +134,7 @@ const ProductPro = () => {
               ></span>
               <span className="ml-2">{colorOpt.color}</span>
             </label>
-          ))) : <p>No Colors Found</p>}
+          ))}
         </div>
         <div className="flex items-center justify-center my-4 space-x-2">
           <button

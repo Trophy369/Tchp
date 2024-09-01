@@ -1,5 +1,4 @@
 import {useState, useEffect} from "react"
-import ShowImage from "../ShowImage"
 
 const Carousel = ({ images }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,7 +23,7 @@ const Carousel = ({ images }) => {
         <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {images.map((src, index) => (
             <div key={index} className="flex-shrink-0 w-full">
-              <ShowImage url={src} alt={`Slide ${index}`} style="carousel" />
+              <img src={src} alt={`Slide ${index}`} className="object-cover w-full h-full" />
             </div>
           ))}
         </div>

@@ -49,8 +49,8 @@ const Product = () => {
 
   useEffect(() => {
     const viewProdCol = async () => {
-      const {data} = await viewProductColors(product.id);
-      setColor(data.colors_available);
+      const response = await viewProductColors(product.id);
+      setColor(response);
     };
 
     viewProdCol();
@@ -289,10 +289,10 @@ const Product = () => {
         <div className="mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold mb-4">Product Colors</h2>
           <div>
-            {color && color.length > 0 ? (
-              color.map((color, index) => (
+            {color.colors_available && color.colors_available.length > 0 ? (
+              color.colors_available.map((color, index) => (
                 <p key={index} className="text-gray-800 mb-4">
-                  {color.color}
+                  {color}
                 </p>
               ))
             ) : (
