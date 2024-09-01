@@ -60,14 +60,8 @@ const router = createBrowserRouter(
         <Route path="/admin/createrole" element={<CreateRole />} />
         <Route path="/admin/assignrole" element={<AssignRole />} />
         <Route path="/admin/coupons" element={<Coupon />} />
-        <Route path="/admin/wallets" element={<Wallets />} />
-<<<<<<< HEAD
-<<<<<<< HEAD
+        <Route path="/admin/wallets" element={<Wallets />} /> 
         <Route path="/admin/createShipping" element={<CreateShipping />} />
-=======
->>>>>>> parent of 56f5a52 (...)
-=======
->>>>>>> parent of 56f5a52 (...)
       </Route>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
