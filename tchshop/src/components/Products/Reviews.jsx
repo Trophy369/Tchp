@@ -6,8 +6,7 @@ import Review from "./Review";
 import ShowError from "../ShowError";
 
 // Product component
-const Reviews = () => {
-  const { id } = useParams();
+const Reviews = (props) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,7 +14,7 @@ const Reviews = () => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const { data, error } = await viewReview(id);
+        const { data, error } = await viewReview(props.id);
 
         if (error) {
           setError(error);
@@ -35,7 +34,7 @@ const Reviews = () => {
     };
 
     fetchReview();
-  }, [id]);
+  }, [props.id]);
 
   return (
     <div>
@@ -44,8 +43,8 @@ const Reviews = () => {
         <ShowError errorMessage={error} />
       ) : (
         <div>
-          {reviews.map((item, index) => (
-            <Review key={index} item={item} />
+          {reviews.map((item) => (
+            <Review key={item.id} item={item} />
           ))}
         </div>
       )}

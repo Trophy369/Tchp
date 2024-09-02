@@ -109,19 +109,6 @@ const initialState = {
       dispatch(setLoading(false));
     }
   };
-//   export const signInUserAsync = (emailInput, passwordInput) => async dispatch => {
-//     dispatch(signInUser());
-//     try {
-//       const { data, error } = await signin(emailInput, passwordInput);
-//       if (error) {
-//         dispatch(signInUserFailure(error));
-//       } else {
-//         dispatch(signInUserSuccess(data));
-//       }
-//     } catch (error) {
-//       dispatch(signInUserFailure('An error occurred during sign-in.'));
-//     }
-//   };
   
   export const checkAuthStatusAsync = () => async dispatch => {
     dispatch(checkAuthStatus());

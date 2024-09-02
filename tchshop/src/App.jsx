@@ -81,6 +81,7 @@ const router = createBrowserRouter(
 const App = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.user);
+  const { cart } = useSelector(state => state.cart.cart_details);
 
   useEffect(() => {
     if (user !== null) {
@@ -92,7 +93,7 @@ const App = () => {
     if (user !== null) {
       dispatch(fetchCartItems());
     }
-  }, [user, dispatch]);
+  }, [user, cart]);
 
   return <RouterProvider router={router} />;
 };

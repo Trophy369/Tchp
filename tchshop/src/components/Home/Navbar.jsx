@@ -28,9 +28,19 @@ const Navbar = () => {
     setIsUserMenuOpen(!isUserMenuOpen);
   };
 
+  // const handleSignOut = async () => {
+  //   try {
+  //     await dispatch(signOutUserAsync()).unwrap();
+  //     signout(() => navigate('/'));
+  //   } catch (error) {
+  //     console.error('Failed to sign out:', error);
+  //   }
+  // };
   const handleSignOut = async () => {
     try {
-      await dispatch(signOutUserAsync()).unwrap();
+      // Directly dispatch the thunk without .unwrap()
+      await dispatch(signOutUserAsync());
+      // If successful, navigate away
       signout(() => navigate('/'));
     } catch (error) {
       console.error('Failed to sign out:', error);

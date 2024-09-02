@@ -1,4 +1,4 @@
-const ShowError = ({ errorMessage, onRetry }) => {
+const ShowError = ({ errorMessage, onRetry, buttonText }) => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
@@ -8,7 +8,7 @@ const ShowError = ({ errorMessage, onRetry }) => {
           className="mt-6 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-300"
           onClick={onRetry}
         >
-          Retry
+          {buttonText}
         </button>
       </div>
     </div>

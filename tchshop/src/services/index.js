@@ -15,9 +15,12 @@ export const getUser = async () => {
 };
 
 export const listproducts = async (limit, offset) => {
-  const response = await fetch(`${baseUrl}/listproducts?limit=${limit}&offset=${offset}`, {
-    credentials: "include"
-  });
+  const response = await fetch(
+    `${baseUrl}/listproducts?limit=${limit}&offset=${offset}`,
+    {
+      credentials: "include"
+    }
+  );
   return response.json();
 };
 
@@ -30,18 +33,6 @@ export const signin = async (email, password) => {
   };
 
   return fetchWithState(`${baseUrl}/auth/signin`, requestOptions);
-
-  // const response = await fetch(`${baseUrl}/auth/signin`, requestOptions);
-  // if (response.ok) {
-  //   return response.json();
-  // } else {
-  //   return response.json().then(data => {
-  //     let errorMsg = "Auth Failed";
-  //     console.log(data.error);
-  //     alert(errorMsg);
-  //     throw new Error(errorMsg);
-  //   });
-  // }
 };
 
 export const signup = async (email, password, remember) => {
@@ -102,7 +93,11 @@ export const resetPassword = async (password, confirm) => {
 export const signout = async () => {
   const requestOptions = {
     method: "GET",
-    credentials: "include"
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json"
+    }
   };
+
   return fetchWithState(`${baseUrl}/auth/logout`, requestOptions);
 };

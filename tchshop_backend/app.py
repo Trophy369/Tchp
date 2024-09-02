@@ -15,7 +15,6 @@ from flask_cors import CORS
 env = os.environ.get('WEBAPP_ENV')
 # app = create_app(os.getenv('WEBAPP_ENV') or 'default')
 app = create_app('config.%sConfig' % env.capitalize())
-CORS(app, supports_credentials=True)
 """
     returns a dictionary that includes the database instance and the models in which 
     flask shell command will import these items automatically into the shell for user
