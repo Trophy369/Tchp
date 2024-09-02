@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
 const ProductCard = ({ productId, name, description, quantity, price, regPrice, product_image }) => {
+  const formattedPrice = (price || 0).toFixed(2);
   return (
     <Link
       to={{ pathname: `/viewproduct/${productId}`, state: { name } }}
@@ -15,7 +16,7 @@ const ProductCard = ({ productId, name, description, quantity, price, regPrice, 
           <h2 className="mb-1 text-lg font-bold text-center">{name}</h2>
           <p className="flex items-center mb-1 text-xl font-bold">
             <FontAwesomeIcon icon={faDollarSign} className="mr-1" />
-            {price.toFixed(2)}
+            {formattedPrice}
           </p>
           <p className="text-sm text-gray-600">
             Sold: {quantity} | Left: {quantity}
@@ -27,3 +28,4 @@ const ProductCard = ({ productId, name, description, quantity, price, regPrice, 
 };
 
 export default ProductCard;
+

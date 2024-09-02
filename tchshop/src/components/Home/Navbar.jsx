@@ -54,15 +54,14 @@ const Navbar = () => {
               window.location.pathname === '/' ? 'bg-blue-600' : 'hover:bg-blue-600'
             }`}
           >
-            Home
+            HOME
           </Link>
           <div className="relative px-2 py-2 mx-4 rounded group">
             <span
               className={`cursor-pointer ${
                 window.location.pathname.includes('collections') ? 'bg-blue-600' : 'hover:bg-blue-600'
               }`}
-            >
-              Products
+            >CATEGORIES
             </span>
             <Categories />
           </div>
@@ -78,7 +77,7 @@ const Navbar = () => {
             href="mailto:example@mail.com"
             className="px-2 py-2 mx-4 rounded hover:bg-blue-600"
           >
-            Contact
+            CONTACT
           </a>
         </div>
 
@@ -114,12 +113,12 @@ const Navbar = () => {
                 to="/"
                 className="block px-4 py-2 text-center hover:bg-blue-600"
               >
-                Home
+                HOME
               </Link>
             </li>
             <li>
         <div className="relative block px-4 py-2 text-center rounded hover:bg-blue-600 group">
-          <span className="cursor-pointer">Products</span>
+          <span className="cursor-pointer">CATEGORIES</span>
           <Categories />
         </div>
       </li>
@@ -136,7 +135,7 @@ const Navbar = () => {
                 to="mailto:example@mail.com"
                 className="block px-4 py-2 text-center hover:bg-blue-600"
               >
-                Contact
+                CCONTACT
               </Link>
             </li>
           </ul>
