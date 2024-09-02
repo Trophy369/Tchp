@@ -34,10 +34,10 @@ import Dashboard from "./components/User/Dashboard";
 import Checkout from "./components/Cart/Checkout";
 import Faq from "./pages/Faq";
 import CategoryPage from "./components/collections/CategoryPage";
+import CreateShipping from "./components/Admin/CreateShipping";
 import { checkAuthStatusAsync } from "./reducers/userReducer";
 import { fetchCartItems } from "./reducers/cartReducer";
 import SignUp2 from "./components/Auth/SignUp2";
-import CreateShipping from './components/Admin/CreateShipping';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,7 +61,7 @@ const router = createBrowserRouter(
         <Route path="/admin/createrole" element={<CreateRole />} />
         <Route path="/admin/assignrole" element={<AssignRole />} />
         <Route path="/admin/coupons" element={<Coupon />} />
-        <Route path="/admin/wallets" element={<Wallets />} /> 
+        <Route path="/admin/wallets" element={<Wallets />} />
         <Route path="/admin/createShipping" element={<CreateShipping />} />
       </Route>
       <Route path="/signin" element={<SignIn />} />

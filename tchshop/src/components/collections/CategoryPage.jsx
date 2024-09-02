@@ -1,9 +1,6 @@
 import {useState, useEffect} from 'react';
 import { useParams } from "react-router-dom"
 import { viewCategoryProducts } from "../../services/userApi";
-import ProductCard from "../Products/ProductCard";
-
-
 
 const CategoryPage = () => {
   const {name} = useParams()
@@ -32,25 +29,10 @@ const CategoryPage = () => {
   }, [name]);
 
   return (
-    <section className="container px-4 py-4 mx-auto">
+    <div>
       <h1>{name}</h1>
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-        {products.map(products => (
-            <ProductCard
-              key={product.id}
-              productId={product.id}
-              product_image={products.product_image}
-              name={product["Product name"]}
-              description={product.description}
-              quantity={product.quantity}
-              price={product.discounted_price}
-              regPrice={product.regular_price}
-            />
-            
-          ))}
-        </div>
-    </section>
-    
+      <p>this category data {JSON.stringify(products)}</p>
+    </div>
   );
 };
 

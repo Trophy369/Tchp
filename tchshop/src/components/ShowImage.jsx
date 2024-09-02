@@ -9,7 +9,9 @@ const ShowImage = ({ style, url }) => {
     size = "object-cover w-16 h-16"; // Small image size
   } else if (style === "home") {
     size = "object-cover w-full h-48"; // Large image size
-  } else { 
+  } else if (style === "carousel") {
+    size = "object-cover w-full h-full";
+  }  else { 
     size = "object-cover w-15 h-15"; // Default or medium image size
   }
 
@@ -17,10 +19,3 @@ const ShowImage = ({ style, url }) => {
 };
 
 export default ShowImage;
-
-// const ShowImage = ({ style, url }) => {
-//   const size = style ? "object-cover w-16 h-16" : "object-cover w-full h-48" : "object-cover w-15 h-15"
-  
-//   return <img src={url} alt={""} className={size} />;
-// };
-// export default ShowImage;
