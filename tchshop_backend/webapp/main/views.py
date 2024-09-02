@@ -585,18 +585,44 @@ def proceed():
 @main.route('/paymentMethods', methods=["POST"], strict_slashes=False)
 def select_method():
     data = request.json
-    method = data["method"]
+    method = data.get("method")
+
+    if not method:
+        return jsonify({"error": "No payment method provided"}), 400
+
     session["method"] = method
 
     check = Wallet.query.filter_by(currency_type=method).first()
     if not check:
-        return jsonify({"error": "not available consider another payment method"}), 400
+        return jsonify({"error": "Payment method not available, consider another option"}), 400
+
     if method.upper() == "USDT":
-        usdt_address = Wallet.query.filter_by(currency_type=method).all()
-        add = random.choice(usdt_address)
-        address = add.address
-        session["address"] = address
-        return redirect(url_for("main.pay")), 200
+        usdt_addresses = Wallet.query.filter_by(currency_type=method).all()
+        selected_address = random.choice(usdt_addresses).address
+        session["address"] = selected_address
+        
+        return jsonify({
+            "success": True,
+            "message": "Payment method selected successfully",
+        }), 200
+
+    return jsonify({"success": True, "message": "Payment method selected successfully"}), 200
+# @login_required
+# @main.route('/paymentMethods', methods=["POST"], strict_slashes=False)
+# def select_method():
+#     data = request.json
+#     method = data["method"]
+#     session["method"] = method
+
+#     check = Wallet.query.filter_by(currency_type=method).first()
+#     if not check:
+#         return jsonify({"error": "not available consider another payment method"}), 400
+#     if method.upper() == "USDT":
+#         usdt_address = Wallet.query.filter_by(currency_type=method).all()
+#         add = random.choice(usdt_address)
+#         address = add.address
+#         session["address"] = address
+#         return redirect(url_for("main.pay")), 200 
     
 
         # return jsonify({"address": address, "crypto": method}), 200

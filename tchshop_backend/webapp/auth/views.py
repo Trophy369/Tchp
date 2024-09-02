@@ -137,7 +137,7 @@ def signin():
             logging.info(f"token:{user}")
             session["userId"] = user.id
 
-            return jsonify({"Message": "Login Successful", "username": user.firstname, "id": user.id, "roles": len([role.to_dict() for role in user.roles])}), 200
+            return jsonify({"Message": "Login Successful", "username": user.firstname, "email": user.email, "id": user.id, "roles": len([role.to_dict() for role in user.roles])}), 200
         return {"error": "Login failed Wrong password"}, 401
     return jsonify({"error": "Login failed"}), 401
 

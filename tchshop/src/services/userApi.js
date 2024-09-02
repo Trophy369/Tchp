@@ -298,11 +298,12 @@ export const proceed = async () => {
 };
 
 
-export const payment = async () => {
+export const payment = async (method) => {
   const requestOptions = {
-    method: "GET",
+    method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: 'include',
+    body: JSON.stringify(method)
   };
 
   return fetchWithState(`${baseUrl}/paymentMethods`, requestOptions)
@@ -325,5 +326,5 @@ export const confirmation = async () => {
     credentials: 'include',
   };
 
-  return fetchWithState(`${baseUrl}/pay`, requestOptions)
+  return fetchWithState(`${baseUrl}/confirmation`, requestOptions)
 };
