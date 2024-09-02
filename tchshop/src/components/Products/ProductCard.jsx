@@ -12,8 +12,8 @@ const ProductCard = ({ productId, name, description, quantity, price, regPrice, 
       <div className="flex flex-col h-full">
         <ShowImage url={`static/products/default_img/${product_image}`} style="home" />
         <div className="flex flex-col items-center justify-center flex-1 p-2">
-          <h2 className="mb-1 text-base font-medium text-center">{name}</h2>
-          <p className="flex items-center mb-1 text-base font-normal">
+          <h2 className="mb-1 text-base font-normal text-center">{name}</h2>
+          <p className="flex items-center mb-1 text-base font-medium">
             <FontAwesomeIcon icon={faDollarSign} className="mr-1" />
             {price.toFixed(2)}
           </p>

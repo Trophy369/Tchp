@@ -5,7 +5,7 @@ import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 
 const Hero = () => {
   return (
-    <section className="relative flex items-center mt-4 z-10 justify-center h-[20vh] overflow-hidden">
+    <section className="relative flex items-center mt-4 z-10 justify-center h-[22vh] overflow-hidden">
       {/* SVG Background */}
       {/* <svg
         xmlns="http://www.w3.org/2000/svg"

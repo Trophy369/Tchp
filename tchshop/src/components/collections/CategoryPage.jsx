@@ -31,22 +31,16 @@ const CategoryPage = () => {
   }, [name]);
 
   return (
-    // <div className="container p-4 mx-auto">
-    //   <h1>{name}</h1>
-    //   <p>this category data {JSON.stringify(products)}</p>
-    //   {products.map(product => <CategoryCards product={product}/>)}
-    // </div>
-    <div className="container p-4 mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">{name}</h1>
-      <p className="text-gray-700 mb-6">
-        This category data: {JSON.stringify(products)}
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map(product => (
+    <section className="container py-4 py-8 mx-4 mx-auto font-bold">
+      <h1 className="p-2 my-4 text-center">{name.toUpperCase()}</h1>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+      {products.map(product => (
           <CategoryCards key={product.id} product={product} />
         ))}
       </div>
-    </div>
+      
+      
+    </section>
   );
 };
 
