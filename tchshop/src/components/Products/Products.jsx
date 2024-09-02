@@ -44,7 +44,7 @@ const Products = () => {
       <button
         onClick={loadMore}
         disabled={loading}
-        className={`mx-auto flex justify-center my-2 md:max-w-[25vw] p-2 ${
+        className={`mx-auto flex justify-center my-8 md:max-w-[25vw] p-2 ${
           loading ? "bg-gray-500" : "bg-blue-500"
         } text-white font-semibold rounded hover:bg-blue-600`}
       >

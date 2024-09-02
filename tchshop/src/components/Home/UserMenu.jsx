@@ -33,9 +33,9 @@ const UserMenu = ({ user, handleSignOut }) => {
         onClick={handleToggleMenu}
       />
       <div
-        className="absolute right-0 z-20 hidden w-48 bg-white rounded-md shadow-lg group-hover:block"
+        className="absolute right-0 z-20 hidden transform -translate-x-1/2 bg-white rounded-md shadow-lg left-1/2 w-36 group-hover:block"
       >
-        <div className="px-4 py-2 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200 ">
           {user ? (
             <Link
               to="/"

@@ -13,13 +13,13 @@ const ProductCard = ({ productId, name, description, quantity, price, regPrice, 
       <div className="flex flex-col h-full">
         <ShowImage url={`static/products/default_img/${product_image}`} style="home" />
         <div className="flex flex-col items-center justify-center flex-1 p-2">
-          <h2 className="mb-1 text-lg font-bold text-center">{name}</h2>
-          <p className="flex items-center mb-1 text-xl font-bold">
+          <h2 className="mb-1 text-base font-medium text-center">{name}</h2>
+          <p className="flex items-center mb-1 text-base font-normal">
             <FontAwesomeIcon icon={faDollarSign} className="mr-1" />
             {formattedPrice}
           </p>
           <p className="text-sm text-gray-600">
-            Sold: {quantity} | Left: {quantity}
+             {quantity} Sold |  {quantity} Left
           </p>
         </div>
       </div>

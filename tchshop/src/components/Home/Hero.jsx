@@ -5,7 +5,7 @@ import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 
 const Hero = () => {
   return (
-    <section className="relative flex items-center mt-2 z-10 justify-center h-[20vh] overflow-hidden">
+    <section className="relative flex items-center mt-4 z-10 justify-center h-[20vh] overflow-hidden">
       {/* SVG Background */}
       {/* <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -57,9 +57,9 @@ const Hero = () => {
       </svg> */}
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-4 mx-4 text-center text-yellow-900 animate-heartbeat">
+      <div className="relative z-10 flex flex-col items-center justify-center px-4 mx-4 text-center text-yellow-900 ">
         <motion.h1
-          className="mb-2 text-2xl font-extrabold md:text-3xl lg:text-4xl"
+          className="mb-2 text-2xl font-extrabold md:text-3xl lg:text-4xl animate-heartbeat"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -77,6 +77,14 @@ const Hero = () => {
           transition={{ duration: 1, delay: 0.5 }}
         >
           Discover amazing technology tools for software engineering, development, and pentesting.
+        </motion.p>
+        <motion.p
+          className="mb-4 text-sm text-yellow-700 md:text-base lg:text-lg"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.7 }}
+        >
+          Global Deliveries with private Packaging.
         </motion.p>
       </div>
     </section>
