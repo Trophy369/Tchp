@@ -7,7 +7,7 @@ import { faBars, faShoppingCart, faScrewdriverWrench } from '@fortawesome/free-s
 import { signOutUserAsync } from '../../reducers/userReducer';
 import { signout } from '../../services';
 import Categories from './Categories';
-import UserMenu from './UserMenu'; 
+import UserMenu from './UserMenu';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -16,9 +16,19 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // const handleSignOut = async () => {
+  //   try {
+  //     await dispatch(signOutUserAsync()).unwrap();
+  //     signout(() => navigate('/'));
+  //   } catch (error) {
+  //     console.error('Failed to sign out:', error);
+  //   }
+  // };
   const handleSignOut = async () => {
     try {
-      await dispatch(signOutUserAsync()).unwrap();
+      // Directly dispatch the thunk without .unwrap()
+      await dispatch(signOutUserAsync());
+      // If successful, navigate away
       signout(() => navigate('/'));
     } catch (error) {
       console.error('Failed to sign out:', error);
@@ -54,14 +64,15 @@ const Navbar = () => {
               window.location.pathname === '/' ? 'bg-blue-600' : 'hover:bg-blue-600'
             }`}
           >
-            HOME
+            Home
           </Link>
           <div className="relative px-2 py-2 mx-4 rounded group">
             <span
               className={`cursor-pointer ${
                 window.location.pathname.includes('collections') ? 'bg-blue-600' : 'hover:bg-blue-600'
               }`}
-            >CATEGORIES
+            >
+              Products
             </span>
             <Categories />
           </div>
@@ -77,7 +88,7 @@ const Navbar = () => {
             href="mailto:example@mail.com"
             className="px-2 py-2 mx-4 rounded hover:bg-blue-600"
           >
-            CONTACT
+            Contact
           </a>
         </div>
 
@@ -113,12 +124,12 @@ const Navbar = () => {
                 to="/"
                 className="block px-4 py-2 text-center hover:bg-blue-600"
               >
-                HOME
+                Home
               </Link>
             </li>
             <li>
         <div className="relative block px-4 py-2 text-center rounded hover:bg-blue-600 group">
-          <span className="cursor-pointer">CATEGORIES</span>
+          <span className="cursor-pointer">Products</span>
           <Categories />
         </div>
       </li>
@@ -135,7 +146,7 @@ const Navbar = () => {
                 to="mailto:example@mail.com"
                 className="block px-4 py-2 text-center hover:bg-blue-600"
               >
-                CCONTACT
+                Contact
               </Link>
             </li>
           </ul>
