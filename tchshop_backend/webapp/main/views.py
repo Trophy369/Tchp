@@ -17,36 +17,6 @@ import os
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
 # get all products
-# @main.route('/listproducts', methods=['GET'], strict_slashes=False)
-# def get_products():
-#     products = Product.query.all()
-    
-#     product_list = []
-    
-#     for product in products:
-#         # Construct the URL for the product image
-#         if product.product_image:
-#             # logging.error(f'image url {product.product_image}')
-
-#             # Handle URL encoding of spaces and special characters if needed
-#             image_filename = product.product_image.replace(' ', '%20')
-#             image_url = f'{image_filename}'
-#             # logging.error(f'image url {image_url}')
-#         else:
-#             image_url = None
-        
-#         product_list.append({
-#             'id': product.id,
-#             'Product name': product.product_name,
-#             'description': product.description,
-#             'quantity': product.quantity,
-#             'regular_price': product.regular_price,
-#             'product_image': image_url,
-#             'discounted_price': product.discounted_price
-#         })
-
-#     return jsonify(product_list), 200
-
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)
 def get_products():
     # Get the 'limit' and 'offset' query parameters from the request
@@ -100,7 +70,9 @@ def products_category(category):
                 cat_prods.append(product)
             pass
     category_products = [{
-        'product_name': prod.product_name,
+        'name': prod.product_name,
+        'image': prod.product_image,
+        'price': prod.discounted_price,
         'id': prod.id
     } for prod in cat_prods]
     return jsonify(category_products), 200
@@ -109,9 +81,10 @@ def products_category(category):
 # get a product
 @main.route('/product/<int:product_id>', methods=['GET'], strict_slashes=False)
 def view_product(product_id):
-    product = Product.query.get_or_404(product_id)
+    product = Product.query.get(product_id) 
+    
     if not product:
-        return jsonify({'error': 'Product Not found'}), 404
+        return jsonify({'error': 'Product Not Found'}), 404
 
     # Convert the product object to a dictionary
     product_data = product.to_dict()
@@ -204,9 +177,6 @@ def cart():
     # user_id = current_user.id
     # user = Cart.query.filter_by(user_id=user_id).first()
     cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
-    
-    if not cart_items:
-        return jsonify({'message': 'Empty Cart!'}), 404
 
     cart_details = []
     for item in cart_items:
@@ -394,6 +364,7 @@ def view_reviews(product_id):
                 "Review": review.product_review,
                 "Timestamp": review.timestamp,
                 "Image": image_urls,
+                "id": review.id,
                 "user_id": review.user_id
             })
 

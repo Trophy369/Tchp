@@ -35,8 +35,7 @@ const email = user.user.email
 
   const handleCoupon = async () => {
     const code = couponRef.current.value;
-    console.log("coupon", code);
-    const data = await useCoupon(code);
+    const {data, error} = await useCoupon(code);
     console.log(data);
   };
 

@@ -141,7 +141,6 @@ def signin():
         return {"error": "Login failed Wrong password"}, 401
     return jsonify({"error": "Login failed"}), 401
 
-
 @auth_views.route('/logout', strict_slashes=False, methods=['GET', 'POST'])
 @login_required
 def logout():
@@ -149,8 +148,6 @@ def logout():
     session.clear()
 
     response = jsonify({"message": "User logged out"})
-    response.set_cookie('session', '', expires=0)
-
     response.set_cookie('session', '', expires=0)
     
     return response

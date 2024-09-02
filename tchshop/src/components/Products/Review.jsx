@@ -16,7 +16,7 @@ const Review = ({ item }) => {
 
   return (
     <div>
-      {imageUrls.map(image => <img src={image} />)}
+      {imageUrls.map((image, index) => <img key={index} src={image} />)}
       <h1>{Review}</h1>
       <h2>{Rating}</h2>
       <h3>{Timestamp}</h3>

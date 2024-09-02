@@ -11,10 +11,15 @@ const ShowImage = ({ style, url }) => {
     size = "object-cover w-full h-48"; // Large image size
   } else if (style === "carousel") {
     size = "object-cover w-full h-full";
-  }  else { 
+  }  else if (style === "category") {
+    size = "w-24 h-24 object-cover";
+  } else { 
     size = "object-cover w-15 h-15"; // Default or medium image size
   }
 
+  // "w-1/3 h-auto object-cover rounded-lg"
+  // "w-16 h-16 object-cover"
+  
   return <img src={`${baseURL}/${url}`} alt={""} className={size} />;
 };
 

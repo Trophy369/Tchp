@@ -9,8 +9,6 @@ const Signin = () => {
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector(state => state.user);
 
-  console.log("state error:", error);
-
   const {
     value: enteredEmail,
     isValid: enteredEmailisValid,
