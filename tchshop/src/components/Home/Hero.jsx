@@ -5,9 +5,9 @@ import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 
 const Hero = () => {
   return (
-    <section className="relative flex items-center z-10 justify-center h-[20vh] overflow-hidden">
+    <section className="relative flex items-center mt-2 z-10 justify-center h-[20vh] overflow-hidden">
       {/* SVG Background */}
-      <svg
+      {/* <svg
         xmlns="http://www.w3.org/2000/svg"
         version="1.1"
         xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -54,10 +54,10 @@ const Hero = () => {
             <stop stopColor="rgba(194, 208, 57, 1)" offset="1"></stop>
           </linearGradient>
         </defs>
-      </svg>
+      </svg> */}
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-4 text-center text-yellow-900 animate-heartbeat">
+      <div className="relative z-10 flex flex-col items-center justify-center px-4 mx-4 text-center text-yellow-900 animate-heartbeat">
         <motion.h1
           className="mb-2 text-2xl font-extrabold md:text-3xl lg:text-4xl"
           initial={{ opacity: 0, y: -50 }}
