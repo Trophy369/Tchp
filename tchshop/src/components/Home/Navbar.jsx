@@ -16,19 +16,9 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // const handleSignOut = async () => {
-  //   try {
-  //     await dispatch(signOutUserAsync()).unwrap();
-  //     signout(() => navigate('/'));
-  //   } catch (error) {
-  //     console.error('Failed to sign out:', error);
-  //   }
-  // };
   const handleSignOut = async () => {
     try {
-      // Directly dispatch the thunk without .unwrap()
       await dispatch(signOutUserAsync());
-      // If successful, navigate away
       signout(() => navigate('/'));
     } catch (error) {
       console.error('Failed to sign out:', error);
@@ -38,14 +28,12 @@ const Navbar = () => {
   return (
     <nav className="px-4 py-3 text-white bg-blue-500 z-sticky">
       <div className="container flex items-center justify-between mx-auto">
-        {/* Hamburger menu (Mobile) */}
         <FontAwesomeIcon
           icon={faBars}
           className="mr-4 text-2xl text-white cursor-pointer md:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         />
 
-        {/* Logo */}
         <Link to="/" className="flex items-center">
           <FontAwesomeIcon
             icon={faScrewdriverWrench}
@@ -56,7 +44,6 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* Navbar links */}
         <div className="justify-center flex-grow hidden md:flex">
           <Link
             to="/"
@@ -92,9 +79,6 @@ const Navbar = () => {
           </a>
         </div>
 
-        {/* Right side links (Login, Create Account, Cart) */}
-        
-        {/* user menu button */}
         <div className="flex items-center ">
         <UserMenu
             user={user}
@@ -114,7 +98,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="mt-2 md:hidden">
         <nav>
