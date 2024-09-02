@@ -5,7 +5,7 @@ import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 
 const Hero = () => {
   return (
-    <section className="relative flex items-center mt-4 z-10 justify-center h-[22vh] overflow-hidden">
+    <section className="relative flex items-center  z-10 justify-center h-[18vh] bg-red-100/30 overflow-hidden">
       {/* SVG Background */}
       {/* <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -71,20 +71,20 @@ const Hero = () => {
           </span>
         </motion.h1>
         <motion.p
-          className="mb-4 text-sm text-black md:text-base lg:text-lg"
+          className="text-sm text-black md:text-base lg:text-lg"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          Discover amazing technology tools for software engineering, development, and pentesting.
+          Create, Innovate, Dominate. Get the right tools here.
         </motion.p>
         <motion.p
-          className="mb-4 text-sm text-yellow-700 md:text-base lg:text-lg"
+          className="text-sm text-yellow-700 md:text-base lg:text-lg"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.7 }}
         >
-          Global Deliveries with private Packaging.
+         Discrete Deliveries Worldwide.
         </motion.p>
       </div>
     </section>

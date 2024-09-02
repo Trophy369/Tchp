@@ -25,7 +25,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="px-4 py-3 font-mono text-white bg-blue-500 z-sticky">
+    <nav className="relative z-50 px-4 py-3 font-mono text-white bg-blue-500 z-sticky">
       <div className="container flex items-center justify-between mx-auto">
         {/* Hamburger menu (Mobile) */}
         <FontAwesomeIcon
@@ -57,8 +57,8 @@ const Navbar = () => {
           </Link>
           <div className="relative px-2 py-2 mx-4 rounded group">
             <span
-              className={` px-2 py-2 rounded cursor-pointer ${
-                window.location.pathname.includes('collections') ? 'bg-blue-600' : 'hover:bg-blue-600'
+              className={` px-2 py-2 mx-4 rounded cursor-pointer ${
+                window.location.pathname.includes('collections') ? 'bg-blue-600' : 'hover:bg-blue-600 '
               }`}
             >CATEGORIES
             </span>

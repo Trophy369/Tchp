@@ -17,11 +17,8 @@ const Shipping = ({selectedShippingMethod, setSelectedShippingMethod}) => {
   }, []);
 
   return (
-    <div className="text-center">
-      <p className="inline-block px-4 py-2 my-4 text-center bg-gray-100 border border-black">
-        Shipping is calculated at checkout
-      </p>
-      <section className="p-4 mb-8 border-2 border-black bg-light-brown-500/50">
+    
+      <section className="p-4 mb-8 text-center border-2 border-black bg-light-brown-500/50">
         <h2 className="mb-2 text-xl font-semibold">Shipping Method</h2>
         <div className="space-y-4">
           {shippingMethods.map(ship => (
@@ -42,7 +39,7 @@ const Shipping = ({selectedShippingMethod, setSelectedShippingMethod}) => {
           ))}
         </div>
       </section>
-    </div>
+    
   );
 };
 

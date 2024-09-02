@@ -123,6 +123,10 @@ const ProductPro = () => {
             +
           </button>
         </div>
+        <Shipping
+        selectedShippingMethod={selectedShippingMethod}
+        setSelectedShippingMethod={setSelectedShippingMethod}
+        />
         <button
           onClick={handleAddToCart}
           className="px-6 py-2 text-white bg-blue-500 rounded-lg"
@@ -130,10 +134,7 @@ const ProductPro = () => {
           Add to Cart
         </button>
       </div>
-      <Shipping
-        selectedShippingMethod={selectedShippingMethod}
-        setSelectedShippingMethod={setSelectedShippingMethod}
-      />
+      
       <div className="my-4 text-center">
         <p>Description.</p>
         <ProductDescription />
