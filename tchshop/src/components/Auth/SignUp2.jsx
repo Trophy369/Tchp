@@ -23,7 +23,7 @@ const SignUp2 = () => {
   };
 
   useEffect(() => {
-    if (signed) {
+    if (signed2) {
       navigate("/signin");
     }
   }, [signed2, navigate]);

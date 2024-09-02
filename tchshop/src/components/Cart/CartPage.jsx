@@ -2,36 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaDollarSign, FaTrash } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
-import { useAuth } from "../authContext/AuthProvider";
 import { clearCartAsync } from "../../reducers/cartReducer";
 import Cart from "./Cart";
 import { Link } from "react-router-dom";
 import ShowError from "../ShowError";
-import { fetchCartItems } from "../../reducers/cartReducer";
-
 
 const CartPage = ({}) => {
   const dispatch = useDispatch();
-  // const { user } = useSelector((state) => state.user);
   const { cart_details, loading, error } = useSelector(state => state.cart);
-
-  // useEffect(() => {
-  //   if (user !== null) {
-  //     dispatch(fetchCartItems());
-  //   }
-  // }, [user, dispatch]);
 
   const subtotal = cart_details
     .reduce((acc, item) => acc + item.discounted_price * item.prod_quantity, 0)
     .toFixed(2);
-
-  // const updateQuantity = (productId, newQuantity) => {
-  //   setCart(
-  //     cart.map(item =>
-  //       item.id === productId ? { ...item, prod_quantity: newQuantity } : item
-  //     )
-  //   );
-  // };
 
   const handleClearCart = () => {
     dispatch(clearCartAsync());

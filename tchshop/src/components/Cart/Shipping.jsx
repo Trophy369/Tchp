@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { getShipping, addShippingDetails } from "../../services/userApi";
+import { addShippingDetails } from "../../services/userApi";
 import axios from "axios";
 
-const Shipping = () => {
+const Shipping = ({setShipData}) => {
   const [deliveryForm, setDeliveryForm] = useState({
     country: "",
     state: "",
@@ -117,7 +117,9 @@ const Shipping = () => {
         deliveryForm.street,
         deliveryForm.zipcode
       );
-      console.log("Shipping details added successfully:", result);
+      if(result.status === "success") {
+        setShipData(true)
+      }
       
       // Clear form after successful submission
       setDeliveryForm({
