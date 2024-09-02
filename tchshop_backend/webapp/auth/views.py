@@ -75,54 +75,6 @@ def signup_coupon(coupon):
         return jsonify({'message': 'User created successfully with coupon', 'user': new_user.email}), 201
 
 
-@auth_views.route('/signup/<coupon>', methods=['POST'], strict_slashes=False)
-def signup_coupon(coupon):
-    data = request.json
-    
-    # Check if email already exists
-    existing_user = User.query.filter_by(email=data['email']).first()
-    if existing_user:
-
-        return jsonify({'message': 'Username or email already exists'}), 400
-
-    else:
-        # Create new user
-        new_user = User(
-            firstname=data.get('firstname', ''),
-            lastname=data.get('lastname', ''),
-            email=data['email'],
-            agree=True,  # Example: Assuming agree is a boolean field
-            city=data.get('city', ''),
-            state=data.get('state', ''),
-            country=data.get('country', ''),
-            street=data.get('street', ''),
-            zipcode=data.get('zipcode', ''),
-            phone=data.get('phone', '')
-        )
-        new_user.set_password(password=data['password'])
-        # users.append(new_user)
-        db.session.add(new_user)
-        db.session.commit()
-
-        if coupon:
-            code = coupon
-            user = User.query.filter_by(email=data['email']).first()
-            new_coupon = Coupon(code=code, user_id=user.id, percentage='', status="pending")
-            db.session.add(new_coupon)
-            coupon_owner = Coupon.query.filter_by(code=code, status='minion').first()
-            count = User.query.filter_by(id=coupon_owner.user_id).first()
-
-            # all pending refs of a user
-            owners_coupons = Coupon.query.filter_by(code=code, status='pending').all()
-            # each minions count updated
-            count.coupons_count = len(owners_coupons)
-            db.session.commit()
-        else:
-            pass
-            
-        return jsonify({'message': 'User created successfully with coupon', 'user': new_user.email}), 201
-
-
 
 @auth_views.route('/signup', methods=['POST'], strict_slashes=False)
 def signup():
