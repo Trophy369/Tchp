@@ -11,6 +11,15 @@ const CartPage = ({}) => {
   const dispatch = useDispatch();
   const { cart_details, loading, error } = useSelector(state => state.cart);
 
+  if (cart_details.length === 0) {
+    return (
+      <div>
+        <h2>Cart is Empty </h2>
+        <Link to={"/"}>Continue Shopping</Link>
+      </div>
+    )
+  }
+
   const subtotal = cart_details
     .reduce((acc, item) => acc + item.discounted_price * item.prod_quantity, 0)
     .toFixed(2);
