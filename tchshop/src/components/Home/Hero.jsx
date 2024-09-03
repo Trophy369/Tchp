@@ -76,7 +76,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          Create, Innovate, Dominate. Get the right tools here.
+          Create, Innovate, Dominate. Get the right tools & devices here.
         </motion.p>
         <motion.p
           className="text-sm text-yellow-700 md:text-base lg:text-lg"

@@ -42,12 +42,12 @@ const Reviews = (props) => {
   };
 
   return (
-    <section className="my-4">
+    <section className="my-2 md:w-[60vw] mx-auto">
       <div 
         className="flex items-center justify-between p-4 bg-gray-100 cursor-pointer" 
         onClick={toggleAccordion}
       >
-        <h1 className="text-lg font-semibold">Reviews</h1>
+        <h1 className="text-lg font-semibold md:mx-auto ">Reviews</h1>
         <FontAwesomeIcon icon={isOpen ? faChevronUp : faChevronDown} />
       </div>
 
@@ -62,7 +62,7 @@ const Reviews = (props) => {
             <ShowError errorMessage={error} />
           ) : (
             reviews.length === 0 ? (
-              <p className="text-center text-gray-500">No Reviews Available</p>
+              <p className="mx-auto text-center text-gray-500">No Reviews Available</p>
             ) : (
               reviews.map((item) => (
                 <Review key={item.id} item={item} />

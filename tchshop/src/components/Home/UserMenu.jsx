@@ -37,12 +37,21 @@ const UserMenu = ({ user, handleSignOut }) => {
       >
         <div className="border-b border-gray-200 ">
           {user ? (
+            <div>
+              <Link
+            to="/dashboard"
+            className="block px-4 py-2 text-sm text-center text-gray-700 transition duration-300 ease-in-out hover:bg-gray-100"
+          >
+            <span >Dashboard</span>
+          </Link>
             <Link
               to="/"
               className="block px-4 py-2 text-sm text-center text-gray-700 transition duration-300 ease-in-out hover:bg-gray-100"
             >
               <span onClick={handleSignOut}>Sign Out</span>
             </Link>
+            </div>
+
           ) : (
             <>
               <Link

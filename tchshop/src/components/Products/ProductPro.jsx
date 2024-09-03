@@ -110,16 +110,20 @@ const ProductPro = () => {
              {quantity} Sold |  {quantity} Left
           </p>
         </div> */}
-      <div className="my-4 text-center">
-        <h1 className="mb-1 text-lg font-medium">{product_name}</h1>
+      <div className="my-8 text-center">
+        <h1 className="text-lg font-medium ">{product_name}</h1>
         <p className="flex items-center justify-center text-base font-medium">
-          <FaDollarSign className="mr-1" /> {discounted_price}
+          <FaDollarSign className="mr-1" /> {discounted_price} / Piece
         </p>
-        <p className="my-2 text-sm">{description}</p>
-        <hr />
+        <p className="my-4 text-sm">{description}</p>
+
+        <hr className="w-[80vw] md:w-[60vw] mx-auto "/>
+        
         <ProductColors id={id} color={color} setColor={setColor} />
-        <hr />
-        <div>
+        
+        <hr className="w-[80vw] md:w-[60vw] mx-auto "/>
+
+        <div className="my-8">
         <h3 className="text-center ">Quantity</h3>
         <div className="flex items-center justify-center my-4 space-x-2">
          
@@ -140,12 +144,14 @@ const ProductPro = () => {
         </div>
         </div>
         
-        <hr/>
+        <hr className="w-[80vw] md:w-[60vw] mx-auto "/>
+      
         <Shipping
         selectedShippingMethod={selectedShippingMethod}
         setSelectedShippingMethod={setSelectedShippingMethod}
         />
-        <hr />
+     
+       
 
         <button
           onClick={handleAddToCart}
@@ -154,8 +160,9 @@ const ProductPro = () => {
           Add to Cart
         </button>
       </div>
-      
-      <div className="my-4 text-center">
+      <hr />
+      <hr />
+      <div className="mt-8 text-center">
         <ProductDescription />
         <Reviews id={id} />
       </div>

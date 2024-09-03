@@ -45,12 +45,12 @@ const ProductDescription = () => {
   };
 
   return (
-    <section className="my-4">
+    <section className="my-2 md:w-[60vw] mx-auto">
       <div 
         className="flex items-center justify-between p-4 bg-gray-100 cursor-pointer" 
         onClick={toggleAccordion}
       >
-        <h1 className="text-lg font-semibold">Description</h1>
+        <h1 className="text-lg font-semibold md:mx-auto">Description</h1>
         <FontAwesomeIcon icon={isOpen ? faChevronUp : faChevronDown} />
       </div>
 
@@ -66,12 +66,12 @@ const ProductDescription = () => {
           ) : (
             <>
               {descImageUrls.map((src, index) => (
-                <div key={index} className="flex-shrink-0 w-full mb-2">
+                <div key={index} className="flex-shrink-0 w-full mx-auto mb-2">
                   <ShowImage url={src} alt={`Slide ${index}`} style="carousel" />
                 </div>
               ))}
               <h2 className="font-medium text-md">{productDesc.specifications}</h2>
-              <p className="text-sm text-gray-500">End of product description</p>
+              {/* <p className="text-sm text-gray-500">End of product description</p> */}
             </>
           )}
         </div>
