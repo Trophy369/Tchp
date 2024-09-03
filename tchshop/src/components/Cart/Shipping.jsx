@@ -8,7 +8,10 @@ const Shipping = ({setShipData}) => {
     state: "",
     city: "",
     street: "",
-    zipcode: ""
+    zipcode: "",
+    firstname: "",
+    lastname: "",
+    phone: ""
   });
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
@@ -85,7 +88,10 @@ const Shipping = ({setShipData}) => {
   // Validate form fields
   const validateForm = () => {
     let formErrors = {};
-
+    
+    if (!deliveryForm.phone) formErrors.phone = "Phone is required";
+    if (!deliveryForm.lastname) formErrors.street = "Lastname is required";
+    if (!deliveryForm.firstname) formErrors.street = "Firstname is required";
     if (!deliveryForm.street) formErrors.street = "Street address is required";
     if (!deliveryForm.country) formErrors.country = "Country is required";
     if (!deliveryForm.state) formErrors.state = "State is required";
@@ -115,7 +121,10 @@ const Shipping = ({setShipData}) => {
         deliveryForm.state,
         deliveryForm.city,
         deliveryForm.street,
-        deliveryForm.zipcode
+        deliveryForm.zipcode,
+        deliveryForm.firstname, 
+        deliveryForm.lastname, 
+        deliveryForm.phone
       );
       if(result.status === "success") {
         setShipData(true)
@@ -127,7 +136,10 @@ const Shipping = ({setShipData}) => {
         state: "",
         city: "",
         street: "",
-        zipcode: ""
+        zipcode: "",
+        firstname: "",
+        lastname: "",
+        phone: ""
       });
       setErrors({});
     } catch (error) {
@@ -208,6 +220,30 @@ const Shipping = ({setShipData}) => {
           className="w-full p-2 border"
         />
         {errors.zipcode && <p className="text-red-500">{errors.zipcode}</p>}
+      </div>
+
+      <div className="mb-2">
+        <input
+          name="lastname"
+          type="text"
+          placeholder="lastname"
+          value={deliveryForm.lastname}
+          onChange={handleChange}
+          className="w-full p-2 border"
+        />
+        {errors.lastname && <p className="text-red-500">{errors.lastname}</p>}
+      </div>
+
+      <div className="mb-2">
+        <input
+          name="firstname"
+          type="text"
+          placeholder="firstname"
+          value={deliveryForm.firstname}
+          onChange={handleChange}
+          className="w-full p-2 border"
+        />
+        {errors.zipcode && <p className="text-red-500">{errors.firstname}</p>}
       </div>
 
       <button

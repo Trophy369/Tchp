@@ -7,28 +7,28 @@ const ProductColors = ({id, color, setColor}) => {
   useEffect(() => {
     const fetchProductColors = async () => {
       const { data } = await viewProductColors(id);
-      setColors(data.colors_available)   
+      setColors(data);
+      setColor(data[0].id)
     };
 
     fetchProductColors();
   }, [id]);
 
-  
   return (
     <section className="my-8">
       <h3 className="my-4 text-center">Color</h3>
       <div className="grid justify-center grid-cols-3 gap-1 mx-auto w-[50vw] md:w-[20vw] ">
       {colors && colors.length > 0 ? (
         colors.map(colorOpt => (
-          <label key={colorOpt.color} className="inline-flex items-center">
+          <label key={colorOpt.id} className="inline-flex items-center">
+          {console.log(colorOpt)}
             <input
               type="radio"
               name="color"
-              default={colorOpt}
-              value={colorOpt.color}
+              // value={colorOpt.color}
               className="form-radio"
-              checked={color === colorOpt.color}
-              onChange={() => setColor(colorOpt.color)}
+              checked={color === colorOpt.id}
+              onChange={() => setColor(colorOpt.id)}
             />
             <span
               className="block w-6 h-6 ml-2"

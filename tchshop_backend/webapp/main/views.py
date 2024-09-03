@@ -132,7 +132,7 @@ def add_to_cart(product_id):
     cs = len(all_colors)
     # color = data['color']
     # if not color:
-    color = data.get('color')
+    color = data.get('color_id')
     # color = data.get('color', f'{all_colors[random.choice(range(1, cs))].color}')
     logging.info(f"Quantity first {quantity}")
     logging.info(f"Data {data['quantity']}")
@@ -392,10 +392,12 @@ def address():
     if request.method == 'POST':
         data = request.json
         
-        required_fields = ['country', 'state', 'city', 'street', 'zipcode']
+        required_fields = ['country', 'state', 'city', 'street', 'zipcode', 'firstname', 'lastname', 'phone'] 
         if not all(field in data and data[field] for field in required_fields):
-            return jsonify({'error': 'All fields (country, state, city, street, zipcode) are required.'}), 400
-
+            return jsonify({'error': 'All fields (country, state, city, street, zipcode, firstname, lastname, phone) are required.'}), 400
+        user.firstname =data.get('firstname') 
+        user.lastname =data.get('lastname')
+        user.phone =data.get('phone')
         user.country = data.get('country')
         user.state = data.get('state')
         user.city = data.get('city')
@@ -418,7 +420,7 @@ def view_product_colors(product_id):
     if request.method == 'GET':
         product_colors = ProductColor.query.filter_by(product_id=product.id).all()
         colors = [color.to_dict() for color in product_colors]
-        return jsonify({'product_name': product.product_name, 'colors_available': colors}), 200
+        return jsonify(colors), 200
 
 
 @login_required

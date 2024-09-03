@@ -100,12 +100,12 @@ class ProductColor(db.Model):
 
     def to_dict(self):
         return {
-            # 'id': self.id,
+            'id': self.id,
             'color': self.color
         }
 
     def __repr__(self):
-        return f"Product Color ('{self.color}', '{self.number}', '{self.product_id}')"
+        return f"Product Color ('{self.id}', '{self.color}', '{self.number}', '{self.product_id}')"
 
 
 # product

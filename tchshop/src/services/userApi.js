@@ -22,11 +22,11 @@ export const fetchWithState = async (url, options) => {
   }
 };
 
-export const addToCart = async (id, quantity, shipping, color) => {
+export const addToCart = async (id, quantity, shipping, color_id) => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ quantity, shipping, color }),
+    body: JSON.stringify({ quantity, shipping, color_id }),
     credentials: "include"
   };
 
@@ -49,12 +49,24 @@ export const addShippingDetails = async (
   state,
   city,
   street,
-  zipcode
+  zipcode,
+  firstname,
+  lastname,
+  phone
 ) => {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ country, state, city, street, zipcode }),
+    body: JSON.stringify({
+      country,
+      state,
+      city,
+      street,
+      zipcode,
+      firstname,
+      lastname,
+      phone
+    }),
     credentials: "include"
   };
 
@@ -83,7 +95,7 @@ export const viewProduct = async id => {
     }
     return data;
   } catch (err) {
-    return err
+    return err;
   }
 };
 
@@ -167,7 +179,7 @@ export const getCart = async () => {
     }
     return data;
   } catch (err) {
-    return err
+    return err;
   }
 };
 
