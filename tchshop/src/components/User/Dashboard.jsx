@@ -1,7 +1,12 @@
-const Dashboard = () => {
-    return (
-        <h1>hey react</h1>
-    )
-}
+import UpdateProfile from "./UpdateProfile";
 
-export default Dashboard
+const Dashboard = () => {
+  return (
+    <div>
+      <h1>hey react</h1>
+      <UpdateProfile />
+    </div>
+  );
+};
+
+export default Dashboard;

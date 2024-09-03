@@ -7,24 +7,28 @@ const ProductColors = ({id, color, setColor}) => {
   useEffect(() => {
     const fetchProductColors = async () => {
       const { data } = await viewProductColors(id);
-      setColors(data.colors_available);
+      setColors(data);
+      setColor(data[0].id)
     };
 
     fetchProductColors();
   }, [id]);
 
+  console.log(color)
+
   return (
     <div className="flex justify-center space-x-2">
       {colors && colors.length > 0 ? (
         colors.map(colorOpt => (
-          <label key={colorOpt.color} className="inline-flex items-center">
+          <label key={colorOpt.id} className="inline-flex items-center">
+          {console.log(colorOpt)}
             <input
               type="radio"
               name="color"
-              value={colorOpt.color}
+              // value={colorOpt.color}
               className="form-radio"
-              checked={color === colorOpt.color}
-              onChange={() => setColor(colorOpt.color)}
+              checked={color === colorOpt.id}
+              onChange={() => setColor(colorOpt.id)}
             />
             <span
               className="block w-6 h-6 ml-2"
