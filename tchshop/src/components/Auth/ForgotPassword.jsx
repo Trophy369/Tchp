@@ -77,7 +77,7 @@ const ForgotPassword = () => {
           </h2>
           <p className="mt-2 text-sm text-center text-gray-600">
             {step === 1 ? "Enter your email address to receive a reset code."
-              : step === 2 ? "Enter the code sent to your email."
+              : step === 2 ? "Enter the code sent to your email. Check spam folder."
               : "Enter your new password."}
           </p>
         </div>

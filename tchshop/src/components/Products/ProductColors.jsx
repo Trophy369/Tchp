@@ -26,10 +26,10 @@ const ProductColors = ({id, color, setColor}) => {
               checked={color === colorOpt.color}
               onChange={() => setColor(colorOpt.color)}
             />
-            <span
+            {/* <span
               className="block w-6 h-6 ml-2"
               style={{ backgroundColor: colorOpt.color.toLowerCase() }}
-            ></span>
+            ></span> */}
             <span className="ml-2">{colorOpt.color}</span>
           </label>
         ))

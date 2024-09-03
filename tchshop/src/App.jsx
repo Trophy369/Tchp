@@ -16,9 +16,9 @@ import SignIn from "./components/Auth/SignIn";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import SignUp from "./components/Auth/SignUp";
 import UpdateProfile from "./components/User/UpdateProfile";
-import Shipping from "./pages/shoppolicy/Shipping";
-import Warranty from "./pages/shoppolicy/Warranty";
-import Returns from "./pages/Returns";
+// import Shipping from "./pages/shoppolicy/Shipping";
+// import Warranty from "./pages/shoppolicy/Warranty";
+// import Returns from "./pages/Returns";
 import ProductPro from "./components/Products/ProductPro";
 import AdminDash from "./components/Admin/AdminDash";
 import AddProduct from "./components/Admin/AddProducts";
@@ -68,9 +68,9 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<SignUp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/viewproduct/:id" element={<ProductPro />} />
-      <Route path="/shoppolicy/shipping" element={<Shipping />} />
+      {/* <Route path="/shoppolicy/shipping" element={<Shipping />} />
       <Route path="/shoppolicy/returns" element={<Returns />} />
-      <Route path="/shoppolicy/warranty" element={<Warranty />} />
+      <Route path="/shoppolicy/warranty" element={<Warranty />} /> */}
       <Route path="/faq" element={<Faq />} />
       <Route path="collections/:name" element={<CategoryPage />} />
       <Route path="/:refCode" element={<SignUp2 />} />

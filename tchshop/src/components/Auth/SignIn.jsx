@@ -49,8 +49,8 @@ const Signin = () => {
     : "border-gray-300";
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 py-4 bg-gray-50 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-2">
+    <section className="flex items-center justify-center px-4 py-4 bg-gray-50 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-2">
         <div>
           <h2 className="mt-2 text-3xl font-extrabold text-center text-gray-900">
             Log in to your account
@@ -157,7 +157,7 @@ const Signin = () => {
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

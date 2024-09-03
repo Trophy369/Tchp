@@ -100,12 +100,22 @@ const ProductPro = () => {
         </motion.div>
       )}
       <Carousel images={imageUrls} />
+      {/* <div className="flex flex-col items-center justify-center flex-1 p-2">
+          <h2 className="mb-1 text-base font-normal text-center">{name}</h2>
+          <p className="flex items-center mb-1 text-base font-medium">
+            <FontAwesomeIcon icon={faDollarSign} className="mr-1" />
+            {price.toFixed(2)}
+          </p>
+          <p className="text-sm text-gray-600">
+             {quantity} Sold |  {quantity} Left
+          </p>
+        </div> */}
       <div className="my-4 text-center">
-        <h1 className="text-2xl font-bold">{product_name}</h1>
-        <p className="flex items-center justify-center text-lg font-medium">
+        <h1 className="mb-1 text-lg font-medium">{product_name}</h1>
+        <p className="flex items-center justify-center text-base font-medium">
           <FaDollarSign className="mr-1" /> {discounted_price}
         </p>
-        <p className="text-sm">{description}</p>
+        <p className="my-2 text-sm">{description}</p>
         <ProductColors id={id} color={color} setColor={setColor} />
         <div className="flex items-center justify-center my-4 space-x-2">
           <button onClick={decrementQuantity} className="px-4 py-2 bg-gray-300">

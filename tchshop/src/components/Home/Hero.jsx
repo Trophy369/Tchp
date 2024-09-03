@@ -5,7 +5,7 @@ import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 
 const Hero = () => {
   return (
-    <section className="relative flex items-center  z-10 justify-center h-[18vh] bg-red-100/30 overflow-hidden">
+    <section className="relative flex items-center  z-10 justify-center h-[18vh] md:h-[27vh] bg-red-100/20 overflow-hidden">
       {/* SVG Background */}
       {/* <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -66,8 +66,8 @@ const Hero = () => {
         >
           Welcome to{' '}
           <FontAwesomeIcon icon={faScrewdriverWrench} className="mx-2 text-2xl text-yellow-900 md:text-3xl lg:text-4xl" />
-          <span className="text-2xl font-extrabold md:text-3xl lg:text-4xl">
-            <span className="overline">Hack</span>SHOP
+          <span className="text-3xl font-extrabold md:text-3xl lg:text-4xl">
+            <span className="overline">Tech</span>SHOP
           </span>
         </motion.h1>
         <motion.p
