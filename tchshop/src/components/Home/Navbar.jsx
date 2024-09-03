@@ -1,9 +1,8 @@
-// Navbar.js
 import React, { useState, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faShoppingCart, faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faShoppingCart, faScrewdriverWrench, faTimes } from '@fortawesome/free-solid-svg-icons'; // Import the faTimes icon
 import { signOutUserAsync } from '../../reducers/userReducer';
 import { signout } from '../../services';
 import Categories from './Categories';
@@ -26,14 +25,16 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="px-4 py-3 text-white bg-blue-500 z-sticky">
+    <nav className="relative z-50 px-4 py-3 font-mono text-white bg-blue-500 z-sticky">
       <div className="container flex items-center justify-between mx-auto">
+        {/* Hamburger menu (Mobile) */}
         <FontAwesomeIcon
-          icon={faBars}
+          icon={isMobileMenuOpen ? faTimes : faBars} // Toggle icon based on state
           className="mr-4 text-2xl text-white cursor-pointer md:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         />
 
+        {/* Logo */}
         <Link to="/" className="flex items-center">
           <FontAwesomeIcon
             icon={faScrewdriverWrench}
@@ -44,6 +45,7 @@ const Navbar = () => {
           </span>
         </Link>
 
+        {/* Navbar links */}
         <div className="justify-center flex-grow hidden md:flex">
           <Link
             to="/"
@@ -51,15 +53,14 @@ const Navbar = () => {
               window.location.pathname === '/' ? 'bg-blue-600' : 'hover:bg-blue-600'
             }`}
           >
-            Home
+            HOME
           </Link>
           <div className="relative px-2 py-2 mx-4 rounded group">
             <span
-              className={`cursor-pointer ${
-                window.location.pathname.includes('collections') ? 'bg-blue-600' : 'hover:bg-blue-600'
+              className={` px-2 py-2 mx-4 rounded cursor-pointer ${
+                window.location.pathname.includes('collections') ? 'bg-blue-600' : 'hover:bg-blue-600 '
               }`}
-            >
-              Products
+            >CATEGORIES
             </span>
             <Categories />
           </div>
@@ -75,12 +76,13 @@ const Navbar = () => {
             href="mailto:example@mail.com"
             className="px-2 py-2 mx-4 rounded hover:bg-blue-600"
           >
-            Contact
+            CONTACT
           </a>
         </div>
 
-        <div className="flex items-center ">
-        <UserMenu
+        {/* Right side links (Login, Create Account, Cart) */}
+        <div className="flex items-center">
+          <UserMenu
             user={user}
             handleSignOut={handleSignOut}
             isOpen={isMobileMenuOpen}
@@ -98,44 +100,44 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="mt-2 md:hidden">
-        <nav>
-          <ul className="space-y-2">
-            <li>
-              <Link
-                to="/"
-                className="block px-4 py-2 text-center hover:bg-blue-600"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-        <div className="relative block px-4 py-2 text-center rounded hover:bg-blue-600 group">
-          <span className="cursor-pointer">Products</span>
-          <Categories />
+          <nav>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  to="/"
+                  className="block px-4 py-2 text-center hover:bg-blue-600"
+                >
+                  HOME
+                </Link>
+              </li>
+              <li>
+                <div className="relative block px-4 py-2 text-center rounded hover:bg-blue-600 group">
+                  <span className="cursor-pointer">CATEGORIES</span>
+                  <Categories />
+                </div>
+              </li>
+              <li>
+                <Link
+                  to="/faq"
+                  className="block px-4 py-2 text-center hover:bg-blue-600"
+                >
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="mailto:example@mail.com"
+                  className="block px-4 py-2 text-center hover:bg-blue-600"
+                >
+                  CONTACT
+                </Link>
+              </li>
+            </ul>
+          </nav>
         </div>
-      </li>
-            <li>
-              <Link
-                to="/faq"
-                className="block px-4 py-2 text-center hover:bg-blue-600"
-              >
-                FAQ
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="mailto:example@mail.com"
-                className="block px-4 py-2 text-center hover:bg-blue-600"
-              >
-                Contact
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      
       )}
     </nav>
   );

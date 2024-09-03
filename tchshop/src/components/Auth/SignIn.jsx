@@ -49,14 +49,14 @@ const Signin = () => {
     : "border-gray-300";
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 py-6 bg-gray-50 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex items-center justify-center min-h-screen px-4 py-4 bg-gray-50 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-2">
         <div>
-          <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
+          <h2 className="mt-2 text-3xl font-extrabold text-center text-gray-900">
             Log in to your account
           </h2>
         </div>
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-2 space-y-6">
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -97,13 +97,13 @@ const Signin = () => {
           {loading && (
             <button
               type="button"
-              className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md cursor-not-allowed shadow hover:bg-indigo-400 transition ease-in-out duration-150"
+              className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out bg-indigo-500 border border-transparent rounded-md shadow cursor-not-allowed hover:bg-indigo-400"
               disabled
               aria-busy="true"
               aria-label="Loading"
             >
               <svg
-                className="animate-spin h-5 w-5 mr-3 text-white"
+                className="w-5 h-5 mr-3 text-white animate-spin"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -150,7 +150,7 @@ const Signin = () => {
           <p className="mt-4">
             <Link
               to={"/forgot-password"}
-              className="text-blue-500 hover:underline hover:text-indigo-700 transition duration-200 ease-in-out"
+              className="text-blue-500 transition duration-200 ease-in-out hover:underline hover:text-indigo-700"
             >
               Forgot Password?
             </Link>

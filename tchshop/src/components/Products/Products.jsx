@@ -44,7 +44,7 @@ const Products = () => {
       <button
         onClick={loadMore}
         disabled={loading}
-        className={`w-full p-2 ${
+        className={`mx-auto flex justify-center my-8 md:max-w-[25vw] p-2 ${
           loading ? "bg-gray-500" : "bg-blue-500"
         } text-white font-semibold rounded hover:bg-blue-600`}
       >
@@ -54,8 +54,8 @@ const Products = () => {
   };
 
   return (
-    <section className="container px-4 py-8 mx-auto">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+    <section className="container mx-auto ">
+      <div className="grid grid-cols-2 gap-4 py-2 mx-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {products.map(product => (
           <ProductCard
             key={product.id}

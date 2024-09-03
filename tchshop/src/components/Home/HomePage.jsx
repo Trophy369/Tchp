@@ -1,6 +1,6 @@
 import Hero from '../Home/Hero'
 import Products from '../Products/Products'
-import ShopPolicy from '../Home/ShopPolicy'
+// import ShopPolicy from '../Home/ShopPolicy'
 import Search from '../Home/Search'
 
 
@@ -10,7 +10,7 @@ const HomePage = () => {
         <Hero />
         {/* <Search /> */}
         <Products />
-        <ShopPolicy />
+        {/* <ShopPolicy /> */}
     </>
   )
 }

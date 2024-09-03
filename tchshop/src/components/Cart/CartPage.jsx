@@ -32,14 +32,9 @@ const CartPage = ({}) => {
     <ShowError errorMessage={error} />
   ) : (
     <div className="container p-4 mx-auto">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Your Cart</h1>
-        <button
-          onClick={handleClearCart} // Call the clearCart function when clicked
-          className="flex items-center px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
-        >
-          <FaTrash className="mr-2" /> Clear Cart
-        </button>
+        
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left">
@@ -64,6 +59,12 @@ const CartPage = ({}) => {
             ))}
           </tbody>
         </table>
+        <button
+          onClick={handleClearCart} // Call the clearCart function when clicked
+          className="flex items-center px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+        >
+          <FaTrash className="mr-2" /> Clear Cart
+        </button>
       </div>
       <div className="mt-4 text-center">
         <p className="mb-2">
