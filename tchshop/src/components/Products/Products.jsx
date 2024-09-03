@@ -4,7 +4,7 @@ import ProductCard from "./ProductCard";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const [limit, setLimit] = useState(16);
+  const [limit, setLimit] = useState(18);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);

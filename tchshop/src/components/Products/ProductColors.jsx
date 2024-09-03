@@ -14,10 +14,10 @@ const ProductColors = ({id, color, setColor}) => {
     fetchProductColors();
   }, [id]);
 
-  console.log(color)
-
   return (
-    <div className="flex justify-center space-x-2">
+    <section className="my-8">
+      <h3 className="my-4 text-center">Color</h3>
+      <div className="grid justify-center grid-cols-3 gap-1 mx-auto w-[50vw] md:w-[20vw] ">
       {colors && colors.length > 0 ? (
         colors.map(colorOpt => (
           <label key={colorOpt.id} className="inline-flex items-center">
@@ -34,13 +34,14 @@ const ProductColors = ({id, color, setColor}) => {
               className="block w-6 h-6 ml-2"
               style={{ backgroundColor: colorOpt.color.toLowerCase() }}
             ></span>
-            <span className="ml-2">{colorOpt.color}</span>
+            {/* <span className="ml-2">{colorOpt.color}</span> */}
           </label>
         ))
       ) : (
         <p>No Colors Found</p>
       )}
     </div>
+    </section>
   );
 };
 

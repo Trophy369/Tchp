@@ -509,10 +509,14 @@ def use_coupon():
     data = request.json
     code = data["code"]
     coupon_user = Coupon.query.filter_by(code=code, percentage=20).first()
+    logging.info(f'total price: {session["total_price"]}, total shipping: {session["total_shipping"]}')
+
     if not coupon_user:
         return jsonify({"error": "Invalid coupon code"}), 400
 
     session.pop("total_price", None)
+    session.pop("total_shipping", None)
+
     total_price = 0
     total_shipping = 0
     cart_items = CartItem.query.filter_by(cart_id=current_user.id).all()
@@ -521,7 +525,7 @@ def use_coupon():
         product = Product.query.get(cart_item.product_id)
         product.quantity -= cart_item.quantity
         method = Shipping.query.filter_by(id=cart_item.shipping).first()
-        total_price += (product.discounted_price * cart_item.quantity) - ((product.discounted_price * cart_item.quantity) * (int(coupon_user.percentage) / 100))
+        total_price += (product.discounted_price * cart_item.quantity) - ((product.discounted_price * cart_item.quantity) * (int(coupon_user.percentage - 13) / 100))
         if cart_item.quantity >= 2:
             total_shipping += (method.cost * cart_item.quantity) * 0.85
         else:

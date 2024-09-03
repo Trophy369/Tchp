@@ -100,14 +100,33 @@ const ProductPro = () => {
         </motion.div>
       )}
       <Carousel images={imageUrls} />
-      <div className="my-4 text-center">
-        <h1 className="text-2xl font-bold">{product_name}</h1>
-        <p className="flex items-center justify-center text-lg font-medium">
-          <FaDollarSign className="mr-1" /> {discounted_price}
+      {/* <div className="flex flex-col items-center justify-center flex-1 p-2">
+          <h2 className="mb-1 text-base font-normal text-center">{name}</h2>
+          <p className="flex items-center mb-1 text-base font-medium">
+            <FontAwesomeIcon icon={faDollarSign} className="mr-1" />
+            {price.toFixed(2)}
+          </p>
+          <p className="text-sm text-gray-600">
+             {quantity} Sold |  {quantity} Left
+          </p>
+        </div> */}
+      <div className="my-8 text-center">
+        <h1 className="text-lg font-medium ">{product_name}</h1>
+        <p className="flex items-center justify-center text-base font-medium">
+          <FaDollarSign className="mr-1" /> {discounted_price} / Piece
         </p>
-        <p className="text-sm">{description}</p>
+        <p className="my-4 text-sm">{description}</p>
+
+        <hr className="w-[80vw] md:w-[60vw] mx-auto "/>
+        
         <ProductColors id={id} color={color} setColor={setColor} />
+        
+        <hr className="w-[80vw] md:w-[60vw] mx-auto "/>
+
+        <div className="my-8">
+        <h3 className="text-center ">Quantity</h3>
         <div className="flex items-center justify-center my-4 space-x-2">
+         
           <button onClick={decrementQuantity} className="px-4 py-2 bg-gray-300">
             -
           </button>
@@ -123,31 +142,31 @@ const ProductPro = () => {
             +
           </button>
         </div>
+        </div>
+        
+        <hr className="w-[80vw] md:w-[60vw] mx-auto "/>
+      
         <Shipping
         selectedShippingMethod={selectedShippingMethod}
         setSelectedShippingMethod={setSelectedShippingMethod}
         />
+     
+       
+
         <button
           onClick={handleAddToCart}
-          className="px-6 py-2 text-white bg-blue-500 rounded-lg"
+          className="px-6 py-2 my-4 text-white bg-blue-500 rounded-lg"
         >
           Add to Cart
         </button>
       </div>
-      
-      <div className="my-4 text-center">
-        <p>Description.</p>
+      <hr />
+      <hr />
+      <div className="mt-8 text-center">
         <ProductDescription />
-      </div>
-      <div className="my-4 text-center">
-        <p>Additional product details go here.</p>
-        <img
-          src="/path/to/placeholder-image.jpg"
-          alt="Product Detail"
-          className="w-full h-auto just"
-        />
         <Reviews id={id} />
       </div>
+     
     </div>
   );
 };

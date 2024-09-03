@@ -29,7 +29,7 @@ const SignUp2 = () => {
   }, [signed2, navigate]);
 
   return (
-    <section className="flex items-center justify-center px-4 py-12 bg-gray-50 sm:px-6 lg:px-8">
+    <section className="flex items-center justify-center px-4 py-4 bg-gray-50 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
           <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">

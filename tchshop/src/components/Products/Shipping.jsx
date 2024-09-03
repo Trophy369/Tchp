@@ -18,11 +18,11 @@ const Shipping = ({selectedShippingMethod, setSelectedShippingMethod}) => {
 
   return (
     
-      <section className="p-4 mb-8 text-center border-2 border-black bg-light-brown-500/50">
-        <h2 className="mb-2 text-xl font-semibold">Shipping Method</h2>
-        <div className="space-y-4">
+      <section className="p-4 mb-8 text-center bg-light-brown-500/50">
+        <h3 className="my-4 ">Shipping Method</h3>
+        <div className="p-2 mx-auto space-y-4 border-2 border-solid border-black-500 md:w-[30vw]">
           {shippingMethods.map(ship => (
-            <label key={ship.id} className="flex items-center">
+            <label key={ship.id} className="flex items-center justify-center ">
               <input
                 type="checkbox"
                 checked={selectedShippingMethod === ship.id}
