@@ -23,7 +23,7 @@ const Carousel = ({ images }) => {
 
   return (
     <section className="relative overflow-hidden">
-      <div className="flex transition-transform duration-500" style={{ height: '50vh', width: '100%', transform: `translateX(-${currentIndex * 100}%)` }}>
+      <div className="flex mx-auto transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
         {images.map((src, index) => (
           <div key={index} className="flex-shrink-0 w-full h-full md:w-full">
             <ShowImage url={src} alt={`Slide ${index}`} style="carousel" />

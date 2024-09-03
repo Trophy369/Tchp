@@ -10,7 +10,7 @@ const ShowImage = ({ style, url }) => {
   } else if (style === "home") {
     size = "object-cover w-full h-48"; // Large image size
   } else if (style === "carousel") {
-    size = "object-cover w-full w-50";
+    size = "object-cover  mx-auto ";
   }  else if (style === "category") {
     size = "w-24 h-24 object-cover";
   } else { 

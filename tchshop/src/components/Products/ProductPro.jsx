@@ -116,8 +116,13 @@ const ProductPro = () => {
           <FaDollarSign className="mr-1" /> {discounted_price}
         </p>
         <p className="my-2 text-sm">{description}</p>
+        <hr />
         <ProductColors id={id} color={color} setColor={setColor} />
+        <hr />
+        <div>
+        <h3 className="text-center ">Quantity</h3>
         <div className="flex items-center justify-center my-4 space-x-2">
+         
           <button onClick={decrementQuantity} className="px-4 py-2 bg-gray-300">
             -
           </button>
@@ -133,31 +138,28 @@ const ProductPro = () => {
             +
           </button>
         </div>
+        </div>
+        
+        <hr/>
         <Shipping
         selectedShippingMethod={selectedShippingMethod}
         setSelectedShippingMethod={setSelectedShippingMethod}
         />
+        <hr />
+
         <button
           onClick={handleAddToCart}
-          className="px-6 py-2 text-white bg-blue-500 rounded-lg"
+          className="px-6 py-2 my-4 text-white bg-blue-500 rounded-lg"
         >
           Add to Cart
         </button>
       </div>
       
       <div className="my-4 text-center">
-        <p>Description.</p>
         <ProductDescription />
-      </div>
-      <div className="my-4 text-center">
-        <p>Additional product details go here.</p>
-        <img
-          src="/path/to/placeholder-image.jpg"
-          alt="Product Detail"
-          className="w-full h-auto just"
-        />
         <Reviews id={id} />
       </div>
+     
     </div>
   );
 };

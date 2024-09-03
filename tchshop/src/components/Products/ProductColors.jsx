@@ -14,7 +14,9 @@ const ProductColors = ({id, color, setColor}) => {
   }, [id]);
 
   return (
-    <div className="flex justify-center space-x-2">
+    <section className="my-2">
+      <h3 className="text-center">Color</h3>
+      <div className="grid justify-center grid-cols-3 gap-1 mx-auto w-[70vw] md:w-[30vw] ">
       {colors && colors.length > 0 ? (
         colors.map(colorOpt => (
           <label key={colorOpt.color} className="inline-flex items-center">
@@ -37,6 +39,7 @@ const ProductColors = ({id, color, setColor}) => {
         <p>No Colors Found</p>
       )}
     </div>
+    </section>
   );
 };
 
