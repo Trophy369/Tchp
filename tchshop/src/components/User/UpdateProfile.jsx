@@ -104,7 +104,7 @@ const UpdateProfile = () => {
     fetchCities();
   }, [deliveryForm.state]);
 
-  // Validate form fields
+  // Validate form field
   const validateForm = () => {
     let formErrors = {};
 
