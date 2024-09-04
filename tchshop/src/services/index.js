@@ -24,6 +24,22 @@ export const listproducts = async (limit, offset) => {
   return response.json();
 };
 
+export const setCookie = (name, value, days) => {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+};
+
+export const getCookie = (name) => {
+  return document.cookie.split('; ').reduce((r, c) => {
+      const [key, v] = c.split('=');
+      return key === name ? decodeURIComponent(v) : r;
+  }, '');
+};
+
+const deleteCookie = (name) => {
+  setCookie(name, '', -1);
+};
+
 export const signin = async (email, password) => {
   const requestOptions = {
     method: "POST",
@@ -98,6 +114,7 @@ export const signout = async () => {
       "Content-Type": "application/json"
     }
   };
+  deleteCookie('userId')
 
   return fetchWithState(`${baseUrl}/auth/logout`, requestOptions);
 };
