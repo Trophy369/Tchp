@@ -66,12 +66,12 @@ const ProductDescription = () => {
           ) : (
             <>
               {descImageUrls.map((src, index) => (
-                <div key={index} className="flex-shrink-0 w-full mx-auto mb-2">
-                  <ShowImage url={src} alt={`Slide ${index}`} style="carousel" />
+                <div key={index} className="flex justify-center mb-4">
+                  <ShowImage url={src} alt={`Slide ${index}`} style="carousel" className="object-cover h-50vh w-50vw" />
                 </div>
               ))}
-              <h2 className="font-medium text-md">{productDesc.specifications}</h2>
-              {/* <p className="text-sm text-gray-500">End of product description</p> */}
+              <p className="mt-4 font-medium text-md">{productDesc.specifications}</p>
+              
             </>
           )}
         </div>

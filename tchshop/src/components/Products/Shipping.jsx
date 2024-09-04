@@ -34,6 +34,9 @@ const Shipping = ({selectedShippingMethod, setSelectedShippingMethod}) => {
                 <div className="text-sm text-gray-600">
                   Delivery Time: {ship.deliveryTime}
                 </div>
+                <div className="text-sm text-gray-600">
+                  Cost: ${ship.cost}
+                </div>
               </div>
             </label>
           ))}

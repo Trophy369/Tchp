@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { forgotPassword, verifyCode, resetPassword } from "../../services"; // Import resetPassword function
+import { forgotPassword, verifyCode, resetPassword } from "../../services";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -9,7 +9,7 @@ const ForgotPassword = () => {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1); // Track current step: 1 for email, 2 for code, 3 for password reset
+  const [step, setStep] = useState(1);
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
@@ -19,8 +19,8 @@ const ForgotPassword = () => {
 
     try {
       const response = await forgotPassword(email);
-      setStep(2); // Move to the next step for code verification
-      setMessage("A reset code has been sent to your email.");
+      setStep(2);
+      setMessage("A reset code has been sent to your email, if not inside inbox check your spam folder.");
     } catch (err) {
       setError(err.message || "Failed to send reset code.");
     } finally {
@@ -36,7 +36,7 @@ const ForgotPassword = () => {
 
     try {
       const response = await verifyCode(code);
-      setStep(3); // Move to the next step for password reset
+      setStep(3);
       setMessage("Code verified successfully! Please reset your password.");
     } catch (err) {
       setError(err.message || "Verification failed. Please try again.");
@@ -57,10 +57,9 @@ const ForgotPassword = () => {
         return;
       }
 
-      // Call the resetPassword function with the new password
       const response = await resetPassword(password, confirmPassword);
       setMessage("Password has been reset successfully! You can now log in.");
-      setStep(1); // Optionally reset the step for future use
+      setStep(1);
     } catch (err) {
       setError(err.message || "Password reset failed. Please try again.");
     } finally {
@@ -69,31 +68,29 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex items-center justify-center px-4 py-6 bg-gray-50 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-center px-4 py-4 my-8 bg-gray-50 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
-        <div>
-          <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
-            {step === 1 ? "Forgot Password" : step === 2 ? "Verify Code" : "Reset Password"}
-          </h2>
-          <p className="mt-2 text-sm text-center text-gray-600">
-            {step === 1 ? "Enter your email address to receive a reset code."
-              : step === 2 ? "Enter the code sent to your email. Check spam folder."
-              : "Enter your new password."}
-          </p>
-        </div>
+        <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
+          {step === 1 ? "Forgot Password" : step === 2 ? "Verify Code" : "Reset Password"}
+        </h2>
+        <p className="mt-2 text-sm text-center text-gray-600">
+          {step === 1
+            ? "Enter your email address to receive a reset code."
+            : step === 2
+            ? "Enter the code sent to your email."
+            : "Enter your new password."}
+        </p>
 
         {step === 1 && (
           <form onSubmit={handleEmailSubmit} className="mt-8 space-y-6">
             <div className="rounded-md shadow-sm">
               <div>
-                <label htmlFor="email" className="sr-only">
-                  Email
-                </label>
+                <label htmlFor="email" className="sr-only">Email</label>
                 <input
                   id="email"
                   type="email"
                   required
-                  className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -121,14 +118,12 @@ const ForgotPassword = () => {
           <form onSubmit={handleCodeSubmit} className="mt-8 space-y-6">
             <div className="rounded-md shadow-sm">
               <div>
-                <label htmlFor="code" className="sr-only">
-                  Verification Code
-                </label>
+                <label htmlFor="code" className="sr-only">Verification Code</label>
                 <input
                   id="code"
                   type="text"
                   required
-                  className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Verification Code"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -156,28 +151,24 @@ const ForgotPassword = () => {
           <form onSubmit={handlePasswordSubmit} className="mt-8 space-y-6">
             <div className="rounded-md shadow-sm">
               <div>
-                <label htmlFor="password" className="sr-only">
-                  New Password
-                </label>
+                <label htmlFor="password" className="sr-only">New Password</label>
                 <input
                   id="password"
                   type="password"
                   required
-                  className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="New Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <div className="mt-4">
-                <label htmlFor="confirmPassword" className="sr-only">
-                  Confirm Password
-                </label>
+              <div>
+                <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
                 <input
                   id="confirmPassword"
                   type="password"
                   required
-                  className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
