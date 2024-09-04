@@ -81,9 +81,9 @@ const Faq = () => {
   };
 
   return (
-    <div className="max-w-4xl p-6 mx-auto">
+    <div className="max-w-4xl p-6 mx-auto my-8">
       <h1 className="mb-8 text-3xl font-semibold text-center">Frequently Asked Questions</h1>
-      <div className="space-y-4">
+      <div className="my-4 space-y-4">
         {faqData.map((item, index) => (
           <div key={index}>
             <motion.div
