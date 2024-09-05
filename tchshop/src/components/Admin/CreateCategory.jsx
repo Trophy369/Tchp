@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createCategory, getCategory, deleteCategory, assignCategory } from "../../services/adminApi";
-import { FaTrash, FaPlus } from "react-icons/fa"; // Importing icons
+import { createCategory, deleteCategory, assignCategory } from "../../services/adminApi";
+import { viewCategory } from "../../services/userApi";
+import { FaTrash, FaPlus } from "react-icons/fa";
 
 const CreateCategory = () => {
   const nameRef = useRef();
@@ -8,14 +9,14 @@ const CreateCategory = () => {
   const [productName, setProductName] = useState("");
   const [categoryToAssign, setCategoryToAssign] = useState("");
 
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     const data = await getCategory(); // Assuming getCategory() fetches all categories
-  //     setCategories(data);
-  //   };
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const {data} = await viewCategory();
+      setCategories(data);
+    };
 
-  //   fetchCategories();
-  // }, []);
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -107,7 +108,7 @@ const CreateCategory = () => {
       <ul className="space-y-2">
         {categories.map((category) => (
           <li key={category.id} className="flex justify-between items-center bg-gray-100 p-2 rounded">
-            <span className="text-gray-800">{category.name}</span>
+            <span className="text-gray-800">{category.category_name}</span>
             <button
               onClick={() => handleDelete(category.id)}
               className="text-red-600 hover:text-red-800 flex items-center"

@@ -212,6 +212,29 @@ export const getWallet = async () => {
   return response.json();
 };
 
+export const getCoupon = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include"
+  };
+
+  const response = await fetch(`${baseUrl}/admin/viewCoupons`, requestOptions);
+  return response.json();
+};
+
+export const editShipping = async (id, cost) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ cost })
+  };
+
+  const response = await fetch(`${baseUrl}/admin/update_shipping_cost/${id}`, requestOptions);
+  return response.json();
+};
+
 export const createReview = async formData => {
   const extractedId = formData.get("id");
   const requestOptions = {
@@ -370,14 +393,14 @@ export const deleteRole = async id => {
   return response.json();
 };
 
-export const deleteShipping = async method => {
+export const deleteShipping = async name => {
   const requestOptions = {
     method: "DELETE",
     credentials: "include"
   };
 
   const response = await fetch(
-    `${baseUrl}/admin/delete_shipping/${method}`,
+    `${baseUrl}/admin/delete_shipping/${name}`,
     requestOptions
   );
   return response.json();
