@@ -74,6 +74,7 @@ class User(db.Model):
     def __init__(self, email, firstname, lastname, agree, city, state, country, zipcode, street, phone):
         self.email = email
         default = Role.query.filter_by(name="default").one()
+        self.roles.append(default)
         self.firstname = firstname
         self.lastname = lastname
         self.agree = agree
@@ -241,7 +242,7 @@ class User(db.Model):
         return (self.id)
 
     def __repr__(self):
-        return f"User('{self.firstname}', '{self.lastname}'), '{self.roles}', '{self.coupons_count}', '{self.coupons}'"\
+        return f"User('{self.id}', '{self.firstname}', '{self.lastname}'), '{self.roles}', '{self.coupons_count}', '{self.coupons}'"\
                f"'{self.city}', '{self.state}', '{self.country}', '{self.zipcode}', '{self.street}','{self.email}', '{self.carts}'"
 
 

@@ -38,6 +38,7 @@ import CreateShipping from "./components/Admin/CreateShipping";
 import { checkAuthStatusAsync } from "./reducers/userReducer";
 import { fetchCartItems } from "./reducers/cartReducer";
 import SignUp2 from "./components/Auth/SignUp2";
+import Orders from "./components/User/Orders";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
         <Route path="/cart" element={<CartPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/update" element={<UpdateProfile />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/payment" element={<Payment />} />
       </Route>

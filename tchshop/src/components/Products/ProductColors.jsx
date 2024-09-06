@@ -21,7 +21,6 @@ const ProductColors = ({id, color, setColor}) => {
       {colors && colors.length > 0 ? (
         colors.map(colorOpt => (
           <label key={colorOpt.id} className="inline-flex items-center">
-          {console.log(colorOpt)}
             <input
               type="radio"
               name="color"

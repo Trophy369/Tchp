@@ -22,7 +22,8 @@ def get_current_user():
             return jsonify({
                 "id": user.id,
                 "username": user.firstname,
-                "roles": len([role.to_dict() for role in user.roles])
+                "roles": len([role.to_dict() for role in user.roles]),
+                "email": user.email
             }), 200
     return jsonify({"error": "User not authenticated"}), 401
 
@@ -73,7 +74,6 @@ def signup_coupon(coupon):
             pass
             
         return jsonify({'message': 'User created successfully with coupon', 'user': new_user.email}), 201
-
 
 
 @auth_views.route('/signup', methods=['POST'], strict_slashes=False)

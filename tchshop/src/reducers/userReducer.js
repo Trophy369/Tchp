@@ -1,6 +1,6 @@
 // src/redux/slices/userSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { signin, getUser, signout, getCookie, setCookie } from '../services'
+import { signin, getUser, signout } from '../services'
 
 const initialState = {
     user: JSON.parse(localStorage.getItem('user')) || null,
@@ -99,8 +99,6 @@ const initialState = {
       if (data.id) {
         dispatch(setUser(data));
         localStorage.setItem('user', JSON.stringify(data));
-        setCookie('userId', data.id, 7);
-        console.log(getCookie('userId'))
       } else {
         dispatch(setError(data.message || 'Login failed.'));
         localStorage.removeItem('user');
@@ -119,7 +117,6 @@ const initialState = {
       const response = await getUser();
       if (response.id) {
         dispatch(checkAuthStatusSuccess(response));
-        getCookie('userId');
       } else {
         dispatch(checkAuthStatusFailure('No user is currently authenticated.'));
       }
