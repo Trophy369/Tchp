@@ -243,7 +243,19 @@ const Shipping = ({setShipData}) => {
           onChange={handleChange}
           className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
         />
-        {errors.zipcode && <p className="text-red-500">{errors.firstname}</p>}
+        {errors.firstname && <p className="text-red-500">{errors.firstname}</p>}
+      </div>
+
+      <div className="mb-2">
+        <input
+          name="phone"
+          type="text"
+          placeholder="phone"
+          value={deliveryForm.phone}
+          onChange={handleChange}
+          className="w-full p-2 border"
+        />
+        {errors.phone && <p className="text-red-500">{errors.phone}</p>}
       </div>
 
       <div>

@@ -13,8 +13,7 @@ class Order(db.Model):
     billing_address = db.Column(db.String(90), nullable=False)
     contacts = db.Column(db.String(200), nullable=False)
     userid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-    ordered_products = db.relationship('OrderedProduct', backref='orders', lazy='dynamic')
+    ordered_products = db.relationship('OrderedProduct', backref='orders', cascade="all, delete-orphan", lazy=True)
 
     def to_dict(self):
         return {
@@ -27,7 +26,7 @@ class Order(db.Model):
         }
 
     def __repr__(self):
-        return f"Order('{self.id}', '{self.order_date}','{self.contacts}','{self.shipping_price}','{self.billing_address}','{self.userid}'')"
+        return f"Order('{self.id}', '{self.order_date}','{self.contacts}','{self.shipping_price}','{self.billing_address}', '{self.userid}', '{self.ordered_products}')"
 
 
 class OrderedProduct(db.Model):
@@ -36,9 +35,31 @@ class OrderedProduct(db.Model):
     orderid = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
     productid = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+    shipping = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(15), default='pending')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'orderid': self.orderid,
+            'productid': self.productid,
+            'quantity': self.quantity,
+            'shipping': self.shipping,
+            'status': self.status
+        }
+
+    @staticmethod
+    def clean_pending():
+        all_pending = OrderedProduct.query.filter_by(status='pending').all()
+        if all_pending:
+            for i in all_pending:
+                Order.query.filter_by(id=i.orderid).delete()
+                # for j in corresponding_orders:
+                db.session.delete(i)
+            db.session.commit()
 
     def __repr__(self):
-        return f"Order('{self.id}', '{self.orderid}','{self.productid}','{self.quantity}')"
+        return f"OrderedProduct('{self.id}', '{self.orderid}','{self.productid}','{self.quantity}', '{self.status}', '{self.shipping}')"
 
 
 class Coupon(db.Model):

@@ -8,6 +8,7 @@ import Shipping from "./Shipping";
 const Order = ({ checkoutRes, shippingAddress }) => {
   const {user, cart} = useSelector((state) => state);
   const [proceedRes, setProceedRes] = useState(null);
+  const [priceUpdate, setPriceUpdate] = useState(null);
   const couponRef = useRef();
 
 const cartItems = cart.cart_details;
@@ -36,9 +37,15 @@ const email = user.user.email
   const handleCoupon = async () => {
     const code = couponRef.current.value;
     const {data, error} = await useCoupon(code);
+    setPriceUpdate(data.coupon_price)
     console.log(data);
   };
 
+  const total = priceUpdate ? priceUpdate : (proceedRes?.grand_total ? proceedRes.grand_total : "0.00");
+
+  // Convert total to a number before calling toFixed
+  const formattedTotal = parseFloat(total).toFixed(2);
+  
   return (
     <section className="max-w-2xl p-4 mx-auto mb-8 bg-white rounded-lg shadow-md">
       <h2 className="mb-4 text-2xl font-semibold text-center">Order Summary</h2>
@@ -75,10 +82,7 @@ const email = user.user.email
           <div className="flex items-center justify-between py-2 border-b">
             <span className="font-semibold">Total:</span>
             <span>
-              $
-              {proceedRes?.grand_total
-                ? proceedRes.grand_total.toFixed(2)
-                : "0.00"}
+              ${formattedTotal}
             </span>
           </div>
           <div className="mt-4">

@@ -25,6 +25,7 @@ def create_app(object_name):
             e.g. Patient-Information-System.config.DevConfig
     """
     app = Flask(__name__)
+    app.secret_key = 'qwertyuiop'
     app.config.from_object(object_name)
 
     db.init_app(app)

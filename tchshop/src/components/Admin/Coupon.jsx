@@ -1,9 +1,20 @@
-import React, { useState } from "react";
-import { generateCoupon, deleteCoupon, deleteCoupons } from "../../services/adminApi";
+import { useState, useEffect } from "react";
+import { generateCoupon, deleteCoupon, deleteCoupons, getCoupon } from "../../services/adminApi";
 import { FaTrash } from "react-icons/fa"; // Importing the trash icon
 
 const Coupon = () => {
   const [email, setEmail] = useState("");
+  const [coupons, setCoupons] = useState([])
+
+
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      const data = await getCoupon()
+      setCoupons(data)
+    }
+
+    fetchCoupons()
+  },[])
 
   const handleGenerateCoupon = async (e) => {
     e.preventDefault();

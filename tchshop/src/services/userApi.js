@@ -109,6 +109,16 @@ export const viewCategory = async () => {
   return fetchWithState(`${baseUrl}/categories`, requestOptions);
 };
 
+export const viewOrder = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include"
+  };
+
+  return fetchWithState(`${baseUrl}/orders`, requestOptions);
+};
+
 export const viewCategoryProducts = async category => {
   const requestOptions = {
     method: "GET",
@@ -151,6 +161,17 @@ export const updateCartItemColor = async (productId, color) => {
     `${baseUrl}/updateColor/${productId}`,
     requestOptions
   );
+  return response.json();
+};
+
+export const shipment = async productId => {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include"
+  };
+
+  const response = await fetch(`${baseUrl}/shipment/${productId}`, requestOptions);
   return response.json();
 };
 

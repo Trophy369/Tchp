@@ -95,6 +95,7 @@ const initialState = {
     try {
       const response = await signin(emailInput, passwordInput);
       const {data, error} = response
+      console.log(response.session)
       if (data.id) {
         dispatch(setUser(data));
         localStorage.setItem('user', JSON.stringify(data));

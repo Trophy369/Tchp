@@ -727,7 +727,7 @@ def delete_all_coupons():
 def view_all_coupons():
     coupons = Coupon.query.all()
     c = [coup.to_dict() for coup in coupons]
-    return jsonify({"success": c}), 200
+    return jsonify(c), 200
 
 
 # add wallet addresses
@@ -759,7 +759,7 @@ def add_wallet():
 def list_wallets():
     wallets = Wallet.query.all()
     all = [wallet.to_dict() for wallet in wallets]
-    return jsonify({"success": all}), 200
+    return jsonify(all), 200
 
 
 

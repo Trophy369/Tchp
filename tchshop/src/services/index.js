@@ -99,5 +99,6 @@ export const signout = async () => {
     }
   };
 
-  return fetchWithState(`${baseUrl}/auth/logout`, requestOptions);
+  const response = await fetch(`${baseUrl}/auth/logout`, requestOptions);
+  return response.json();
 };
