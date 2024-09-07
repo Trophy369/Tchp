@@ -395,7 +395,11 @@ def address():
     if request.method == 'POST':
         data = request.json
         
+<<<<<<< HEAD
+        required_fields = ['country', 'state', 'city', 'street', 'zipcode', 'firstname', 'lastname', 'phone']
+=======
         required_fields = ['country', 'state', 'city', 'street', 'zipcode']
+>>>>>>> a451a55d35c592577f6ad4ccfbeeca733c9f5e7e
         if not all(field in data and data[field] for field in required_fields):
             return jsonify({'error': 'All fields (country, state, city, street, zipcode) are required.'}), 400
 
@@ -554,18 +558,6 @@ def use_coupon():
     # all_order = Order.query.filter_by(userid=coupon_user.id).all()
 
 
-# proceed to payment
-@login_required
-@main.route('/proceed', methods=["GET"], strict_slashes=False)
-def proceed():
-    total_price = session["total_price"]
-    total_shipping = session["total_shipping"]
-    session["tax"] = 5.6
-    tax = session["tax"]
-    grand_total = round(float(total_price) + float(total_shipping) + float(tax), 3)
-    session["grand_total"] = grand_total
-    return jsonify({'total_price': total_price, 'total_shipping': total_shipping, 'tax': tax, 'grand_total': grand_total})
-
 
 # select payment method
 @login_required
@@ -624,6 +616,24 @@ def select_method():
     #     return redirect(url_for("main.pay")), 200
         # return jsonify({"address": address, "crypto": method}), 200
 
+<<<<<<< HEAD
+# proceed to payment
+# @login_required
+# @main.route('/proceed', methods=["GET"], strict_slashes=False)
+# def proceed():
+#     total_price = session["total_price"]
+#     total_shipping = session["total_shipping"]
+#     session["tax"] = 5.6
+#     tax = session["tax"]
+#     grand_total = round(float(total_price) + float(total_shipping) + float(tax), 3)
+#     session["grand_total"] = grand_total
+#     return jsonify({'total_price': total_price, 'total_shipping': total_shipping, 'tax': tax, 'grand_total': grand_total})
+
+
+
+
+=======
+>>>>>>> a451a55d35c592577f6ad4ccfbeeca733c9f5e7e
 """
     the appropriate random address selected from the above is passed here with the amount to be paid
 """
@@ -633,8 +643,15 @@ def pay():
     if current_user:
         address = session["address"]
         method = session["method"]
+        total_price = session["total_price"]
+        total_shipping = session["total_shipping"]
+        session["tax"] = 5.6
+        tax = session["tax"]
+        grand_total = round(float(total_price) + float(total_shipping) + float(tax), 3)
+        session["grand_total"] = grand_total
         grand_total = session["grand_total"]
-        return jsonify({'address': address, 'type': method, 'grand_total': grand_total})
+
+        return jsonify({'address': address, 'type': method, 'total_price': total_price, 'tax': tax, 'grand_total': grand_total})
 
 
 # confirm pay
@@ -731,7 +748,11 @@ def orders():
                     "quantity": all_ordered.quantity
                 })
 
+<<<<<<< HEAD
+    return jsonify({all_orders}), 200
+=======
     return jsonify(all_orders), 200
+>>>>>>> a451a55d35c592577f6ad4ccfbeeca733c9f5e7e
 
 
 # check ordered product status
