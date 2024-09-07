@@ -92,7 +92,7 @@ const App = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (user !== null) {
+    if (user !== null && user.roles !== 2) {
       dispatch(fetchCartItems());
     }
   }, [user, cart]);
