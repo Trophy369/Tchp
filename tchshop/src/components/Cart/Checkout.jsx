@@ -52,10 +52,8 @@ const Checkout = () => {
   }, [shippingAddress]);
 
   return (
-    <div className="container p-4 mx-auto">
-      <h1 className="mb-8 text-3xl font-bold text-center text-black">
-        Checkout
-      </h1>
+    <section className="flex items-center justify-center px-4 py-4 my-8 bg-gray-50 sm:px-6 lg:px-8" >
+      <div className="w-full max-w-md space-y-8">
 
       {shipData ? (
         <Order shippingAddress={shippingAddress} checkoutRes={checkoutRes} />
@@ -63,6 +61,8 @@ const Checkout = () => {
         <Shipping setShipData={setShipData} />
       )}
     </div>
+    </section>
+    
   );
 };
 

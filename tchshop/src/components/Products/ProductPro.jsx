@@ -115,7 +115,7 @@ const ProductPro = () => {
         <p className="flex items-center justify-center text-base font-medium">
           <FaDollarSign className="mr-1" /> {discounted_price} / Piece
         </p>
-        <p className="my-4 text-sm">{description}</p>
+        <p className="my-2 text-sm">{description}</p>
 
         <hr className="w-[80vw] md:w-[60vw] mx-auto "/>
         
@@ -123,7 +123,7 @@ const ProductPro = () => {
         
         <hr className="w-[80vw] md:w-[60vw] mx-auto "/>
 
-        <div className="my-8">
+        <div className="my-3">
         <h3 className="text-center ">Quantity</h3>
         <div className="flex items-center justify-center my-4 space-x-2">
          

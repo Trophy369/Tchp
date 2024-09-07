@@ -2,39 +2,23 @@ import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { FaTrash, FaPlus, FaMinus, FaDollarSign } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
-import { inputQuantityAsync, minusOneToCartAsync, plusOneToCartAsync, removeFromCartAsync } from "../../reducers/cartReducer";
-import ShowImage from "../ShowImage.jsx";
 import {
-  inputQuantity,
-  viewProductColors,
-  updateCartItemColor
-} from "../../services/userApi.js";
-import ColorDisplay from "./ColorDisplay";
+  inputQuantityAsync,
+  minusOneToCartAsync,
+  plusOneToCartAsync,
+  removeFromCartAsync,
+} from "../../reducers/cartReducer";
+import ShowImage from "../ShowImage.jsx";
+import { viewProductColors } from "../../services/userApi.js";
 
-const Cart = ({
-  productId,
-  name,
-  price,
-  quantity,
-  image
-}) => {
+const Cart = ({ productId, name, price, quantity, image }) => {
   const dispatch = useDispatch();
   const [lilQuantity, setLilQuantity] = useState(quantity);
-  const [color, setColor] = useState([]);
   const timeoutRef = useRef(null);
 
   useEffect(() => {
     setLilQuantity(quantity);
   }, [quantity]);
-
-  useEffect(() => {
-    const fetchProductColor = async () => {
-      const data = await viewProductColors(productId);
-      setColor(data);
-    };
-
-    fetchProductColor();
-  }, [productId]);
 
   const handleIncrement = () => {
     dispatch(plusOneToCartAsync(productId));
@@ -44,7 +28,7 @@ const Cart = ({
     dispatch(minusOneToCartAsync(productId));
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const newQuantity = Number(e.target.value);
     setLilQuantity(newQuantity);
 
@@ -61,14 +45,16 @@ const Cart = ({
     dispatch(removeFromCartAsync(productId));
   };
 
+ 
+
   return (
-    <tr key={productId} className="border-b">
-      <td className="flex items-center py-2 space-x-4">
-        <ShowImage style="cart" url={`static/products/default_img/${image}`}/>
+    <tr key={productId} className="text-center border-b">
+      <td className="flex flex-col py-2 space-x-4 md:flex-row">
+        <ShowImage style="cart" url={`static/products/default_img/${image}`} />
         <span className="truncate">{name}</span>
       </td>
       <td className="hidden py-2 md:table-cell">
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <button onClick={handleDecrement} className="px-2">
             <FaMinus />
           </button>
@@ -85,10 +71,30 @@ const Cart = ({
           </button>
         </div>
       </td>
-      <td className="flex flex-col items-start py-2 md:flex-row md:items-center md:justify-center">
-        <FaDollarSign className="mr-1" /> {price.toFixed(2)}
+      {/* price */}
+      <td className="">
+        <div className="flex items-center justify-center ">
+          <FaDollarSign className="mr-1 size-3" /> {price.toFixed(2)}
+        </div>
+        <div className="flex items-center justify-center my-1 md:hidden ">
+         
+          <button onClick={handleDecrement} className="px-1">
+            <FaMinus />
+          </button>
+          <input
+            type="number"
+            value={lilQuantity}
+            onChange={handleChange}
+            className="w-12 text-center"
+            min="1"
+            max="28"
+          />
+          <button onClick={handleIncrement} className="px-1">
+            <FaPlus />
+          </button>
+        </div>
       </td>
-      <td className="py-2 text-center">
+      <td className="py-2">
         <button
           onClick={handleRemove}
           className="transition-transform duration-200 hover:scale-125"

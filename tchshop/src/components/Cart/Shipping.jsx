@@ -151,13 +151,13 @@ const Shipping = ({setShipData}) => {
 
   return (
     <section className="mb-8">
-      <legend className="mb-2 text-xl font-semibold">Delivery</legend>
+      <legend className="mb-2 text-xs font-semibold">Enter address where product will be delivered.</legend>
 
       <select
         name="country"
         value={deliveryForm.country}
         onChange={handleChange}
-        className="w-full p-2 mb-2 border"
+        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
       >
         <option value="">Select Country</option>
         {countries.map(country => (
@@ -172,7 +172,7 @@ const Shipping = ({setShipData}) => {
         name="state"
         value={deliveryForm.state}
         onChange={handleChange}
-        className="w-full p-2 mb-2 border"
+        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
       >
         <option value="">Select State</option>
         {states.map(state => (
@@ -187,7 +187,7 @@ const Shipping = ({setShipData}) => {
         name="city"
         value={deliveryForm.city}
         onChange={handleChange}
-        className="w-full p-2 mb-2 border"
+        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
       >
         <option value="">Select City</option>
         {cities.map(city => (
@@ -205,7 +205,7 @@ const Shipping = ({setShipData}) => {
           placeholder="Street Address"
           value={deliveryForm.street}
           onChange={handleChange}
-          className="w-full p-2 border"
+          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
         />
         {errors.street && <p className="text-red-500">{errors.street}</p>}
       </div>
@@ -217,7 +217,7 @@ const Shipping = ({setShipData}) => {
           placeholder="Zip Code"
           value={deliveryForm.zipcode}
           onChange={handleChange}
-          className="w-full p-2 border"
+          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
         />
         {errors.zipcode && <p className="text-red-500">{errors.zipcode}</p>}
       </div>
@@ -229,7 +229,7 @@ const Shipping = ({setShipData}) => {
           placeholder="lastname"
           value={deliveryForm.lastname}
           onChange={handleChange}
-          className="w-full p-2 border"
+          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
         />
         {errors.lastname && <p className="text-red-500">{errors.lastname}</p>}
       </div>
@@ -241,19 +241,21 @@ const Shipping = ({setShipData}) => {
           placeholder="firstname"
           value={deliveryForm.firstname}
           onChange={handleChange}
-          className="w-full p-2 border"
+          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
         />
         {errors.zipcode && <p className="text-red-500">{errors.firstname}</p>}
       </div>
 
+      <div>
       <button
         type="button"
         onClick={handleDelivery}
-        className="w-full p-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+       className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         disabled={loading}
       >
         {loading ? "Processing..." : "Submit"}
       </button>
+      </div>
     </section>
   );
 };

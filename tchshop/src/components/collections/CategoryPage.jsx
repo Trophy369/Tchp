@@ -7,6 +7,8 @@ const CategoryPage = () => {
   const { name } = useParams();
   const [products, setProducts] = useState([]);
   const [error, setError] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -30,8 +32,44 @@ const CategoryPage = () => {
     fetchCategories();
   }, [name]);
 
+  const loadMore = async () => {
+    setLoading(true);
+    try {
+      const newOffset = offset + limit;
+      const data = await listproducts(limit, newOffset);
+  
+      if (data.length === 0) {
+        setHasMore(false);
+      } else {
+        setProducts(prevProducts => [...prevProducts, ...data]);
+        setOffset(newOffset);
+      }
+    } catch (error) {
+      console.error("Error loading more products:", error);
+      setError("Failed to load more products. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMoreButton = () => {
+    return (
+      <button
+        onClick={loadMore}
+        disabled={loading || !hasMore}
+        className={`mx-auto flex justify-center mt-8 mb-44 md:max-w-[25vw] p-2 ${
+          loading ? "bg-gray-500" : hasMore ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-500"
+        } text-white font-semibold rounded `}
+      >
+        {loading ? "Loading..." : hasMore ? "Load More" : "No More Products"}
+      </button>
+    );
+  };
+
+
+
   return (
-    <section className="container py-4 py-8 mx-4 mx-auto font-bold">
+    <section className="container py-8 mx-auto font-bold">
       <h1 className="p-2 my-4 text-center">{name.toUpperCase()}</h1>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
       {products.map(product => (
@@ -39,6 +77,7 @@ const CategoryPage = () => {
         ))}
       </div>
       
+      {loadMoreButton()}
       
     </section>
   );

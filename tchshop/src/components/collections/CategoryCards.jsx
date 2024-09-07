@@ -5,7 +5,7 @@ import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
 const CategoryCards = ({ product }) => {
     return (
-        <Link to={`/${product.id}`} className="block overflow-hidden transition-transform transform bg-white rounded-lg shadow-lg hover:scale-105">
+        <Link to={`/viewproduct/${product.id}`} className="block overflow-hidden transition-transform transform bg-white rounded-lg shadow-lg hover:scale-105">
           <div className="flex flex-col h-full">
         <ShowImage url={`static/products/default_img/${product.image}`} style="home" />
         <div className="flex flex-col items-center justify-center flex-1 p-2">

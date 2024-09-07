@@ -15,7 +15,7 @@ const ProductColors = ({id, color, setColor}) => {
   }, [id]);
 
   return (
-    <section className="my-8">
+    <section className="my-3">
       <h3 className="my-4 text-center">Color</h3>
       <div className="grid justify-center grid-cols-3 gap-1 mx-auto w-[50vw] md:w-[20vw] ">
       {colors && colors.length > 0 ? (

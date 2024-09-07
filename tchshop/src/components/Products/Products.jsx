@@ -43,12 +43,12 @@ const Products = () => {
     return (
       <button
         onClick={loadMore}
-        disabled={loading}
-        className={`mx-auto flex justify-center my-8 md:max-w-[25vw] p-2 ${
-          loading ? "bg-gray-500" : "bg-blue-500"
-        } text-white font-semibold rounded hover:bg-blue-600`}
+        disabled={loading || !hasMore}
+        className={`mx-auto flex justify-center mt-8 mb-44 md:max-w-[25vw] p-2 ${
+          loading ? "bg-gray-500" : hasMore ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-500"
+        } text-white font-semibold rounded `}
       >
-        {loading ? "Loading..." : "Load More"}
+        {loading ? "Loading..." : hasMore ? "Load More" : "No More Products to display"}
       </button>
     );
   };

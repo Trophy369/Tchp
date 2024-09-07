@@ -42,7 +42,7 @@ const Reviews = (props) => {
   };
 
   return (
-    <section className="my-2 md:w-[60vw] mx-auto">
+    <section className="mt-2 mb-44 md:w-[60vw] mx-auto">
       <div 
         className="flex items-center justify-between p-4 bg-gray-100 cursor-pointer" 
         onClick={toggleAccordion}

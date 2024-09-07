@@ -5,7 +5,7 @@ import { faScrewdriverWrench } from '@fortawesome/free-solid-svg-icons';
 
 const Hero = () => {
   return (
-    <section className="relative flex items-center  z-10 justify-center h-[18vh] md:h-[27vh] bg-red-100/20 overflow-hidden">
+    <section className="relative flex items-center  z-10 mb-4 justify-center h-[26vh] md:h-[35vh] bg-red-100/20 overflow-hidden">
       {/* SVG Background */}
       {/* <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -59,32 +59,33 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center px-4 mx-4 text-center text-yellow-900 ">
         <motion.h1
-          className="mb-2 text-2xl font-extrabold md:text-3xl lg:text-4xl animate-heartbeat"
+          className="mb-3 text-lg font-extrabold md:text-3xl lg:text-4xl animate-heartbeat"
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          Welcome to{' '}
-          <FontAwesomeIcon icon={faScrewdriverWrench} className="mx-2 text-2xl text-yellow-900 md:text-3xl lg:text-4xl" />
-          <span className="text-3xl font-extrabold md:text-3xl lg:text-4xl">
-            <span className="overline">Tech</span>SHOP
+          WELCOME TO{' '}
+          <FontAwesomeIcon icon={faScrewdriverWrench} className="mx-2 text-yellow-900 text- xl md:text-3xl lg:text-4xl" />
+          <span className="text-2xl font-extrabold md:text-3xl lg:text-4xl">
+            <span className="overline">TECH</span>SHOP
           </span>
         </motion.h1>
         <motion.p
-          className="text-sm text-black md:text-base lg:text-lg"
+          className="mb-2 text-sm font-bold tracking-widest text-black md:text-base lg:text-lg"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.5 }}
         >
-          Create, Innovate, Dominate. Get the right tools & devices here.
+           CREATE EXPLORE INNOVATE DOMINATE
         </motion.p>
+        
         <motion.p
-          className="text-sm text-yellow-700 md:text-base lg:text-lg"
+          className="text-sm italic font-semibold text-yellow-700 md:text-base lg:text-lg"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.7 }}
         >
-         Discrete Deliveries Worldwide.
+          Get the right tools & devices here. Discrete Deliveries Worldwide.
         </motion.p>
       </div>
     </section>

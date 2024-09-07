@@ -47,7 +47,7 @@ const Signin = () => {
     <section className="flex items-center justify-center px-4 py-4 my-8 bg-gray-50 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
-          Log in to your account
+          Login account
         </h2>
         <form onSubmit={handleSubmit} className="mt-2 space-y-6">
           <div className="rounded-md shadow-sm">
@@ -56,7 +56,7 @@ const Signin = () => {
               <input
                 id="email"
                 type="email"
-                className={`relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 ${emailInputClasses} rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm my-2`}
+                className={`relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none ${emailInputClasses} rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm my-2`}
                 onChange={emailChangeHandler}
                 onBlur={emailBlurHandler}
                 value={enteredEmail}
@@ -103,7 +103,7 @@ const Signin = () => {
           <div>
             <button
               type="submit"
-              className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               disabled={loading}
             >
               Login

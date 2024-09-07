@@ -37,7 +37,7 @@ const ForgotPassword = () => {
     try {
       const response = await verifyCode(code);
       setStep(3);
-      setMessage("Code verified successfully! Please reset your password.");
+      setMessage("Code verification successful! Please reset your password.");
     } catch (err) {
       setError(err.message || "Verification failed. Please try again.");
     } finally {
@@ -58,7 +58,7 @@ const ForgotPassword = () => {
       }
 
       const response = await resetPassword(password, confirmPassword);
-      setMessage("Password has been reset successfully! You can now log in.");
+      setMessage("Password reset successful! You can now login.");
       setStep(1);
     } catch (err) {
       setError(err.message || "Password reset failed. Please try again.");
@@ -71,9 +71,9 @@ const ForgotPassword = () => {
     <div className="flex items-center justify-center px-4 py-4 my-8 bg-gray-50 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
-          {step === 1 ? "Forgot Password" : step === 2 ? "Verify Code" : "Reset Password"}
+          {step === 1 ? "Forgot Password" : step === 2 ? "" : "Reset Password"}
         </h2>
-        <p className="mt-2 text-sm text-center text-gray-600">
+        <p className="mt-2 text-sm font-bold text-center text-gray-600">
           {step === 1
             ? "Enter your email address to receive a reset code."
             : step === 2
@@ -105,7 +105,7 @@ const ForgotPassword = () => {
             <div>
               <button
                 type="submit"
-                className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 disabled={loading}
               >
                 Send Reset Code
@@ -123,7 +123,7 @@ const ForgotPassword = () => {
                   id="code"
                   type="text"
                   required
-                  className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="relative block px-3 py-2 mx-auto my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none w-44 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Verification Code"
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -138,7 +138,7 @@ const ForgotPassword = () => {
             <div>
               <button
                 type="submit"
-                className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 disabled={loading}
               >
                 Verify Code
@@ -156,7 +156,7 @@ const ForgotPassword = () => {
                   id="password"
                   type="password"
                   required
-                  className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="relative block px-3 py-2 mx-auto my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none w-44 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="New Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -168,7 +168,7 @@ const ForgotPassword = () => {
                   id="confirmPassword"
                   type="password"
                   required
-                  className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="relative block px-3 py-2 mx-auto my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none w-44 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -183,7 +183,7 @@ const ForgotPassword = () => {
             <div>
               <button
                 type="submit"
-                className="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 disabled={loading}
               >
                 Reset Password

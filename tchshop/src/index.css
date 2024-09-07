@@ -13,6 +13,7 @@ html {
     --navbar-bg-color: #1a202c; /* Set your desired background color */
     --navbar-text-color: #ffffff; /* Set your desired text color */
     --navbar-text-size: 16px; /* Set your desired text size */
+    position: relative;
   }
   
   body {

@@ -14,8 +14,8 @@ const OrderCart = ({cartP}) => {
           </div>
         </div>
         <div className="flex justify-between w-full">
-          <div className="text-lg font-semibold">{cartP.product_name}</div>
-          <div className="text-lg font-semibold">${cartP.discounted_price}</div>
+          <div className="text-base font-light">{cartP.product_name}</div>
+          <div className="text-base font-light">${cartP.discounted_price}</div>
         </div>
       </div>
     </div>

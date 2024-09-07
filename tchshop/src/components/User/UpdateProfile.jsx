@@ -169,9 +169,9 @@ const UpdateProfile = () => {
   };
 
   return (
-    <section className="mb-8">
+    <section className="mb-8 ">
       {shipData ? (
-        <div className="flex justify-between items-center border-b py-2">
+        <div className="flex items-center justify-between py-2 border-b">
           <span className="font-semibold">Address:</span>
           <span>{shippingAddress}</span>
           <button onClick={() => setShipData(false)}>
@@ -180,116 +180,117 @@ const UpdateProfile = () => {
         </div>
       ) : (
         <div>
-            <button onClick={() => setShipData(true)}>
+            <button  onClick={() => setShipData(true)}>
             Close Shipping Details
           </button>
-          <legend className="mb-2 text-xl font-semibold">Delivery</legend>
+         
+        <section className="mx-auto mb-8 w-80">
+      <legend className="mb-2 text-xs font-semibold">Enter shipping address where product will be delivered.</legend>
 
-          <select
-            name="country"
-            value={deliveryForm.country}
-            onChange={handleChange}
-            className="w-full p-2 mb-2 border"
-          >
-            <option value="">Select Country</option>
-            {countries.map(country => (
-              <option key={country.code} value={country.name}>
-                {country.name}
-              </option>
-            ))}
-          </select>
-          {errors.country && <p className="text-red-500">{errors.country}</p>}
+      <select
+        name="country"
+        value={deliveryForm.country}
+        onChange={handleChange}
+        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+      >
+        <option value="">Select Country</option>
+        {countries.map(country => (
+          <option key={country.code} value={country.name}>
+            {country.name}
+          </option>
+        ))}
+      </select>
+      {errors.country && <p className="text-red-500">{errors.country}</p>}
 
-          <select
-            name="state"
-            value={deliveryForm.state}
-            onChange={handleChange}
-            className="w-full p-2 mb-2 border"
-          >
-            <option value="">Select State</option>
-            {states.map(state => (
-              <option key={state.name} value={state.name}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-          {errors.state && <p className="text-red-500">{errors.state}</p>}
+      <select
+        name="state"
+        value={deliveryForm.state}
+        onChange={handleChange}
+        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+      >
+        <option value="">Select State</option>
+        {states.map(state => (
+          <option key={state.name} value={state.name}>
+            {state.name}
+          </option>
+        ))}
+      </select>
+      {errors.state && <p className="text-red-500">{errors.state}</p>}
 
-          <select
-            name="city"
-            value={deliveryForm.city}
-            onChange={handleChange}
-            className="w-full p-2 mb-2 border"
-          >
-            <option value="">Select City</option>
-            {cities.map(city => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
-          {errors.city && <p className="text-red-500">{errors.city}</p>}
+      <select
+        name="city"
+        value={deliveryForm.city}
+        onChange={handleChange}
+        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+      >
+        <option value="">Select City</option>
+        {cities.map(city => (
+          <option key={city} value={city}>
+            {city}
+          </option>
+        ))}
+      </select>
+      {errors.city && <p className="text-red-500">{errors.city}</p>}
 
-          <div className="mb-2">
-            <input
-              name="street"
-              type="text"
-              placeholder="Street Address"
-              value={deliveryForm.street}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            {errors.street && <p className="text-red-500">{errors.street}</p>}
-          </div>
+      <div className="mb-2">
+        <input
+          name="street"
+          type="text"
+          placeholder="Street Address"
+          value={deliveryForm.street}
+          onChange={handleChange}
+          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+        />
+        {errors.street && <p className="text-red-500">{errors.street}</p>}
+      </div>
 
-          <div className="mb-2">
-            <input
-              name="zipcode"
-              type="text"
-              placeholder="Zip Code"
-              value={deliveryForm.zipcode}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            {errors.zipcode && <p className="text-red-500">{errors.zipcode}</p>}
-          </div>
+      <div className="mb-2">
+        <input
+          name="zipcode"
+          type="text"
+          placeholder="Zip Code"
+          value={deliveryForm.zipcode}
+          onChange={handleChange}
+          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+        />
+        {errors.zipcode && <p className="text-red-500">{errors.zipcode}</p>}
+      </div>
 
-          <div className="mb-2">
-            <input
-              name="lastname"
-              type="text"
-              placeholder="lastname"
-              value={deliveryForm.lastname}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            {errors.lastname && (
-              <p className="text-red-500">{errors.lastname}</p>
-            )}
-          </div>
+      <div className="mb-2">
+        <input
+          name="lastname"
+          type="text"
+          placeholder="lastname"
+          value={deliveryForm.lastname}
+          onChange={handleChange}
+          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+        />
+        {errors.lastname && <p className="text-red-500">{errors.lastname}</p>}
+      </div>
 
-          <div className="mb-2">
-            <input
-              name="firstname"
-              type="text"
-              placeholder="firstname"
-              value={deliveryForm.firstname}
-              onChange={handleChange}
-              className="w-full p-2 border"
-            />
-            {errors.zipcode && (
-              <p className="text-red-500">{errors.firstname}</p>
-            )}
-          </div>
+      <div className="mb-2">
+        <input
+          name="firstname"
+          type="text"
+          placeholder="firstname"
+          value={deliveryForm.firstname}
+          onChange={handleChange}
+          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+        />
+        {errors.zipcode && <p className="text-red-500">{errors.firstname}</p>}
+      </div>
 
-          <button
-            type="button"
-            onClick={handleDelivery}
-            className="w-full p-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
-            disabled={loading}
-          >
-            {loading ? "Processing..." : "Submit"}
-          </button>
+      <div>
+      <button
+        type="button"
+        onClick={handleDelivery}
+       className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        disabled={loading}
+      >
+        {loading ? "Processing..." : "Submit"}
+      </button>
+      </div>
+    </section>
         </div>
       )}
     </section>

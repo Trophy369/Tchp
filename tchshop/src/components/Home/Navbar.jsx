@@ -41,7 +41,7 @@ const Navbar = () => {
             className="mr-2 text-2xl text-white"
           />
           <span className="text-lg font-extrabold">
-            <span className="overline">Tech</span>SHOP
+            <span className="overline">TECH</span>SHOP
           </span>
         </Link>
 

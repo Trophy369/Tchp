@@ -24,12 +24,12 @@ const Footer = () => {
     },
     {
       icon: faEnvelope,
-      url: 'mailto:help@techshop.com?subject=Techshop%20Help', // email link with pre-populated subject
+      url: 'mailto:help@tchshop.com?subject=Techshop%20Help', // email link with pre-populated subject
     },
   ];
 
   return (
-    <footer className="py-4 text-center bg-gray-200">
+    <footer className="absolute bottom-0 left-0 w-full py-4 text-center bg-gray-200">
       <div className="container mx-auto">
         <div className="flex justify-center mb-4">
           {socialMediaLinks.map((link, index) => (
@@ -48,10 +48,10 @@ const Footer = () => {
           <FontAwesomeIcon icon={faCopyright} /> {currentYear} 
           <FontAwesomeIcon
             icon={faScrewdriverWrench}
-            className="mx-2 text-sm text-black"
+            className="mx-2 text-sm text-gray-600"
           />
           <span className="text-sm font-bold">
-            <span className="overline">Tech</span>SHOP
+            <span className="overline">TECH</span>SHOP
           </span>
         </div>
       </div>
