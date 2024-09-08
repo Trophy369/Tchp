@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Carousel from "./Carousel";
 import { viewProduct } from "../../services/userApi";
 import { addToCartAsync } from "../../reducers/cartReducer";
@@ -14,6 +14,8 @@ import ShowError from "../ShowError";
 
 const ProductPro = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const { user } = useSelector(state => state.user);
   const [quantity, setQuantity] = useState(1);
   const [notification, setNotification] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,6 +57,10 @@ const ProductPro = () => {
   const { description, product_name, discounted_price } = product;
 
   const handleAddToCart = () => {
+    if(!user) {
+      navigate("/signin")
+    }
+
     if (!color) {
       setError("Please select a color.");
       return;
