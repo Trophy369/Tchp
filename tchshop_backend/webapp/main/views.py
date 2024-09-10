@@ -1,6 +1,6 @@
 import random
 from webapp.email import send_coupon_email
-from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session, send_from_directory
+from flask import render_template, url_for, flash, jsonify, redirect, request, make_response, session, send_from_directory, current_app
 from models.product import Product, Category, Review, CartItem, Shipping, ProductColor, Description, ProductImage
 from models.user import User, Cart
 from webapp import db
@@ -16,6 +16,14 @@ import os
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
 
+@main.route('/')
+def index():
+    return render_template('index.html')
+
+# Serve other static files (like CSS, JS)
+@main.route('/assets/<path:filename>')
+def serve_static_assets(filename):
+    return send_from_directory(os.path.join(current_app.static_folder, 'dist/assets'), filename)
 
 # get all products
 @main.route('/listproducts', methods=['GET'], strict_slashes=False)

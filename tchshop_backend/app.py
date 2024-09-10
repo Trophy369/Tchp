@@ -3,7 +3,7 @@
 Route module for the app
 """
 from webapp import create_app, db, mail
-from flask import jsonify, send_from_directory
+from flask import jsonify
 import os
 from models.base_model import BaseModel
 from models.product import Product, Category, Review, CartItem, Description, DescriptionImage, ProductImage, Shipping, ReviewImage, ProductColor
@@ -65,17 +65,5 @@ def forbidden_app(e):
 #         if auth.current_user(request) is None:
 #             abort(403)
 
-@app.route('/')
-def index():
-    return send_from_directory('webapp/static/dist', 'index.html')
-
-# Serve other static files (like CSS, JS)
-@app.route('/static/<path:path>')
-def send_static(path):
-    return send_from_directory('webapp/static/dist', path)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
-
-# if __name__ == "__main__":
-#     app.run(debug=True, port=5000)
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)

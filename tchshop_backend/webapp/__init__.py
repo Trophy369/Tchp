@@ -32,7 +32,7 @@ def create_app(object_name):
     mail.init_app(app)
     migrate.init_app(app, db)
 
-    CORS(app, supports_credentials=True)  # Enable CORS for all origins
+    CORS(app, supports_credentials=True)
 
     # auth module  init creation
     from webapp.auth import create_module as auth_create_module
