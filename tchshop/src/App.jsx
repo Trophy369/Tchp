@@ -31,7 +31,6 @@ import CreateReview from "./components/Admin/CreateReview";
 import CreateCategory from "./components/Admin/CreateCategory";
 import Dashboard from "./components/User/Dashboard";
 import Checkout from "./components/Cart/Checkout";
-import Shipping from "./components/Cart/Shipping";
 import Faq from "./pages/Faq";
 import CategoryPage from "./components/collections/CategoryPage";
 import CreateShipping from "./components/Admin/CreateShipping";
@@ -73,7 +72,6 @@ const router = createBrowserRouter(
       <Route path="/shoppolicy/returns" element={<Returns />} />
       <Route path="/shoppolicy/warranty" element={<Warranty />} /> */}
       <Route path="/faq" element={<Faq />} />
-      <Route path="/ship" element={<Shipping />} />
       <Route path="collections/:name" element={<CategoryPage />} />
       <Route path="/:refCode" element={<SignUp2 />} />
     </Route>

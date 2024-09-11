@@ -18,6 +18,9 @@ const Shipping = ({ setShipData }) => {
   const [cities, setCities] = useState([]);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [countryIso2, setCountryIso2] = useState("");
+  const [stateIso2, setStateIso2] = useState([]);
+  const [cityIso2, setCityIso2] = useState([]);
 
   const api = import.meta.env.VITE_LOCATION_API;
   const headers = {
@@ -48,7 +51,7 @@ const Shipping = ({ setShipData }) => {
   useEffect(() => {
     const fetchStates = async () => {
       if (deliveryForm.country) {
-        const url = `https://api.countrystatecity.in/v1/countries/${deliveryForm.country}/states`;
+        const url = `https://api.countrystatecity.in/v1/countries/${countryIso2}/states`;
         try {
           const response = await axios.get(url, { headers });
           setStates(response.data || []);
@@ -66,17 +69,10 @@ const Shipping = ({ setShipData }) => {
   useEffect(() => {
     const fetchCities = async () => {
       if (deliveryForm.state) {
-        const url = `https://api.countrystatecity.in/v1/countries/${deliveryForm.country}/states/${deliveryForm.state}/cities`;
+        const url = `https://api.countrystatecity.in/v1/countries/${countryIso2}/states/${stateIso2}/cities`;
         try {
           const response = await axios.get(url, { headers });
-          // const response = await axios.post(
-          //   "https://countriesnow.space/api/v0.1/countries/state/cities",
-          //   {
-          //     country: deliveryForm.country,
-          //     state: deliveryForm.state
-          //   }
-          // );
-          console.log(response.data)
+          console.log(response.data);
           setCities(response.data || []);
         } catch (error) {
           console.error("Failed to fetch cities:", error);
@@ -108,6 +104,21 @@ const Shipping = ({ setShipData }) => {
   const handleChange = e => {
     const { name, value } = e.target;
     setDeliveryForm(prev => ({ ...prev, [name]: value }));
+
+    if (name === "country") {
+      const selectedCountry = countries.find(country => country.name === value);
+      console.log('o', selectedCountry)
+      if (selectedCountry) {
+        setCountryIso2(selectedCountry.iso2);
+      }
+    }
+
+    if (name === "state") {
+      const selectedState = states.find(state => state.name === value);
+      if (selectedState) {
+        setStateIso2(selectedState.iso2);
+      }
+    }
   };
 
   // Handle form submission
@@ -165,7 +176,7 @@ const Shipping = ({ setShipData }) => {
       >
         <option value="">Select Country</option>
         {countries.map(country => (
-          <option key={country.code} value={country.iso2}>
+          <option key={country.code} value={country.name}>
             {country.name}
           </option>
         ))}
@@ -180,7 +191,7 @@ const Shipping = ({ setShipData }) => {
       >
         <option value="">Select State</option>
         {states.map(state => (
-          <option key={state.name} value={state.iso2}>
+          <option key={state.name} value={state.name}>
             {state.name}
           </option>
         ))}
@@ -195,7 +206,7 @@ const Shipping = ({ setShipData }) => {
       >
         <option value="">Select City</option>
         {cities.map(city => (
-          <option key={city.id} value={city}>
+          <option key={city.id} value={city.name}>
             {city.name}
           </option>
         ))}
