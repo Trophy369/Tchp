@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { addShippingDetails } from "../../services/userApi";
 import axios from "axios";
 
-const Shipping = ({setShipData}) => {
+const Shipping = ({ setShipData }) => {
   const [deliveryForm, setDeliveryForm] = useState({
     country: "",
     state: "",
@@ -19,22 +19,23 @@ const Shipping = ({setShipData}) => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  const api = import.meta.env.VITE_LOCATION_API;
+  const headers = {
+    "X-CSCAPI-KEY": api
+  };
+
   // Fetch countries on component mount
   useEffect(() => {
     const fetchCountries = async () => {
+      const url = "https://api.countrystatecity.in/v1/countries";
+
       try {
-        const response = await axios.get("https://restcountries.com/v3.1/all");
+        const response = await axios.get(url, { headers });
         const countryData = response.data.map(country => ({
-          name: country.name.common,
-          code: country.cca2
+          name: country.name,
+          iso2: country.iso2
         }));
-
-        // Sort countries alphabetically
-        const sortedCountries = countryData.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-
-        setCountries(sortedCountries);
+        setCountries(countryData);
       } catch (error) {
         console.error("Failed to fetch countries:", error);
       }
@@ -47,12 +48,10 @@ const Shipping = ({setShipData}) => {
   useEffect(() => {
     const fetchStates = async () => {
       if (deliveryForm.country) {
+        const url = `https://api.countrystatecity.in/v1/countries/${deliveryForm.country}/states`;
         try {
-          const response = await axios.post(
-            "https://countriesnow.space/api/v0.1/countries/states",
-            { country: deliveryForm.country }
-          );
-          setStates(response.data.data.states || []);
+          const response = await axios.get(url, { headers });
+          setStates(response.data || []);
           setCities([]); // Reset cities when country changes
         } catch (error) {
           console.error("Failed to fetch states:", error);
@@ -67,15 +66,18 @@ const Shipping = ({setShipData}) => {
   useEffect(() => {
     const fetchCities = async () => {
       if (deliveryForm.state) {
+        const url = `https://api.countrystatecity.in/v1/countries/${deliveryForm.country}/states/${deliveryForm.state}/cities`;
         try {
-          const response = await axios.post(
-            "https://countriesnow.space/api/v0.1/countries/state/cities",
-            {
-              country: deliveryForm.country,
-              state: deliveryForm.state
-            }
-          );
-          setCities(response.data.data || []);
+          const response = await axios.get(url, { headers });
+          // const response = await axios.post(
+          //   "https://countriesnow.space/api/v0.1/countries/state/cities",
+          //   {
+          //     country: deliveryForm.country,
+          //     state: deliveryForm.state
+          //   }
+          // );
+          console.log(response.data)
+          setCities(response.data || []);
         } catch (error) {
           console.error("Failed to fetch cities:", error);
         }
@@ -88,7 +90,7 @@ const Shipping = ({setShipData}) => {
   // Validate form fields
   const validateForm = () => {
     let formErrors = {};
-    
+
     if (!deliveryForm.phone) formErrors.phone = "Phone is required";
     if (!deliveryForm.lastname) formErrors.street = "Lastname is required";
     if (!deliveryForm.firstname) formErrors.street = "Firstname is required";
@@ -122,14 +124,14 @@ const Shipping = ({setShipData}) => {
         deliveryForm.city,
         deliveryForm.street,
         deliveryForm.zipcode,
-        deliveryForm.firstname, 
-        deliveryForm.lastname, 
+        deliveryForm.firstname,
+        deliveryForm.lastname,
         deliveryForm.phone
       );
-      if(result.status === "success") {
-        setShipData(true)
+      if (result.status === "success") {
+        setShipData(true);
       }
-      
+
       // Clear form after successful submission
       setDeliveryForm({
         country: "",
@@ -151,7 +153,9 @@ const Shipping = ({setShipData}) => {
 
   return (
     <section className="mb-8">
-      <legend className="mb-2 text-xs font-semibold">Enter address where product will be delivered.</legend>
+      <legend className="mb-2 text-xs font-semibold">
+        Enter address where product will be delivered.
+      </legend>
 
       <select
         name="country"
@@ -161,7 +165,7 @@ const Shipping = ({setShipData}) => {
       >
         <option value="">Select Country</option>
         {countries.map(country => (
-          <option key={country.code} value={country.name}>
+          <option key={country.code} value={country.iso2}>
             {country.name}
           </option>
         ))}
@@ -176,7 +180,7 @@ const Shipping = ({setShipData}) => {
       >
         <option value="">Select State</option>
         {states.map(state => (
-          <option key={state.name} value={state.name}>
+          <option key={state.name} value={state.iso2}>
             {state.name}
           </option>
         ))}
@@ -191,8 +195,8 @@ const Shipping = ({setShipData}) => {
       >
         <option value="">Select City</option>
         {cities.map(city => (
-          <option key={city} value={city}>
-            {city}
+          <option key={city.id} value={city}>
+            {city.name}
           </option>
         ))}
       </select>
@@ -259,14 +263,14 @@ const Shipping = ({setShipData}) => {
       </div>
 
       <div>
-      <button
-        type="button"
-        onClick={handleDelivery}
-       className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        disabled={loading}
-      >
-        {loading ? "Processing..." : "Submit"}
-      </button>
+        <button
+          type="button"
+          onClick={handleDelivery}
+          className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          disabled={loading}
+        >
+          {loading ? "Processing..." : "Submit"}
+        </button>
       </div>
     </section>
   );

@@ -24,7 +24,6 @@ import AdminDash from "./components/Admin/AdminDash";
 import AddProduct from "./components/Admin/AddProducts";
 import Product from "./components/Admin/Product";
 import CreateProduct from "./components/Admin/CreateProduct";
-import CreateRole from "./components/Admin/CreateRole";
 import Coupon from "./components/Admin/Coupon";
 import Wallets from "./components/Admin/Wallets";
 import AssignRole from "./components/Admin/AssignRole";
@@ -32,6 +31,7 @@ import CreateReview from "./components/Admin/CreateReview";
 import CreateCategory from "./components/Admin/CreateCategory";
 import Dashboard from "./components/User/Dashboard";
 import Checkout from "./components/Cart/Checkout";
+import Shipping from "./components/Cart/Shipping";
 import Faq from "./pages/Faq";
 import CategoryPage from "./components/collections/CategoryPage";
 import CreateShipping from "./components/Admin/CreateShipping";
@@ -60,7 +60,6 @@ const router = createBrowserRouter(
         <Route path="/admin/createproduct" element={<CreateProduct />} />
         <Route path="/admin/createcategory" element={<CreateCategory />} />
         <Route path="/admin/createReview" element={<CreateReview />} />
-        <Route path="/admin/createrole" element={<CreateRole />} />
         <Route path="/admin/assignrole" element={<AssignRole />} />
         <Route path="/admin/coupons" element={<Coupon />} />
         <Route path="/admin/wallets" element={<Wallets />} />
@@ -74,6 +73,7 @@ const router = createBrowserRouter(
       <Route path="/shoppolicy/returns" element={<Returns />} />
       <Route path="/shoppolicy/warranty" element={<Warranty />} /> */}
       <Route path="/faq" element={<Faq />} />
+      <Route path="/ship" element={<Shipping />} />
       <Route path="collections/:name" element={<CategoryPage />} />
       <Route path="/:refCode" element={<SignUp2 />} />
     </Route>

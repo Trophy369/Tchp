@@ -86,7 +86,9 @@ const Products = () => {
     <section className="container mx-auto ">
       <div className="grid grid-cols-2 gap-4 py-2 mx-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {loading
-          ? <Skele />
+          ? Array.from({ length: limit }).map((_, index) => (
+              <Skele key={index} />
+            ))
           : products.map(product => (
               <ProductCard
                 key={product.id}
