@@ -281,17 +281,6 @@ def update_cart_item_color(product_id):
     if not cart_item:
         return jsonify({"message": "Item not found in cart"}), 404
 
-    # update to real quantity in db
-    # ini_quantity = product.quantity
-    # logging.info(f"Initial Product quantity: {ini_quantity}")
-    #
-    # new_quantity = int(data.get('quantity'))
-    # if (cart_item.quantity - new_quantity) <= 0:
-    #     return jsonify({"error": "Not enough in Stock reduce quantity"}), 404
-    # ini_quantity += cart_item.quantity
-    # ini_quantity -= new_quantity
-    # logging.info(f"Product quantity: {ini_quantity}")
-
     cart_item.color = data["color"]
     db.session.commit()
 

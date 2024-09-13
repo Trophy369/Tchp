@@ -127,7 +127,7 @@ export const viewCategoryProducts = async category => {
   };
 
   return fetchWithState(`${baseUrl}/products/${category}`, requestOptions);
-};
+}; 
 
 export const viewProductDescription = async id => {
   const requestOptions = {
@@ -304,16 +304,6 @@ export const checkout = async () => {
   };
 
   return fetchWithState(`${baseUrl}/checkout`, requestOptions);
-};
-
-export const proceed = async () => {
-  const requestOptions = {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include"
-  };
-
-  return fetchWithState(`${baseUrl}/proceed`, requestOptions);
 };
 
 export const payment = async method => {
