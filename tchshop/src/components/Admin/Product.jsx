@@ -142,24 +142,24 @@ const Product = () => {
     : [];
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 shadow-md rounded-lg">
-      <h1 className="text-3xl font-bold mb-6 text-center">Manage Product</h1>
+    <div className="max-w-4xl p-8 mx-auto bg-white rounded-lg shadow-md mt-11 mb-44">
+      <h1 className="mb-6 text-3xl font-bold text-center">Manage Product</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className="block mb-2 text-sm font-semibold text-gray-700">
             Product Name
           </label>
           <input
             type="text"
             value={product.name}
             readOnly
-            className="w-full px-4 py-2 border rounded bg-gray-100"
+            className="w-full px-4 py-2 bg-gray-100 border rounded"
           />
         </div>
 
         <div>
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className="block mb-2 text-sm font-semibold text-gray-700">
             Specifications
           </label>
           <textarea
@@ -172,7 +172,7 @@ const Product = () => {
         </div>
 
         <div>
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className="block mb-2 text-sm font-semibold text-gray-700">
             Description Images (up to 5)
           </label>
           <input
@@ -188,7 +188,7 @@ const Product = () => {
                 key={index}
                 src={URL.createObjectURL(image)}
                 alt={`preview-${index}`}
-                className="w-20 h-20 object-cover rounded"
+                className="object-cover w-20 h-20 rounded"
               />
             ))}
           </div>
@@ -196,14 +196,14 @@ const Product = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+          className="w-full px-6 py-3 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
         >
           Add Description
         </button>
       </form>
 
       <div>
-        <label className="block text-gray-700 text-sm font-semibold mb-2">
+        <label className="block mb-2 text-sm font-semibold text-gray-700">
           Upload New Images
         </label>
         <input
@@ -220,21 +220,21 @@ const Product = () => {
             key={index}
             src={preview}
             alt={`preview-${index}`}
-            className="w-20 h-20 object-cover rounded"
+            className="object-cover w-20 h-20 rounded"
           />
         ))}
       </div>
       <button
         onClick={handleFiles}
-        className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors"
+        className="w-full px-6 py-3 text-white transition-colors bg-green-600 rounded-lg hover:bg-green-700"
       >
         Upload Images
       </button>
 
       {/* Product Description Card */}
-      <div className="mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Product Description</h2>
-        <p className="text-gray-800 mb-4">{desc.specifications}</p>
+      <div className="p-6 mt-10 bg-gray-100 rounded-lg shadow-md">
+        <h2 className="mb-4 text-2xl font-semibold">Product Description</h2>
+        <p className="mb-4 text-gray-800">{desc.specifications}</p>
         <div className="grid grid-cols-2 gap-4">
             {imageUrls &&
               imageUrls.map((image, index) => (
@@ -242,7 +242,7 @@ const Product = () => {
                   key={index}
                   src={image}
                   alt={`description-${index}`}
-                  className="w-full h-48 object-cover rounded-lg"
+                  className="object-cover w-full h-48 rounded-lg"
                 />
               ))}
           </div>
@@ -251,20 +251,20 @@ const Product = () => {
       <div className="mt-8 space-y-4">
         <button
           onClick={handleUpdate}
-          className="w-full bg-yellow-500 text-white py-3 px-6 rounded-lg hover:bg-yellow-600 transition-colors"
+          className="w-full px-6 py-3 text-white transition-colors bg-yellow-500 rounded-lg hover:bg-yellow-600"
         >
           Update Description
         </button>
 
         <button
           onClick={handleDeleteDesc}
-          className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
+          className="w-full px-6 py-3 text-white transition-colors bg-red-600 rounded-lg hover:bg-red-700"
         >
           Delete Description
         </button>
 
-        <div className="mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Product Images</h2>
+        <div className="p-6 mt-10 bg-gray-100 rounded-lg shadow-md">
+          <h2 className="mb-4 text-2xl font-semibold">Product Images</h2>
           <div className="grid grid-cols-2 gap-4">
             {productImageUrls &&
               productImageUrls.map((image, index) => (
@@ -272,7 +272,7 @@ const Product = () => {
                   key={index}
                   src={image}
                   alt={`description-${index}`}
-                  className="w-full h-48 object-cover rounded-lg"
+                  className="object-cover w-full h-48 rounded-lg"
                 />
               ))}
           </div>
@@ -280,18 +280,18 @@ const Product = () => {
 
         <button
           onClick={handleDeleteImg}
-          className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
+          className="w-full px-6 py-3 text-white transition-colors bg-red-600 rounded-lg hover:bg-red-700"
         >
           Delete Images
         </button>
 
         {/* Product Description Card */}
-        <div className="mt-10 p-6 bg-gray-100 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Product Colors</h2>
+        <div className="p-6 mt-10 bg-gray-100 rounded-lg shadow-md">
+          <h2 className="mb-4 text-2xl font-semibold">Product Colors</h2>
           <div>
             {color && color.length > 0 ? (
               color.map((color, index) => (
-                <p key={index} className="text-gray-800 mb-4">
+                <p key={index} className="mb-4 text-gray-800">
                   {color.color}
                 </p>
               ))
@@ -302,7 +302,7 @@ const Product = () => {
         </div>
         <button
           onClick={handleDeleteColor}
-          className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
+          className="w-full px-6 py-3 text-white transition-colors bg-red-600 rounded-lg hover:bg-red-700"
         >
           Delete Color
         </button>
