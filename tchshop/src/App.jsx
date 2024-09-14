@@ -24,7 +24,6 @@ import AdminDash from "./components/Admin/AdminDash";
 import AddProduct from "./components/Admin/AddProducts";
 import Product from "./components/Admin/Product";
 import CreateProduct from "./components/Admin/CreateProduct";
-import CreateRole from "./components/Admin/CreateRole";
 import Coupon from "./components/Admin/Coupon";
 import Wallets from "./components/Admin/Wallets";
 import AssignRole from "./components/Admin/AssignRole";
@@ -60,7 +59,6 @@ const router = createBrowserRouter(
         <Route path="/admin/createproduct" element={<CreateProduct />} />
         <Route path="/admin/createcategory" element={<CreateCategory />} />
         <Route path="/admin/createReview" element={<CreateReview />} />
-        <Route path="/admin/createrole" element={<CreateRole />} />
         <Route path="/admin/assignrole" element={<AssignRole />} />
         <Route path="/admin/coupons" element={<Coupon />} />
         <Route path="/admin/wallets" element={<Wallets />} />

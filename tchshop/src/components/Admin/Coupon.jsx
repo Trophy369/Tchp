@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { generateCoupon, deleteCoupon, deleteCoupons, getCoupon } from "../../services/adminApi";
-import { FaTrash } from "react-icons/fa"; // Importing the trash icon
+import { FaTrash, FaClipboard } from "react-icons/fa"; // Importing the trash icon
 
 const Coupon = () => {
   const [email, setEmail] = useState("");
   const [coupons, setCoupons] = useState([])
-
+  const [generatedCode, setGeneratedCode] = useState('');
 
   useEffect(() => {
     const fetchCoupons = async () => {
@@ -20,7 +20,7 @@ const Coupon = () => {
     e.preventDefault();
     try {
       const response = await generateCoupon(email);
-      console.log(response);
+      setGeneratedCode(response.success)
     } catch (error) {
       console.error(error);
     }
@@ -42,6 +42,16 @@ const Coupon = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(generatedCode)
+      .then(() => {
+        alert('Coupon code copied to clipboard!'); // Optional: Show a success message
+      })
+      .catch(err => {
+        console.error('Failed to copy: ', err);
+      });
   };
 
   return (
