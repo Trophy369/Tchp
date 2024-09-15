@@ -6,7 +6,7 @@ import Review from "./Review";
 import ShowError from "../ShowError";
 import { viewReview } from "../../services/userApi";
 
-const Reviews = (props) => {
+const Reviews = ({id}) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ const Reviews = (props) => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const { data, error } = await viewReview(props.id);
+        const { data, error } = await viewReview(id);
 
         if (error) {
           setError(error);
@@ -35,7 +35,7 @@ const Reviews = (props) => {
     };
 
     fetchReview();
-  }, [props.id]);
+  }, [id]);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);

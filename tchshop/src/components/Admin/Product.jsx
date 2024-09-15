@@ -5,7 +5,8 @@ import {
   updateProdDesc,
   deleteProdImg,
   deleteProdCol,
-  handleUpload
+  handleUpload,
+  reviewDate
 } from "../../services/adminApi";
 import {
   viewProductDescription,
@@ -130,6 +131,15 @@ const Product = () => {
       console.error("Delete Color Error:", error);
     }
   };
+
+  const updateDate = async () => {
+    try {
+      const response = await reviewDate(product.id);
+      console.log("Review", response);
+    } catch (error) {
+      console.error("review err:", error);
+    }
+  }
 
   const imageUrls = Array.isArray(desc.images)
     ? desc.images.map(img => `${baseURL}/static/descriptions/${img.image_name}`)
@@ -300,6 +310,12 @@ const Product = () => {
             )}
           </div>
         </div>
+        <button
+          onClick={updateDate}
+          className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"
+        >
+          update date
+        </button>
         <button
           onClick={handleDeleteColor}
           className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors"

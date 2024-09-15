@@ -21,7 +21,6 @@ import UpdateProfile from "./components/User/UpdateProfile";
 // import Returns from "./pages/Returns";
 import ProductPro from "./components/Products/ProductPro";
 import AdminDash from "./components/Admin/AdminDash";
-import AddProduct from "./components/Admin/AddProducts";
 import Product from "./components/Admin/Product";
 import CreateProduct from "./components/Admin/CreateProduct";
 import Coupon from "./components/Admin/Coupon";
@@ -54,7 +53,6 @@ const router = createBrowserRouter(
       {/* <Route path='/colors' element={<Colors />} /> */}
       <Route element={<AdminRoutes />}>
         <Route path="/admin" element={<AdminDash />} />
-        <Route path="/admin/addproduct" element={<AddProduct />} />
         <Route path="/admin/product/:id" element={<Product />} />
         <Route path="/admin/createproduct" element={<CreateProduct />} />
         <Route path="/admin/createcategory" element={<CreateCategory />} />
@@ -68,6 +66,7 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<SignUp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/viewproduct/:id" element={<ProductPro />} />
+      <Route path="/reviews/:id/:refCode" element={<ProductPro />} />
       {/* <Route path="/shoppolicy/shipping" element={<Shipping />} />
       <Route path="/shoppolicy/returns" element={<Returns />} />
       <Route path="/shoppolicy/warranty" element={<Warranty />} /> */}

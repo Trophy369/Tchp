@@ -296,6 +296,11 @@ export const assignShipping = async productId => {
   return response.json();
 };
 
+export const refReview = async () => {
+  const response = await fetch(`${baseUrl}/reviews/${id}/${refCode}`)
+  return response.json()
+}
+
 export const checkout = async () => {
   const requestOptions = {
     method: "GET",

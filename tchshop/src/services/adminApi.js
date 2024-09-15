@@ -42,6 +42,17 @@ export const createCategory = async category_name => {
   return response.json();
 };
 
+export const reviewDate = async id => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include"
+  };
+
+  const response = await fetch(`${baseUrl}/admin/addReviewDates/${id}`, requestOptions);
+  return response.json();
+};
+
 export const createDescription = async (id, specifications) => {
   const requestOptions = {
     method: "POST",
