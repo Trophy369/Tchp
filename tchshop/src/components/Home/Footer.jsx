@@ -8,7 +8,7 @@ const Footer = () => {
   const socialMediaLinks = [
     {
       icon: faTelegram,
-      url: 'https://t.me/techshop', // placeholder URL
+      url: 'https://t.me/techshoptools', // placeholder URL
     },
     {
       icon: faInstagram,

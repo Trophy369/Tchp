@@ -8,9 +8,9 @@ const faqData = [
     question: 'SHIPPING & PACKAGING INFORMATION',
     answer: (
       <>
-        <p>Hackshop engagement is to get your orders to you as quickly as possible in perfect condition. All packages are insured to 100% of the value, and Hackshop Delivery Protection can be used to ensure immediate re-shipment if a package is lost or damaged.</p>
+        <p>Techshop engagement is to get your orders to you as quickly as possible in perfect condition. All packages are insured to 100% of the value, and Techshop Delivery Protection can be used to ensure immediate re-shipment if a package is lost or damaged.</p>
         <p>All orders are securely packaged. Orders are further protected in an untearable polyurethane satchel, ensuring that your package is not tampered with during delivery.</p>
-        <p>To ensure privacy and reduce theft, all packages are anonymous - there is no mention of product contents or Hackshop branding on the outside of the packaging.</p>
+        <p>To ensure privacy and reduce theft, all packages are anonymous - there is no mention of product contents or Techshop branding on the outside of the packaging.</p>
       </>
     ),
   },
@@ -18,7 +18,7 @@ const faqData = [
     question: 'Shipping Options',
     answer: (
       <>
-        <p>Hackshop provides three types of shipping options:</p>
+        <p>Techshop provides three types of shipping options:</p>
         <ul className="list-disc list-inside">
           <li>Standard Shipping Delivery [deliveryTime: 5-7 days]</li>
           <li>Express Shipping Delivery [deliveryTime: 2-3 days]</li>
@@ -48,7 +48,7 @@ const faqData = [
   },
   {
     question: 'Is my delivery protected?',
-    answer: <p>All Hackshop shipments are insured with the carrier.</p>,
+    answer: <p>All Techshop shipments are insured with the carrier.</p>,
   },
   {
     question: 'My order has missing / incorrect products.',
@@ -62,8 +62,8 @@ const faqData = [
     question: 'My parcel was opened / damaged.',
     answer: (
       <>
-        <p>Do not accept a shipment that is damaged or opened. Hackshop packages are securely prepared in double-wall boxes with an anti-tear shipping satchel. Accidental opening of packages is not possible. If your package is damaged or opened, refuse the parcel.</p>
-        <p>If you accept a parcel that has been damaged or opened in transit, Hackshop is unable to provide any recourse.</p>
+        <p>Do not accept a shipment that is damaged or opened. Techshop packages are securely prepared in double-wall boxes with an anti-tear shipping satchel. Accidental opening of packages is not possible. If your package is damaged or opened, refuse the parcel.</p>
+        <p>If you accept a parcel that has been damaged or opened in transit, Techshop is unable to provide any recourse.</p>
       </>
     ),
   },
