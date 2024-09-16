@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useCoupon } from "../../services/userApi";
 import OrderCart from "./OrderCart";
-import PaymentMethod from "./PaymentMethod";
+// import PaymentMethod from "./PaymentMethod";
+import {  Link } from "react-router-dom";
 
 const Order = ({setPriceUpdate, payInfo, checkoutRes, shippingAddress }) => {
   const { user, cart } = useSelector(state => state);
@@ -56,25 +57,29 @@ const Order = ({setPriceUpdate, payInfo, checkoutRes, shippingAddress }) => {
               <span className="font-semibold">Total:</span>
               <span>${formattedTotal}</span>
             </div>
-            <div className="mt-4">
+            <div className="flex items-center mt-4">
               <input
                 type="text"
                 placeholder="Discount Code"
                 ref={couponRef}
-                className="w-full p-2 mb-2 border rounded-md"
+                className="w-full h-10 p-3 border rounded-md"
               />
-              <div>
-                <button
-                  onClick={handleCoupon}
-                  className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Apply
-                </button>
-              </div>
+              <button
+                onClick={handleCoupon}
+                className="px-4 py-2 ml-2 text-sm font-medium text-black transition duration-300 ease-in-out bg-gray-200 rounded-md hover:bg-gray-500"
+              >
+                Apply
+              </button>
             </div>
+
           </div>
         </div>
-      <PaymentMethod />
+        <Link
+          to="/payment" 
+          className="block w-full p-2 my-8 text-center text-white bg-blue-500 rounded-md hover:bg-blue-600"
+        >
+          Proceed
+        </Link>
     </section>
   );
 };

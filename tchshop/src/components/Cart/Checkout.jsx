@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "tailwindcss/tailwind.css";
 import "react-phone-number-input/style.css";
 import { pay, checkout, getShippingAddress } from "../../services/userApi";
@@ -6,65 +6,67 @@ import Shipping from "./Shipping";
 import Order from "./Order";
 import Skele from "./Skele";
 
-const dummyShippingMethods = [
-  { id: 1, name: "Standard Shipping", deliveryTime: "5-7 days", cost: 5.99 },
-  { id: 2, name: "Express Shipping", deliveryTime: "2-3 days", cost: 12.99 },
-  { id: 3, name: "Overnight Shipping", deliveryTime: "1 day", cost: 24.99 }
-];
-
 const Checkout = () => {
   const [shippingAddress, setShippingAddress] = useState(null);
   const [error, setError] = useState(null);
   const [checkoutRes, setCheckoutRes] = useState(null);
   const [payInfo, setPayInfo] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [shipData, setShipData] = useState(false);
+  const [loading, setLoading] = useState(true); // Start in a loading state
   const [priceUpdate, setPriceUpdate] = useState(null);
 
+  // Fetch Shipping Address
   useEffect(() => {
-    setLoading(true);
     const fetchShippingAddress = async () => {
-      const { data, error } = await getShippingAddress();
-      if (data.error) {
-        setShippingAddress(null);
-        setLoading(false)
-      } else {
-        setShippingAddress(data.shipping_address);
-        setShipData(true);
-        setLoading(false)
+      try {
+        const { data, error } = await getShippingAddress();
+        if (error) {
+          setError("Failed to fetch shipping address.");
+        } else {
+          setShippingAddress(data.shipping_address);
+        }
+      } catch (err) {
+        setError("An error occurred while fetching the shipping address.");
+      } finally {
+        setLoading(false); // Stop loading after fetch
       }
     };
 
     fetchShippingAddress();
-  }, [shipData]);
+  }, []); // Empty dependency, only fetch on initial render
 
+  // Fetch Payment Info when Shipping Address is available
   useEffect(() => {
     if (shippingAddress) {
-      setLoading(true);
       const fetchPay = async () => {
-        const { data, error } = await pay();
-        if (data) {
-          setPayInfo(data);
+        try {
+          const { data, error } = await pay();
+          if (error) {
+            setError("Failed to fetch payment information.");
+          } else {
+            setPayInfo(data);
+          }
+        } catch (err) {
+          setError("An error occurred while fetching payment info.");
         }
-        setLoading(false)
       };
 
       fetchPay();
     }
   }, [shippingAddress, priceUpdate]);
 
+  // Fetch Checkout Info when Shipping Address is available
   useEffect(() => {
     if (shippingAddress) {
       const fetchCheckout = async () => {
         try {
           const { data, error } = await checkout();
           if (error) {
-            console.error("Error fetching checkout data:", error);
+            setError("Failed to fetch checkout data.");
           } else {
             setCheckoutRes(data);
           }
-        } catch (error) {
-          console.error("Error fetching checkout data:", error);
+        } catch (err) {
+          setError("An error occurred while fetching checkout data.");
         }
       };
 
@@ -72,10 +74,11 @@ const Checkout = () => {
     }
   }, [shippingAddress]);
 
+  // Function to load order details or skeleton
   const loadOrders = () => {
     if (loading) {
       return <Skele />;
-    } else {
+    } else if (shippingAddress && payInfo) {
       return (
         <Order
           shippingAddress={shippingAddress}
@@ -84,21 +87,25 @@ const Checkout = () => {
           setPriceUpdate={setPriceUpdate}
         />
       );
+    } else {
+      return <div>No Orders Available</div>;
     }
   };
 
+  // Function to display shipping form or skeleton
   const shipForm = () => {
     if (loading) {
       return <Skele />;
     } else {
-      return <Shipping setShipData={setShipData} />;
+      return <Shipping setShipData={() => setShippingAddress(true)} />;
     }
   };
 
   return (
-    <section className="flex items-center justify-center px-4 py-4 my-8 bg-gray-50 sm:px-6 lg:px-8">
+    <section className="flex items-center justify-center px-4 py-4 mt-11 mb-44 bg-gray-50 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
-        {shipData ? loadOrders() : shipForm()}
+        {/* Conditionally render based on whether shippingAddress exists */}
+        {shippingAddress ? loadOrders() : shipForm()}
       </div>
     </section>
   );

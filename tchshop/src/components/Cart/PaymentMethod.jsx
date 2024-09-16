@@ -21,27 +21,27 @@ const PaymentMethod = () => {
   };
 
   return (
-    <div className="mt-8 p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-bold mb-4 text-center">Select Payment Method</h2>
+    <div className="p-4 mt-8 bg-white rounded-lg shadow-md">
+      <h2 className="mb-4 text-xl font-bold text-center">Select Payment Method</h2>
       <select
         value={selectedMethod}
         onChange={handleMethodChange}
-        className="w-full p-2 border border-gray-300 rounded-md mb-4"
+        className="w-full p-2 mb-4 border border-gray-300 rounded-md"
       >
         <option value="" disabled>
           -- Choose a payment method --
         </option>
         <option value="USDT">USDT</option>
       </select>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="mb-4 text-red-500">{error}</p>}
 
       {/* Proceed to Payment Button placed directly below the select field */}
       {selectedMethod && !error && (
         <Link
           to="/payment" // Adjust the path as necessary
-          className="block w-full mt-4 p-2 bg-blue-500 text-white text-center rounded-md hover:bg-blue-600"
+          className="block w-full p-2 mt-4 text-center text-white bg-blue-500 rounded-md hover:bg-blue-600"
         >
-          Proceed to Payment
+          Proceed
         </Link>
       )}
     </div>

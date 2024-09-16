@@ -22,6 +22,7 @@ export const fetchWithState = async (url, options) => {
   }
 };
 
+
 export const addToCart = async (id, quantity, shipping, color_id) => {
   const requestOptions = {
     method: "POST",

@@ -169,131 +169,166 @@ const UpdateProfile = () => {
   };
 
   return (
-    <section className="mb-8 ">
-      {shipData ? (
-        <div className="flex items-center justify-between py-2 border-b">
-          <span className="font-semibold">Address:</span>
-          <span>{shippingAddress}</span>
-          <button onClick={() => setShipData(false)}>
-            Edit Shipping Details
-          </button>
-        </div>
-      ) : (
+    <section className="max-w-lg p-4 mx-auto bg-white rounded-md shadow-md mb-44 mt-11">
+    <legend className="mb-4 text-xl font-bold text-center">Enter address where product will be delivered.</legend>
+  
+    <form>
+      <div className="grid grid-cols-1 gap-4 mb-4">
         <div>
-            <button  onClick={() => setShipData(true)}>
-            Close Shipping Details
-          </button>
-         
-        <section className="mx-auto mb-8 w-80">
-      <legend className="mb-2 text-xs font-semibold">Enter shipping address where product will be delivered.</legend>
-
-      <select
-        name="country"
-        value={deliveryForm.country}
-        onChange={handleChange}
-        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-      >
-        <option value="">Select Country</option>
-        {countries.map(country => (
-          <option key={country.code} value={country.name}>
-            {country.name}
-          </option>
-        ))}
-      </select>
-      {errors.country && <p className="text-red-500">{errors.country}</p>}
-
-      <select
-        name="state"
-        value={deliveryForm.state}
-        onChange={handleChange}
-        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-      >
-        <option value="">Select State</option>
-        {states.map(state => (
-          <option key={state.name} value={state.name}>
-            {state.name}
-          </option>
-        ))}
-      </select>
-      {errors.state && <p className="text-red-500">{errors.state}</p>}
-
-      <select
-        name="city"
-        value={deliveryForm.city}
-        onChange={handleChange}
-        className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-      >
-        <option value="">Select City</option>
-        {cities.map(city => (
-          <option key={city} value={city}>
-            {city}
-          </option>
-        ))}
-      </select>
-      {errors.city && <p className="text-red-500">{errors.city}</p>}
-
-      <div className="mb-2">
-        <input
-          name="street"
-          type="text"
-          placeholder="Street Address"
-          value={deliveryForm.street}
-          onChange={handleChange}
-          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-        />
-        {errors.street && <p className="text-red-500">{errors.street}</p>}
-      </div>
-
-      <div className="mb-2">
-        <input
-          name="zipcode"
-          type="text"
-          placeholder="Zip Code"
-          value={deliveryForm.zipcode}
-          onChange={handleChange}
-          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-        />
-        {errors.zipcode && <p className="text-red-500">{errors.zipcode}</p>}
-      </div>
-
-      <div className="mb-2">
-        <input
-          name="lastname"
-          type="text"
-          placeholder="lastname"
-          value={deliveryForm.lastname}
-          onChange={handleChange}
-          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-        />
-        {errors.lastname && <p className="text-red-500">{errors.lastname}</p>}
-      </div>
-
-      <div className="mb-2">
-        <input
-          name="firstname"
-          type="text"
-          placeholder="firstname"
-          value={deliveryForm.firstname}
-          onChange={handleChange}
-          className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-        />
-        {errors.zipcode && <p className="text-red-500">{errors.firstname}</p>}
-      </div>
-
-      <div>
-      <button
-        type="button"
-        onClick={handleDelivery}
-       className="relative flex justify-center px-4 py-2 mx-auto text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md w-44 group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        disabled={loading}
-      >
-        {loading ? "Processing..." : "Submit"}
-      </button>
-      </div>
-    </section>
+          <label className="block mb-2 text-sm font-medium" htmlFor="country">Country</label>
+          <select
+            id="country"
+            name="country"
+            value={deliveryForm.country}
+            onChange={handleChange}
+            className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Select Country</option>
+            {countries.map(country => (
+              <option key={country.code} value={country.name}>
+                {country.name}
+              </option>
+            ))}
+          </select>
+          {errors.country && <p className="mt-1 text-sm text-red-500">{errors.country}</p>}
         </div>
-      )}
-    </section>
+  
+        <div>
+          <label className="block mb-2 text-sm font-medium" htmlFor="state">State</label>
+          <select
+            id="state"
+            name="state"
+            value={deliveryForm.state}
+            onChange={handleChange}
+            className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Select State</option>
+            {states.map(state => (
+              <option key={state.name} value={state.name}>
+                {state.name}
+              </option>
+            ))}
+          </select>
+          {errors.state && <p className="mt-1 text-sm text-red-500">{errors.state}</p>}
+        </div>
+  
+        {/* <div>
+          <label className="block mb-2 text-sm font-medium" htmlFor="city">City</label>
+          <select
+            id="city"
+            name="city"
+            value={deliveryForm.city}
+            onChange={handleChange}
+            className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Select City</option>
+            {cities.map(city => (
+              <option key={city.id} value={city.name}>
+                {city.name}
+              </option>
+            ))}
+          </select>
+          {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
+        </div> */}
+      
+      <div>
+          <label className="block mb-2 text-sm font-medium" htmlFor="street">City</label>
+          <input
+            id="city"
+            type="text"
+            name="city"
+            value={deliveryForm.city}
+            onChange={handleChange}
+            className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
+        </div>
+
+      </div>
+  
+      <div className="grid grid-cols-1 gap-4 mb-4">
+        <div>
+          <label className="block mb-2 text-sm font-medium" htmlFor="street">Street Address</label>
+          <input
+            id="street"
+            type="text"
+            name="street"
+            value={deliveryForm.street}
+            onChange={handleChange}
+            className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          {errors.street && <p className="mt-1 text-sm text-red-500">{errors.street}</p>}
+        </div>
+  
+        <div>
+          <label className="block mb-2 text-sm font-medium" htmlFor="zipcode">Zip Code</label>
+          <input
+            id="zipcode"
+            type="text"
+            name="zipcode"
+            value={deliveryForm.zipcode}
+            onChange={handleChange}
+            className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          {errors.zipcode && <p className="mt-1 text-sm text-red-500">{errors.zipcode}</p>}
+        </div>
+      </div>
+  
+      <div className="grid grid-cols-1 gap-4 mb-4">
+        <div>
+          <label className="block mb-2 text-sm font-medium" htmlFor="lastname">Last Name</label>
+          <input
+            id="lastname"
+            type="text"
+            name="lastname"
+            value={deliveryForm.lastname}
+            onChange={handleChange}
+            className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          {errors.lastname && <p className="mt-1 text-sm text-red-500">{errors.lastname}</p>}
+        </div>
+  
+        <div>
+          <label className="block mb-2 text-sm font-medium" htmlFor="firstname">First Name</label>
+          <input
+            id="firstname"
+            type="text"
+            name="firstname"
+            value={deliveryForm.firstname}
+            onChange={handleChange}
+            className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          {errors.firstname && <p className="mt-1 text-sm text-red-500">{errors.firstname}</p>}
+        </div>
+      </div>
+  
+      <div>
+        <label className="block mb-2 text-sm font-medium" htmlFor="phone">Phone Number</label>
+        <input
+          id="phone"
+          type="text"
+          name="phone"
+          value={deliveryForm.phone}
+          onChange={handleChange}
+          className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
+      </div>
+  
+      <div className="flex justify-center mt-4">
+  <button
+    type="button"
+    onClick={handleDelivery}
+    className="px-4 py-2 font-medium text-white bg-blue-500 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    disabled={loading}
+  >
+    {loading ? "Processing..." : "Submit"}
+  </button>
+</div>
+
+    </form>
+  </section>
+  
   );
 };
 

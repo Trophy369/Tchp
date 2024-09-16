@@ -73,7 +73,7 @@ const Navbar = () => {
             FAQ
           </Link>
           <a
-            href="mailto:example@mail.com"
+            href="mailto:Techshoptools@protonmail.com"
             className="px-2 py-2 mx-4 rounded hover:bg-blue-600"
           >
             CONTACT

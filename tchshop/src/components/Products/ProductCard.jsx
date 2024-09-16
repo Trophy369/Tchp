@@ -18,7 +18,7 @@ const ProductCard = ({ productId, name, description, quantity, price, regPrice, 
             {price.toFixed(2)}
           </p>
           <p className="text-sm text-gray-600">
-             {quantity} Sold |  {quantity} Left
+               {quantity} Left
           </p>
         </div>
       </div>
