@@ -15,7 +15,7 @@ const CategoryCards = ({ product }) => {
             {product.price.toFixed(2)}
           </p>
           <p className="text-sm text-gray-600">
-             - Sold |  - Left
+            {product.quantity} Left
           </p>
         </div>
       </div>
