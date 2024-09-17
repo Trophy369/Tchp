@@ -21,19 +21,19 @@ const ProductCard = ({ id, product_image, name, setProducts, products }) => {
   };
 
   return (
-    <tr key={id} className="border-b">
-      <td className="flex items-center py-4 space-x-4">
+    <tr key={id} className="border-b ">
+      <td className="flex flex-wrap items-center py-4 space-x-4">
         <ShowImage
           url={`static/products/default_img/${product_image}`}
           style={true}
         />
         <span className="truncate">{name}</span>
       </td>
-      <td className="hidden md:table-cell py-4 text-center">
+      <td className="flex py-4 text-center md:table-cell">
         <Link
           to={`/admin/product/${id}`}
           state={{ product }}
-          className="inline-block px-4 py-2 bg-blue-600 text-white font-semibold text-sm rounded hover:bg-blue-700 transition duration-200"
+          className="inline-block px-4 py-2 text-sm font-semibold text-white transition duration-200 bg-blue-600 rounded hover:bg-blue-700"
         >
           EDIT PRODUCT
         </Link>
@@ -41,7 +41,7 @@ const ProductCard = ({ id, product_image, name, setProducts, products }) => {
       <td className="py-4 text-center">
         <button
           onClick={handleRemove}
-          className="text-red-600 hover:text-red-800 transition-transform duration-200 hover:scale-125"
+          className="text-red-600 transition-transform duration-200 hover:text-red-800 hover:scale-125"
         >
           <FaTrash />
         </button>

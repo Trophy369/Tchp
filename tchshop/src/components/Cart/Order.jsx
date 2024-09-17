@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { payment, useCoupon } from "../../services/userApi";
+import { useCoupon } from "../../services/userApi";
 import OrderCart from "./OrderCart";
 import {  Link } from "react-router-dom";
 
@@ -8,14 +8,6 @@ const Order = ({setPriceUpdate, payInfo, checkoutRes, shippingAddress }) => {
   const { cart_details } = useSelector(state => state.cart);
   const { email } = useSelector(state => state.user.user);
   const couponRef = useRef();
-
-  useEffect(() => {
-    const postMethod = async () => {
-      const req = await payment("usdt");
-    };
-
-    postMethod();
-  }, []);
 
   const handleCoupon = async () => {
     const code = couponRef.current.value;

@@ -55,23 +55,20 @@ const Coupon = () => {
   };
 
   return (
-    <>
-      <div className="max-w-md mx-auto bg-white p-8 shadow-md rounded mt-8 relative">
-        <h1 className="text-2xl font-bold mb-4 text-center">Generate Coupon</h1>
+    <div className="relative max-w-md p-8 mx-auto bg-white rounded shadow-md mt-11 mb-44">
+      <h1 className="mb-4 text-2xl font-bold text-center">Generate Coupon</h1>
+      
+      <div className="flex justify-end">
+        <button
+          onClick={handleClearCoupons}
+          className="flex items-center block px-4 py-2 mx-auto text-white bg-red-600 rounded hover:bg-red-700"
+        >
+          <FaTrash className="mr-2 " />
+          Clear Coupons
+        </button>
+      </div>
 
-        {/* Clear Coupons Button */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleClearCoupons}
-            className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 flex items-center"
-          >
-            <FaTrash className="mr-2" />
-            Clear Coupons
-          </button>
-        </div>
-
-        {/* Display Generated Coupon Code */}
-        {generatedCode && (
+      {generatedCode && (
           <div className="mb-4 text-center">
             <p className="text-lg font-semibold">Generated Coupon Code: {generatedCode}</p>
             <button onClick={handleCopyToClipboard} className="ml-2 text-blue-600 hover:underline">
@@ -80,40 +77,38 @@ const Coupon = () => {
           </div>
         )}
 
-        <form onSubmit={handleGenerateCoupon}>
-          <div className="mb-4 mt-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              User Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-              placeholder="Enter user email"
-              required
-            />
-          </div>
+      <form onSubmit={handleGenerateCoupon}>
+        <div className="mt-4 mb-4">
+          <label className="block mb-2 text-sm font-bold text-gray-700">
+            User Email
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+            placeholder="Enter user email"
+            required
+          />
+        </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-          >
-            Generate Coupon
-          </button>
-        </form>
-
-        {/* Delete Coupon Button */}
         <button
-          onClick={handleDeleteCoupon}
-          className="w-full mt-4 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 flex items-center justify-center"
+          type="submit"
+          className="w-full px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
         >
-          <FaTrash className="mr-2" />
-          Delete Coupon
+          Generate Coupon
         </button>
-      </div>
+      </form>
 
-      {/* Coupon List */}
+      {/* Delete Coupon Button */}
+      <button
+        onClick={handleDeleteCoupon}
+        className="flex items-center justify-center w-full px-4 py-2 mt-4 text-white bg-red-600 rounded hover:bg-red-700"
+      >
+        <FaTrash className="mr-2" />
+        Delete Coupon
+      </button>
+
       <div className="max-w-md mx-auto bg-white p-6 shadow-md rounded mt-8">
         <h2 className="text-xl font-semibold mb-4">User Coupons</h2>
 
@@ -132,7 +127,7 @@ const Coupon = () => {
           <p className="text-sm text-gray-500">No coupons generated yet.</p>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

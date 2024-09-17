@@ -40,13 +40,13 @@ const CreateCategory = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-8 bg-white shadow-md rounded">
-      <h1 className="text-2xl font-bold mb-4">Manage Categories</h1>
+    <div className="max-w-xl p-8 mx-auto bg-white rounded shadow-md mt-11 mb-44">
+      <h1 className="mb-4 text-2xl font-bold">Manage Categories</h1>
 
       {/* Add Category Form */}
       <form onSubmit={handleSubmit} className="mb-6">
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+          <label htmlFor="name" className="block mb-2 text-sm font-bold text-gray-700">
             Category Name:
           </label>
           <input
@@ -59,7 +59,7 @@ const CreateCategory = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 flex items-center justify-center"
+          className="flex items-center justify-center w-full px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
         >
           <FaPlus className="mr-2" />
           Add Category
@@ -69,7 +69,7 @@ const CreateCategory = () => {
       {/* Assign Category to Product Form */}
       <form onSubmit={handleAssignCategory} className="mb-6">
         <div className="mb-4">
-          <label htmlFor="productName" className="block text-gray-700 text-sm font-bold mb-2">
+          <label htmlFor="productName" className="block mb-2 text-sm font-bold text-gray-700">
             Product Name:
           </label>
           <input
@@ -82,7 +82,7 @@ const CreateCategory = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="categoryToAssign" className="block text-gray-700 text-sm font-bold mb-2">
+          <label htmlFor="categoryToAssign" className="block mb-2 text-sm font-bold text-gray-700">
             Category to Assign:
           </label>
           <input
@@ -96,7 +96,7 @@ const CreateCategory = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 flex items-center justify-center"
+          className="flex items-center justify-center w-full px-4 py-2 text-white bg-green-600 rounded hover:bg-green-700"
         >
           <FaPlus className="mr-2" />
           Assign Category
@@ -104,14 +104,14 @@ const CreateCategory = () => {
       </form>
 
       {/* List of Categories */}
-      <h2 className="text-xl font-bold mb-4">Existing Categories</h2>
+      <h2 className="mb-4 text-xl font-bold">Existing Categories</h2>
       <ul className="space-y-2">
         {categories.map((category) => (
-          <li key={category.id} className="flex justify-between items-center bg-gray-100 p-2 rounded">
+          <li key={category.id} className="flex items-center justify-between p-2 bg-gray-100 rounded">
             <span className="text-gray-800">{category.category_name}</span>
             <button
               onClick={() => handleDelete(category.id)}
-              className="text-red-600 hover:text-red-800 flex items-center"
+              className="flex items-center text-red-600 hover:text-red-800"
             >
               <FaTrash className="mr-2" />
               Delete

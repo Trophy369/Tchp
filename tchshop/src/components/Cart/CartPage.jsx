@@ -1,4 +1,4 @@
-import React from "react";
+import {useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaDollarSign, FaTrash } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
@@ -6,10 +6,19 @@ import { clearCartAsync } from "../../reducers/cartReducer";
 import Cart from "./Cart";
 import { Link } from "react-router-dom";
 import ShowError from "../ShowError";
+import { payment } from "../../services/userApi";
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const { cart_details, loading, error } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    const postMethod = async () => {
+      const req = await payment("usdt");
+    };
+
+    postMethod();
+  }, []);
 
   if (cart_details.length === 0) {
     return (

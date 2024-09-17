@@ -36,26 +36,6 @@ const Checkout = () => {
 
   useEffect(() => {
     if (shippingAddress) {
-      const fetchPay = async () => {
-        try {
-          const { data, error } = await pay();
-          if (error) {
-            setError("Failed to fetch payment information.");
-          } else {
-            setPayInfo(data);
-          }
-        } catch (err) {
-          setError("An error occurred while fetching payment info.");
-        }
-      };
-
-      fetchPay();
-    }
-  }, [shippingAddress, priceUpdate]);
-
-  // Fetch Checkout Info when Shipping Address is available
-  useEffect(() => {
-    if (shippingAddress) {
       const fetchCheckout = async () => {
         try {
           const { data, error } = await checkout();
@@ -72,6 +52,25 @@ const Checkout = () => {
       fetchCheckout();
     }
   }, [shippingAddress]);
+
+  useEffect(() => {
+    if (shippingAddress && checkoutRes) {
+      const fetchPay = async () => {
+        try {
+          const { data, error } = await pay();
+          if (error) {
+            setError("Failed to fetch payment information.");
+          } else {
+            setPayInfo(data);
+          }
+        } catch (err) {
+          setError("An error occurred while fetching payment info.");
+        }
+      };
+
+      fetchPay();
+    }
+  }, [shippingAddress, checkoutRes, priceUpdate]);
 
   // Function to load order details or skeleton
   const loadOrders = () => {

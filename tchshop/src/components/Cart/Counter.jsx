@@ -25,7 +25,7 @@ const Counter = () => {
       }
   }, [countdown])
 
-  return (<h2>Timer: {formatTime(countdown)}</h2>)
+  return (<p>Timer: {formatTime(countdown)}</p>)
 };
 
 export default Counter;

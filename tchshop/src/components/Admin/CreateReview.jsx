@@ -37,11 +37,11 @@ const CreateReview = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">Add Review</h1>
+    <div className="max-w-lg p-6 mx-auto bg-white rounded-lg shadow-md mt-11 mb-44">
+      <h1 className="mb-6 text-2xl font-bold text-center">Add Review</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="rating" className="block text-gray-700 font-bold mb-2">
+          <label htmlFor="rating" className="block mb-2 font-bold text-gray-700">
             Rating:
           </label>
           <input
@@ -55,7 +55,7 @@ const CreateReview = () => {
           />
         </div>
         <div>
-          <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
+          <label htmlFor="name" className="block mb-2 font-bold text-gray-700">
             Review:
           </label>
           <textarea
@@ -66,7 +66,7 @@ const CreateReview = () => {
           />
         </div>
         <div>
-          <label htmlFor="id" className="block text-gray-700 font-bold mb-2">
+          <label htmlFor="id" className="block mb-2 font-bold text-gray-700">
             Product ID:
           </label>
           <input
@@ -79,7 +79,7 @@ const CreateReview = () => {
           />
         </div>
         <div>
-          <h2 className="text-lg font-semibold mb-2">Upload Images for Review</h2>
+          <h2 className="mb-2 text-lg font-semibold">Upload Images for Review</h2>
           <input
             type="file"
             multiple
@@ -89,14 +89,14 @@ const CreateReview = () => {
           />
           {previews.length > 0 && (
             <div className="mt-4">
-              <h3 className="text-md font-medium">Image Previews:</h3>
-              <div className="flex gap-4 overflow-x-auto mt-2">
+              <h3 className="font-medium text-md">Image Previews:</h3>
+              <div className="flex gap-4 mt-2 overflow-x-auto">
                 {previews.map((preview, index) => (
                   <img
                     key={index}
                     src={preview}
                     alt={`Preview ${index}`}
-                    className="w-24 h-24 object-cover rounded-lg shadow-md"
+                    className="object-cover w-24 h-24 rounded-lg shadow-md"
                   />
                 ))}
               </div>
@@ -105,7 +105,7 @@ const CreateReview = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200"
+          className="w-full px-4 py-2 text-white transition duration-200 bg-blue-600 rounded hover:bg-blue-700"
         >
           Submit Review
         </button>

@@ -32,19 +32,19 @@ const Wallets = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto bg-white p-8 shadow-md rounded-lg">
-      <h1 className="text-3xl font-bold mb-6 text-center">Manage Wallets</h1>
+    <div className="max-w-3xl p-8 mx-auto bg-white rounded-lg shadow-md mt-11 mb-44">
+      <h1 className="mb-6 text-3xl font-bold text-center">Manage Wallets</h1>
 
       {/* Wallet Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className="block mb-2 text-sm font-semibold text-gray-700">
             Currency Type
           </label>
           <select
             value={currencyType}
             onChange={(e) => setCurrencyType(e.target.value)}
-            className="w-full px-4 py-2 border rounded bg-gray-100"
+            className="w-full px-4 py-2 bg-gray-100 border rounded"
             required
           >
             <option value="">Select Currency</option>
@@ -54,7 +54,7 @@ const Wallets = () => {
         </div>
 
         <div>
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+          <label className="block mb-2 text-sm font-semibold text-gray-700">
             Wallet Address
           </label>
           <input
@@ -69,7 +69,7 @@ const Wallets = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+          className="w-full px-6 py-3 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
         >
           Add Wallet
         </button>
@@ -77,13 +77,13 @@ const Wallets = () => {
 
       {/* Wallet List */}
       <div className="mt-10">
-        <h2 className="text-2xl font-semibold mb-4">Existing Wallets</h2>
+        <h2 className="mb-4 text-2xl font-semibold">Existing Wallets</h2>
         {wallets.length > 0 ? (
           <ul className="space-y-4">
             {wallets.map((wallet, index) => (
               <li
                 key={index}
-                className="p-4 bg-gray-100 rounded-lg shadow-md flex justify-between items-center"
+                className="flex items-center justify-between p-4 bg-gray-100 rounded-lg shadow-md"
               >
                 <span className="font-medium text-gray-800">
                   {wallet.currency_type.toUpperCase()}
