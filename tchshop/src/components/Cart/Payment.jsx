@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { pay, confirmation } from "../../services/userApi";
 import Counter from "./Counter";
+import Gif from "../../assets/Gif.gif";
 
 const Payment = () => {
   const [payInfo, setPayInfo] = useState({});
@@ -41,7 +42,7 @@ const Payment = () => {
           <p>Expiration Time: <Counter /> </p>
         </div>
        
-       <div>GIF</div>
+       <div> <img src={Gif} alt="GIF For Payment Process" /></div>
        
       </div>
       
@@ -52,7 +53,7 @@ const Payment = () => {
         onClick={handleClick}
         className="w-full px-4 py-2 text-white bg-blue-500 rounded-md sm:w-auto hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
       >
-        Proceed with Ramp
+        Proceed with Ramp 
       </button>
       <div>
         <p>Why USDT? Enjoy a stable dollar value, minimizing price fluctuations and ensuring a smooth transaction.</p>
