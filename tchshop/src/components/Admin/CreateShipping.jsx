@@ -67,11 +67,11 @@ const CreateShipping = () => {
   };
 
   return (
-    <div className="container p-6 mx-auto mt-11 mb-44">
-      <h1 className="mb-4 text-2xl font-semibold text-center">Add Shipping Method</h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-semibold mb-4">Add Shipping Method</h1>
 
       {/* Create Shipping Form */}
-      <form onSubmit={handleSubmit} className="p-4 mb-8 bg-white rounded-lg shadow-md">
+      <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg shadow-md mb-8">
         <div className="mb-4">
           <label htmlFor="cost" className="block text-sm font-medium text-gray-700">
             Shipping Cost:
@@ -80,7 +80,7 @@ const CreateShipping = () => {
             type="text"
             required
             ref={createCostRef}
-            className="w-full p-2 mt-1 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 rounded mt-1"
           />
         </div>
         <div className="mb-4">
@@ -91,7 +91,7 @@ const CreateShipping = () => {
             type="text"
             required
             ref={createMethodRef}
-            className="w-full p-2 mt-1 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 rounded mt-1"
           />
         </div>
         <div className="mb-4">
@@ -102,21 +102,21 @@ const CreateShipping = () => {
             type="text"
             required
             ref={createMethodDescRef}
-            className="w-full p-2 mt-1 border border-gray-300 rounded"
+            className="w-full p-2 border border-gray-300 rounded mt-1"
           />
         </div>
-        <button type="submit" className="block px-4 py-2 mx-auto text-white bg-blue-500 rounded hover:bg-blue-600">
+        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
           Add Shipping Method
         </button>
       </form>
 
-      <h2 className="mb-4 text-xl font-semibold text-center">Shipping Methods</h2>
+      <h2 className="text-xl font-semibold mb-4">Shipping Methods</h2>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {shipping.length > 0 ? (
           shipping.map((item) => (
-            <div key={item.id} className="p-4 bg-white rounded-lg shadow-md">
-              <h3 className="mb-2 text-lg font-semibold">{item.name}</h3>
+            <div key={item.id} className="bg-white p-4 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
               <p className="text-sm text-gray-700">Cost: ${item.cost}</p>
               <p className="text-sm text-gray-700">Delivery Time: {item.deliveryTime}</p>
 
@@ -125,17 +125,17 @@ const CreateShipping = () => {
                   type="text"
                   placeholder="Update Cost"
                   ref={editCostRef}
-                  className="w-full p-2 mr-2 border border-gray-300 rounded"
+                  className="w-full p-2 border border-gray-300 rounded mr-2"
                 />
                 <button
                   onClick={() => handleUpdate(item.id)}
-                  className="p-2 text-white bg-yellow-500 rounded hover:bg-yellow-600"
+                  className="bg-yellow-500 text-white p-2 rounded hover:bg-yellow-600"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(item.name)}
-                  className="p-2 ml-2 text-red-500 rounded hover:text-red-700"
+                  className="ml-2 p-2 rounded text-red-500 hover:text-red-700"
                 >
                   <FaTrash /> {/* Trash icon from react-icons */}
                 </button>

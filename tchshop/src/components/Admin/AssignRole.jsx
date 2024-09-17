@@ -25,8 +25,8 @@ const AssignRole = () => {
 
   return (
     <>
-      <div className="max-w-md p-6 mx-auto bg-white rounded-lg shadow-md mt-11 ">
-        <h1 className="mb-4 text-2xl font-semibold text-gray-800">Add Role Form</h1>
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h1 className="text-2xl font-semibold mb-4 text-gray-800">Add Role Form</h1>
   
         <form onSubmit={handleRole} className="space-y-4">
           <div className="flex flex-col">
@@ -40,15 +40,15 @@ const AssignRole = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-500"
+            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
           >
             Add Role
           </button>
         </form>
       </div>
   
-      <div className="max-w-md p-6 mx-auto mt-8 bg-white rounded-lg shadow-md mb-44">
-        <h1 className="mb-4 text-2xl font-semibold text-gray-800">Assign Role Form</h1>
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md mt-8">
+        <h1 className="text-2xl font-semibold mb-4 text-gray-800">Assign Role Form</h1>
   
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col">
@@ -71,7 +71,7 @@ const AssignRole = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-500"
+            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition-colors"
           >
             Assign Role
           </button>
