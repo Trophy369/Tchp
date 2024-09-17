@@ -10,11 +10,54 @@ from datetime import datetime, timedelta
 from webapp.auth import has_role
 from webapp.main import main
 import logging
+from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 import os
 
 # Configure logging to display messages to the terminal
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[logging.StreamHandler()])
+
+
+# search patient
+@main.route('/search', methods=["GET"], strict_slashes=False)
+def search():
+    data = request.json
+    search_input = data['q']
+    logging.info(f"search input: {search_input}")
+
+    if search_input:
+        # u = ColumnOperators.ilike()
+        products = db.session.query(Product).filter(
+            or_(Product.product_name.ilike(f"%{search_input}%"),
+                 Product.description.ilike(f"%{search_input}%"))
+                ).all()
+        
+        if not products:
+            return jsonify('Product not found'), 400
+
+        product_list = []
+
+        for product in products:
+            # Construct the URL for the product image
+            if product.product_image:
+                # Handle URL encoding of spaces and special characters if needed
+                image_filename = product.product_image.replace(' ', '%20')
+                image_url = f'{image_filename}'
+            else:
+                image_url = None
+
+            product_list.append({
+                'id': product.id,
+                'Product name': product.product_name,
+                'description': product.description,
+                'quantity': product.quantity,
+                'regular_price': product.regular_price,
+                'product_image': image_url,
+                'discounted_price': product.discounted_price
+            })
+
+        return jsonify(product_list), 200
+        
 
 @main.route('/')
 def index():
