@@ -1,5 +1,4 @@
 const Skele = () => {
-  console.log('work')
   return (
     <div className="p-4 border rounded-md">
       {/* Product Skeleton */}

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { payment, pay, confirmation } from "../../services/userApi";
+import { pay, confirmation } from "../../services/userApi";
 import Counter from "./Counter";
 
 const Payment = () => {
-  const [payInfo, setPayInfo] = useState({}); 
+  const [payInfo, setPayInfo] = useState({});
 
   useEffect(() => {
     const fetchPay = async () => {

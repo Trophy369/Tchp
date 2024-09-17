@@ -32,9 +32,8 @@ const Checkout = () => {
     };
 
     fetchShippingAddress();
-  }, []); // Empty dependency, only fetch on initial render
+  }, []);
 
-  // Fetch Payment Info when Shipping Address is available
   useEffect(() => {
     if (shippingAddress) {
       const fetchPay = async () => {

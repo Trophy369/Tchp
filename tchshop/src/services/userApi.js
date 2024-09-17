@@ -317,7 +317,7 @@ export const payment = async method => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify(method)
+    body: JSON.stringify({method})
   };
 
   return fetchWithState(`${baseUrl}/paymentMethods`, requestOptions);

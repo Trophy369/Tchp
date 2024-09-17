@@ -1,17 +1,21 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { useCoupon } from "../../services/userApi";
+import { payment, useCoupon } from "../../services/userApi";
 import OrderCart from "./OrderCart";
-// import PaymentMethod from "./PaymentMethod";
 import {  Link } from "react-router-dom";
 
 const Order = ({setPriceUpdate, payInfo, checkoutRes, shippingAddress }) => {
-  const { user, cart } = useSelector(state => state);
-  // const [priceUpdate, setPriceUpdate] = useState(null);
+  const { cart_details } = useSelector(state => state.cart);
+  const { email } = useSelector(state => state.user.user);
   const couponRef = useRef();
 
-  const cartItems = cart.cart_details;
-  const email = user.user.email;
+  useEffect(() => {
+    const postMethod = async () => {
+      const req = await payment("usdt");
+    };
+
+    postMethod();
+  }, []);
 
   const handleCoupon = async () => {
     const code = couponRef.current.value;
@@ -27,7 +31,7 @@ const Order = ({setPriceUpdate, payInfo, checkoutRes, shippingAddress }) => {
     <section className="max-w-2xl p-4 mx-auto mb-8 bg-white rounded-lg shadow-md">
       <h2 className="mb-4 text-2xl font-semibold text-center">Order Summary</h2>
         <div className="p-4 border rounded-md">
-          {cartItems.map(cartP => (
+          {cart_details.map(cartP => (
             <OrderCart key={cartP.id} cartP={cartP} />
           ))}
           <div className="mt-8">
