@@ -198,7 +198,7 @@ const Shipping = ({ setShipData }) => {
       </select>
       {errors.state && <p className="text-red-500">{errors.state}</p>}
 
-      <select
+      {/* <select
         name="city"
         value={deliveryForm.city}
         onChange={handleChange}
@@ -211,7 +211,21 @@ const Shipping = ({ setShipData }) => {
           </option>
         ))}
       </select>
-      {errors.city && <p className="text-red-500">{errors.city}</p>}
+      {errors.city && <p className="text-red-500">{errors.city}</p>} */}
+
+    <div>
+          
+          <input
+            id="city"
+            type="text"
+            name="city"
+            placeholder="City"
+            value={deliveryForm.city}
+            onChange={handleChange}
+           className="relative block w-full px-3 py-2 my-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+          />
+          {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
+        </div>
 
       <div className="mb-2">
         <input

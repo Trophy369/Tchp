@@ -66,7 +66,7 @@ const Hero = () => {
         >
           WELCOME TO{' '}
           <FontAwesomeIcon icon={faScrewdriverWrench} className="mx-2 text-yellow-900 text- xl md:text-3xl lg:text-4xl" />
-          <span className="text-2xl font-extrabold md:text-3xl lg:text-4xl">
+          <span className="text-xl font-extrabold md:text-3xl lg:text-4xl">
             <span className="overline">TECH</span>SHOP
           </span>
         </motion.h1>
