@@ -580,7 +580,8 @@ def select_method():
             "message": "Payment method selected successfully",
         }), 200
 
-    # return jsonify({"success": True, "message": "Payment method selected successfully"}), 200
+#     # return jsonify({"success": True, "message": "Payment method selected successfully"}), 200
+
 # @login_required
 # @main.route('/paymentMethods', methods=["POST"], strict_slashes=False)
 # def select_method():

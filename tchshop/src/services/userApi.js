@@ -297,6 +297,11 @@ export const assignShipping = async productId => {
   return response.json();
 };
 
+export const refReview = async () => {
+  const response = await fetch(`${baseUrl}/reviews/${id}/${refCode}`)
+  return response.json()
+}
+
 export const checkout = async () => {
   const requestOptions = {
     method: "GET",
@@ -312,7 +317,7 @@ export const payment = async method => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify(method)
+    body: JSON.stringify({method})
   };
 
   return fetchWithState(`${baseUrl}/paymentMethods`, requestOptions);

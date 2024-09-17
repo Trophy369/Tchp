@@ -1,14 +1,16 @@
-import UpdateProfile from "./UpdateProfile";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
+  const {user} = useSelector((state) => state.user);
+
   return (
     <section className="p-4 mx-auto mt-11 mb-44 max-w-7xl bg-gray-50">
       <div className="flex flex-col items-center mb-8">
         <h1 className="mb-4 text-3xl font-bold text-center">Dashboard</h1>
         <div className="flex flex-col items-center mb-8">
-          <p className="text-lg font-medium text-gray-600">Welcome, <span className="text-gray-900">[User Name]</span></p>
-          <p className="text-lg text-gray-600">Email: <span className="text-gray-900">[User Email]</span></p>
+          <p className="text-lg font-medium text-gray-600">Welcome, <span className="text-gray-900">{user.username}</span></p>
+          <p className="text-lg text-gray-600">Email: <span className="text-gray-900">{user.email}</span></p>
         </div>
       </div>
       <nav className="flex flex-col items-center space-y-4">

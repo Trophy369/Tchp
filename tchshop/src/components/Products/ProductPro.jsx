@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { FaDollarSign } from "react-icons/fa";
@@ -23,8 +23,9 @@ const ProductPro = () => {
   const [productError, setProductError] = useState(null);
   const [product, setProduct] = useState([]);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null); // Initialize as null
-  const { id } = useParams();
+  const { id, refCode } = useParams();
   const [color, setColor] = useState([]);
+  const reviewsRef = useRef(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -45,6 +46,15 @@ const ProductPro = () => {
 
     fetchProduct();
   }, [id]);
+
+  useEffect(() => {
+    if (refCode && user) {
+      reviewsRef.current?.scrollIntoView({ behavior: "smooth" });
+    } else if (refCode && !user) {
+      // If refCode exists but user is not logged in, redirect them to a different page (e.g., login/signup)
+      navigate(`/${refCode}`);
+    }
+  }, [refCode, user, navigate]);
 
   if (productError) {
     return <ShowError errorMessage={productError} buttonText={"Reload"} />
@@ -168,7 +178,7 @@ const ProductPro = () => {
       </div>
       <hr />
       <hr />
-      <div className="mt-8 text-center">
+      <div className="mt-8 text-center" ref={reviewsRef}>
         <ProductDescription />
         <Reviews id={id} />
       </div>
