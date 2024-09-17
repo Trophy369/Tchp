@@ -5,7 +5,7 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 const faqData = [
   {
-    question: 'SHIPPING & PACKAGING INFORMATION',
+    question: 'Shipping & Packaging Information',
     answer: (
       <>
         <p>Techshop engagement is to get your orders to you as quickly as possible in perfect condition. All packages are insured to 100% of the value, and Techshop Delivery Protection can be used to ensure immediate re-shipment if a package is lost or damaged.</p>
@@ -20,18 +20,18 @@ const faqData = [
       <>
         <p>Techshop provides three types of shipping options:</p>
         <ul className="list-disc list-inside">
-          <li>Standard Shipping Delivery [deliveryTime: 5-7 days]</li>
-          <li>Express Shipping Delivery [deliveryTime: 2-3 days]</li>
-          <li>Overnight Shipping Delivery [deliveryTime: 1 day]</li>
+          <li>Standard Shipping Delivery [deliveryTime: 7-9 days]</li>
+          <li>Express Shipping Delivery [deliveryTime: 2-5 days]</li>
+          <li>Overtime Shipping Delivery [deliveryTime: 14-21 day]</li>
         </ul>
-        <p>Standard Shipping and Express Shipping Delivery is our default shipping option: fast and reliable delivery via courier, depending on the destination.</p>
-        <p>Overnight Shipping Delivery uses the fastest possible delivery method: UPS Express, FedEx Express, DHL Express, or Chronopost Express.</p>
+        <p>Standard Shipping and Overtime Shipping Delivery is our default shipping option: fast and reliable delivery via courier, depending on the destination.</p>
+        <p>Express Shipping Delivery uses the fastest possible delivery method: UPS Express, FedEx Express, DHL Express, or Chronopost Express.</p>
       </>
     ),
   },
   {
     question: 'Do you ship internationally?',
-    answer: <p>Yes, we ship worldwide ensuring that all logistical or legal restrictions are bypassed.</p>,
+    answer: <p>Yes, we ship discretely worldwide ensuring that all logistical or legal restrictions are bypassed.</p>,
   },
   {
     question: 'When will my order be dispatched?',
@@ -69,7 +69,7 @@ const faqData = [
   },
   {
     question: 'What are your payment options?',
-    answer: <p>Purchase and payment can be made directly on the site.</p>,
+    answer: <p>Payment can be made through Ramp, our trusted payment partner, enabling efficient order processing  with a variety of payment methods. </p>,
   },
 ];
 
