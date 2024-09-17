@@ -31,7 +31,7 @@ const Footer = () => {
   return (
     <footer className="absolute bottom-0 left-0 w-full py-4 text-center bg-gray-200">
       <div className="container mx-auto">
-        <div className="flex justify-center mb-4">
+        {/* <div className="flex justify-center mb-4">
           {socialMediaLinks.map((link, index) => (
             <a
               key={index}
@@ -43,7 +43,7 @@ const Footer = () => {
               <FontAwesomeIcon icon={link.icon} size="lg" />
             </a>
           ))}
-        </div>
+        </div> */}
         <div className="text-sm text-gray-600">
           <FontAwesomeIcon icon={faCopyright} /> {currentYear} 
           <FontAwesomeIcon

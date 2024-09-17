@@ -69,7 +69,7 @@ const CategoryPage = () => {
 
 
   return (
-    <section className="container py-8 mx-auto font-bold">
+    <section className="container p-2 mx-auto font-bold">
       <h1 className="p-2 my-4 text-center">{name.toUpperCase()}</h1>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
       {products.map(product => (
