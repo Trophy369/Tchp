@@ -3,6 +3,7 @@ import ShowImage from "../ShowImage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
+
 const CategoryCards = ({ product }) => {
     return (
         <Link to={`/viewproduct/${product.id}`} className="block overflow-hidden transition-transform transform bg-white rounded-lg shadow-lg hover:scale-105">
@@ -16,6 +17,7 @@ const CategoryCards = ({ product }) => {
           </p>
           <p className="text-sm text-gray-600">
             {product.quantity} Left
+          
           </p>
         </div>
       </div>
