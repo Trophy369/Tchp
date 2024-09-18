@@ -75,7 +75,7 @@ const Payment = () => {
             )}
           </button>
         </div>
-        <dd className="mb-3 text-base">{payInfo.grand_total}</dd>
+        <dd className="mb-3 text-base text-center">{payInfo.grand_total}</dd>
 
         <div className="flex items-center justify-between mb-1">
           <dt className="text-base font-bold">USDT Wallet Address:</dt>
@@ -97,7 +97,7 @@ const Payment = () => {
             )}
           </button>
         </div>
-        <dd className="mb-3 text-base">{payInfo.address}</dd>
+        <dd className="mb-3 text-base text-center">{payInfo.address}</dd>
       </section>
 
       {/* Payment Actions */}
