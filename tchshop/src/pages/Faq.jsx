@@ -69,7 +69,12 @@ const faqData = [
   },
   {
     question: 'What are your payment options?',
-    answer: <p>Payment can be made through Ramp, our trusted payment partner, enabling efficient order processing  with a variety of payment methods. </p>,
+    answer: ( 
+      <>
+        <p>Payment can be made through Ramp, our trusted payment partner, enabling efficient order processing  with a variety of payment methods. </p>
+        <p>We accept USDT (Tether TRC-20) as a payment method, offering a fast and efficient way to process your transactions. By utilizing the TRC-20 protocol, we can settle payments in seconds, ensuring prompt dispatch of your orders worldwide. USDT is a stablecoin, pegged to the US dollar, providing a secure and transparent transaction record on the blockchain. To make a payment, simply select USDT at checkout and send the funds to our unique wallet address using a digital wallet or cryptocurrency exchange.</p>
+      </>
+    ) ,
   },
 ];
 
