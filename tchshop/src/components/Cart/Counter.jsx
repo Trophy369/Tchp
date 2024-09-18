@@ -9,7 +9,7 @@ const formatTime = time => {
   return minutes + ':' + seconds
 };
 const Counter = () => {
-  const [countdown, setCountDown] = useState(3600);
+  const [countdown, setCountDown] = useState(2700);
   const timerId = useRef();
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const Counter = () => {
       }
   }, [countdown])
 
-  return (<p>Timer: {formatTime(countdown)}</p>)
+  return (<p> {formatTime(countdown)}</p>)
 };
 
 export default Counter;
