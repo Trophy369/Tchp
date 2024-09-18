@@ -19,12 +19,12 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     try {
-      await dispatch(signOutUserAsync());
-      signout(() => navigate('/'));
+        await dispatch(signOutUserAsync());
+        signout(() => navigate('/'));
     } catch (error) {
-      console.error('Failed to sign out:', error);
+        console.error('Failed to sign out:', error);
     }
-  };
+};
 
   // Close the menu when the route changes
   useEffect(() => {

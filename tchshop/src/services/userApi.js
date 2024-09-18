@@ -17,7 +17,7 @@ export const fetchWithState = async (url, options) => {
     // Return the success state
     return { ...loadingState, loading: false, data };
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error:", error.message);
     return { ...loadingState, loading: false, error: error.message };
   }
 };

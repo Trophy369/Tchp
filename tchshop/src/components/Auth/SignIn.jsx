@@ -1,13 +1,23 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { signInUserAsync } from "../../reducers/userReducer";
+import { signInUserAsync, clearError } from "../../reducers/userReducer";
 import useValid from "../hooks/useValid";
 
 const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { user, loading, error } = useSelector((state) => state.user);
+  const { user, loading, error } = useSelector(state => state.user);
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        dispatch(clearError());
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   const {
     value: enteredEmail,
@@ -15,14 +25,14 @@ const Signin = () => {
     hasError: emailInputHasError,
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
-    reset: resetEmailInput,
-  } = useValid((value) => value.includes("@"));
+    reset: resetEmailInput
+  } = useValid(value => value.includes("@"));
 
   let formIsValid = enteredEmailisValid;
 
   const passwordRef = useRef();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!enteredEmailisValid) {
       return;
@@ -52,7 +62,9 @@ const Signin = () => {
         <form onSubmit={handleSubmit} className="mt-2 space-y-6">
           <div className="rounded-md shadow-sm">
             <div>
-              <label htmlFor="email" className="sr-only">Email</label>
+              <label htmlFor="email" className="sr-only">
+                Email
+              </label>
               <input
                 id="email"
                 type="email"
@@ -69,7 +81,9 @@ const Signin = () => {
               )}
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
                 id="password"
                 name="password"
@@ -85,20 +99,38 @@ const Signin = () => {
           {loading && (
             <button
               type="button"
-              className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out bg-indigo-500 border border-transparent rounded-md shadow cursor-not-allowed hover:bg-indigo-400"
+              className="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white transition duration-150 ease-in-out bg-blue-500 border border-transparent rounded-md shadow cursor-not-allowed hover:bg-blue-400"
               disabled
               aria-busy="true"
               aria-label="Loading"
             >
-              <svg className="w-5 h-5 mr-3 text-white animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-11 11h4l-3 3 3 3h-4a8 8 0 018-8z"></path>
+              <svg
+                className="w-5 h-5 mr-3 text-white animate-spin"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-11 11h4l-3 3 3 3h-4a8 8 0 018-8z"
+                ></path>
               </svg>
               Authenticating...
             </button>
           )}
 
-          {error && <p className="mt-4 text-sm text-center text-red-700">{error}</p>}
+          {error && (
+            <p className="mt-4 text-sm text-center text-red-700">Username or Password Incorrect</p>
+          )}
 
           <div>
             <button
@@ -114,10 +146,17 @@ const Signin = () => {
         <div className="text-center">
           <p className="text-gray-700">
             Don't have an account?{" "}
-            <Link to={"/signup"} className="text-blue-500 hover:underline">Sign Up</Link>
+            <Link to={"/signup"} className="text-blue-500 hover:underline">
+              Sign Up
+            </Link>
           </p>
           <p className="mt-4">
-            <Link to={"/forgot-password"} className="text-blue-500 transition duration-200 ease-in-out hover:underline hover:text-indigo-700">Forgot Password?</Link>
+            <Link
+              to={"/forgot-password"}
+              className="text-blue-500 transition duration-200 ease-in-out hover:underline hover:text-indigo-700"
+            >
+              Forgot Password?
+            </Link>
           </p>
         </div>
       </div>

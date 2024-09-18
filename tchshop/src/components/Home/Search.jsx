@@ -4,15 +4,17 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { search } from '../../services/userApi';
 
 
-const Search = ({setSearchResult}) => {
+const Search = ({setSearchResult, setLoading}) => {
   const searchRef = useRef()
 
   const handleSearch = async () => {
+    setLoading(true)
     const q = searchRef.current.value;
 
     const {data} = await search(q)
     console.log('data:', data)
     setSearchResult(data)
+    setLoading(false)
   }
 
   return (

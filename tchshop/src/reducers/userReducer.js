@@ -1,5 +1,5 @@
 // src/redux/slices/userSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { signin, getUser, signout } from '../services'
 
 const initialState = {
@@ -95,12 +95,11 @@ const initialState = {
     try {
       const response = await signin(emailInput, passwordInput);
       const {data, error} = response
-      console.log(response.session)
-      if (data.id) {
+      if (data) {
         dispatch(setUser(data));
         localStorage.setItem('user', JSON.stringify(data));
       } else {
-        dispatch(setError(data.message || 'Login failed.'));
+        dispatch(setError(data || 'Login failed.'));
         localStorage.removeItem('user');
       }
     } catch (error) {
