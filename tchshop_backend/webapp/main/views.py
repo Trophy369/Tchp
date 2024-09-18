@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 
 # search patient
-@main.route('/search', methods=["GET"], strict_slashes=False)
+@main.route('/search', methods=["POST"], strict_slashes=False)
 def search():
     data = request.json
     search_input = data['q']

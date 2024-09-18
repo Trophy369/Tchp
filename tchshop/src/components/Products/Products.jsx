@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import {Link} from "react-router-dom"
 import { listproducts } from "../../services";
 import ProductCard from "./ProductCard";
 import Skele from "./Skele";
 
-const Products = () => {
+const Products = ({ searchResult }) => {
   const [products, setProducts] = useState([]);
   const [limit, setLimit] = useState(18);
   const [offset, setOffset] = useState(0);
@@ -28,17 +29,26 @@ const Products = () => {
     fetchProducts();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //   setLoading(true);
-  //     const data = await listproducts(limit, offset);
-  //     setProducts(data);
-  //     setLoading(false);
+  useEffect(() => {
+    if (searchResult === null) {
+      setProducts(null);
+    } else {
+      setProducts(searchResult)
+    }
+  }, [searchResult]);
 
-  //   };
-
-  //   fetchProducts();
-  // }, []);
+  if(!loading && !products) {
+    return (
+      <div className="flex items-center justify-center my-16 ">
+        <div className="w-[80vw] h-[35vh] md:w-[50vw] md:h-[50vh] flex flex-col items-center justify-center bg-white shadow-lg rounded-lg">
+          <h1 className="mb-4 text-2xl font-bold text-red-400">Product Not Found</h1>
+          <a href="/" className="text-lg text-blue-500 underline">
+            Continue Shopping
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   const loadMore = async () => {
     setLoading(true);

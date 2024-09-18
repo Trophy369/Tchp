@@ -3,7 +3,7 @@ import ShowImage from "../ShowImage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
-const ProductCard = ({ productId, name, description, quantity, price, regPrice, product_image }) => {
+const ProductCard = ({ productId, name, quantity, price, product_image }) => {
   return (
     <Link
       to={{ pathname: `/viewproduct/${productId}`, state: { name } }}

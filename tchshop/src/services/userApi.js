@@ -17,7 +17,7 @@ export const fetchWithState = async (url, options) => {
     // Return the success state
     return { ...loadingState, loading: false, data };
   } catch (error) {
-    console.error("Error:", error.message);
+    console.error("Error:", error);
     return { ...loadingState, loading: false, error: error.message };
   }
 };
@@ -341,4 +341,14 @@ export const confirmation = async () => {
   };
 
   return fetchWithState(`${baseUrl}/confirmation`, requestOptions);
+};
+
+export const search = async (q) => {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({q}),
+    credentials: "include"
+  };
+  return fetchWithState(`${baseUrl}/search`, requestOptions);
 };
