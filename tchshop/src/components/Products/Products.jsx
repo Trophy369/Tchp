@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import {Link} from "react-router-dom"
 import { listproducts } from "../../services";
 import ProductCard from "./ProductCard";
 import Skele from "./Skele";

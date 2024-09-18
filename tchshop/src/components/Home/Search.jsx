@@ -12,7 +12,6 @@ const Search = ({setSearchResult, setLoading}) => {
     const q = searchRef.current.value;
 
     const {data} = await search(q)
-    console.log('data:', data)
     setSearchResult(data)
     setLoading(false)
   }
