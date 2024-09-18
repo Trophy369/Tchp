@@ -111,6 +111,7 @@ const Products = ({ searchResult, loading, setLoading }) => {
             ))}
       </div>
       {loadMoreButton()}
+      <div className="mb-33"></div>
     </section>
   );
 };

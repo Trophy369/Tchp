@@ -32,25 +32,25 @@ const CategoryPage = () => {
     fetchCategories();
   }, [name]);
 
-  const loadMore = async () => {
-    setLoading(true);
-    try {
-      const newOffset = offset + limit;
-      const data = await listproducts(limit, newOffset);
+  // const loadMore = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const newOffset = offset + limit;
+  //     const data = await listproducts(limit, newOffset);
   
-      if (data.length === 0) {
-        setHasMore(false);
-      } else {
-        setProducts(prevProducts => [...prevProducts, ...data]);
-        setOffset(newOffset);
-      }
-    } catch (error) {
-      console.error("Error loading more products:", error);
-      setError("Failed to load more products. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (data.length === 0) {
+  //       setHasMore(false);
+  //     } else {
+  //       setProducts(prevProducts => [...prevProducts, ...data]);
+  //       setOffset(newOffset);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error loading more products:", error);
+  //     setError("Failed to load more products. Please try again later.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const loadMoreButton = () => {
     return (
@@ -77,7 +77,7 @@ const CategoryPage = () => {
         ))}
       </div>
       
-      {loadMoreButton()}
+      {/* {loadMoreButton()} */}
       
     </section>
   );
