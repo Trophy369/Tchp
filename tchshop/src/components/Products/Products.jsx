@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import {Link} from "react-router-dom"
 import { listproducts } from "../../services";
 import ProductCard from "./ProductCard";
 import Skele from "./Skele";
 
-const Products = ({ searchResult }) => {
+const Products = ({ searchResult, loading, setLoading }) => {
   const [products, setProducts] = useState([]);
   const [limit, setLimit] = useState(18);
   const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
 

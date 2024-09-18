@@ -100,5 +100,5 @@ export const signout = async () => {
   };
 
   const response = await fetch(`${baseUrl}/auth/logout`, requestOptions);
-  return
+  return response
 };

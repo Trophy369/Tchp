@@ -4,10 +4,13 @@ import Counter from "./Counter";
 import Gif from "../../assets/Gif.gif";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHourglassHalf, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
 
 const Payment = () => {
   const [payInfo, setPayInfo] = useState({});
   const [copiedField, setCopiedField] = useState(null);
+  const [clicked, setClicked] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchPay = async () => {
@@ -33,12 +36,17 @@ const Payment = () => {
 
   const handleClick = async () => {
     try {
-      const data = await confirmation();
-      alert('Payment processing: ' + data.success);
+      await confirmation();
+      navigate("/")
     } catch (error) {
-      alert('Error: ' + error.message);
+      console.log(error)
     }
   };
+
+  const handleProceed = () => {
+    setClicked(true)
+    window.open("https://www.ramp.network/buy", "_blank")
+  }
 
   return (
     <main className="relative flex flex-col items-center p-4 mt-7 mb-44">
@@ -109,13 +117,23 @@ const Payment = () => {
           className="w-full h-auto max-w-xs mx-auto rounded-lg" // Adjusted dimensions for responsiveness
         />
         <button
-          onClick={() => window.open("https://www.ramp.network/buy", "_blank")}
+          onClick={handleProceed}
           aria-label="Proceed with payment using Ramp"
           className="w-full px-4 py-2 mt-4 text-white bg-blue-500 rounded-md sm:w-auto hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
           Proceed with Ramp
         </button>
       </section>
+
+      {clicked && <section className="w-full max-w-md mt-3 text-center">
+        <p className="mb-3 text-lg font-medium">Click Confirm if Your Payment was Successful.</p>
+        <button
+          onClick={handleClick}
+          className="w-full px-4 py-2 mt-4 text-white bg-blue-500 rounded-md sm:w-auto hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+        >
+          Confirm Payment
+        </button>
+      </section>}
 
       {/* Additional Info Section */}
       <section className="w-full max-w-md mt-6 text-center">

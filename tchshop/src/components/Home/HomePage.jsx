@@ -7,12 +7,14 @@ import Search from '../Home/Search'
 
 const HomePage = () => {
   const [searchResult, setSearchResult] = useState([])
+  const [loading, setLoading] = useState(false);
+
 
   return (
     <>
         <Hero />
-        <Search setSearchResult={setSearchResult} />
-        <Products searchResult={searchResult} />
+        <Search setSearchResult={setSearchResult} setLoading={setLoading} />
+      <Products searchResult={searchResult} loading={loading} setLoading={setLoading} />
         {/* <ShopPolicy /> */}
     </>
   )
