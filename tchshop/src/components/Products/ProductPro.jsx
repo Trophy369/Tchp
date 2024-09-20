@@ -110,7 +110,7 @@ const ProductPro = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed px-4 py-2 text-white bg-green-500 rounded-lg bottom-4 right-4"
+          className="fixed px-4 py-2 text-white bg-green-500 rounded-lg mb-44 bottom-4 right-4"
         >
           {notification}
         </motion.div>

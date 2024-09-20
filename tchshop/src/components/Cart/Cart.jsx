@@ -49,7 +49,7 @@ const Cart = ({ productId, name, price, quantity, image }) => {
 
   return (
     <tr key={productId} className="text-center border-b">
-      <td className="flex flex-col py-2 space-x-4 md:flex-row">
+      <td className="flex flex-col py-2 space-x-4 text-sm text-left md:flex-row">
         <ShowImage style="cart" url={`static/products/default_img/${image}`} />
         <span className="truncate">{name}</span>
       </td>
