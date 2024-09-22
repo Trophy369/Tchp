@@ -18,6 +18,7 @@ const CartPage = () => {
     };
 
     postMethod();
+    window.scrollTo(0, 0);
   }, []);
 
   if (cart_details.length === 0) {

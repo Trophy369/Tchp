@@ -15,7 +15,7 @@ const Review = ({ item }) => {
     <div className="mb-4 overflow-y-auto max-h-20vh">
       <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 ">
         {imageUrls.map((image, index) => (
-          <img key={index} src={image} className="object-cover w-full h-auto mx-auto rounded" alt={`Review ${index + 1}`} />
+          <img key={index} src={image} className="object-contain w-1/2 h-auto mx-auto rounded" alt={`Review ${index + 1}`} />
         ))}
       </div>
       <div className="mt-4">

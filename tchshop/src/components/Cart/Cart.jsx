@@ -49,11 +49,11 @@ const Cart = ({ productId, name, price, quantity, image }) => {
 
   return (
     <tr key={productId} className="text-center border-b">
-      <td className="flex flex-col py-2 space-x-4 text-sm text-left md:flex-row">
+      <td className="flex flex-col py-1 space-x-4 text-sm text-left md:flex-row">
         <ShowImage style="cart" url={`static/products/default_img/${image}`} />
-        <span className="truncate">{name}</span>
+        <span className="text-xs truncate text-wrap">{name}</span>
       </td>
-      <td className="hidden py-2 md:table-cell">
+      <td className="hidden py-1 md:table-cell">
         <div className="flex items-center justify-center">
           <button onClick={handleDecrement} className="px-2">
             <FaMinus />

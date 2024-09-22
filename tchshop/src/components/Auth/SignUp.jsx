@@ -23,6 +23,8 @@ const SignUp = () => {
     const { data } = await signup(emailInput, passwordInput);
     if (data.message === "User created successfully") {
       setSigned(data);
+      const successMessage = "Your account has been created successfully!";
+      localStorage.setItem("notification", successMessage); // Store notification in localStorage
     }
   };
 

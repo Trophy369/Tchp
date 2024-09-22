@@ -45,6 +45,7 @@ const ProductPro = () => {
     };
 
     fetchProduct();
+    window.scrollTo(0, 0);
   }, [id]);
 
   useEffect(() => {
@@ -127,7 +128,7 @@ const ProductPro = () => {
           </p>
         </div> */}
       <div className="my-8 text-center">
-        <h1 className="text-lg font-medium ">{product_name}</h1>
+        <h1 className="text-base font-medium ">{product_name}</h1>
         <p className="flex items-center justify-center text-base font-medium">
           <FaDollarSign className="mr-1" /> {discounted_price} / Piece
         </p>
@@ -171,14 +172,14 @@ const ProductPro = () => {
 
         <button
           onClick={handleAddToCart}
-          className="px-6 py-2 my-4 text-white bg-blue-500 rounded-lg"
+          className="px-6 py-2 my-2 text-white bg-blue-500 rounded-lg"
         >
           Add to Cart
         </button>
       </div>
       <hr />
       <hr />
-      <div className="mt-8 text-center" ref={reviewsRef}>
+      <div className="mt-4 text-center" ref={reviewsRef}>
         <ProductDescription />
         <Reviews id={id} />
       </div>

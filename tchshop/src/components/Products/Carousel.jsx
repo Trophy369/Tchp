@@ -5,15 +5,19 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const Carousel = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 7000); // 3 seconds interval
+      if (!isPaused) {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }
+    }, 7000); // 7 seconds interval
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [images.length, isPaused]);
 
   const handleSwipe = (direction) => {
+    setIsPaused(false); // Reset pause on swipe
     if (direction === 'left') {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     } else if (direction === 'right') {
@@ -21,11 +25,15 @@ const Carousel = ({ images }) => {
     }
   };
 
+  const handleTouchStart = () => {
+    setIsPaused(true); // Pause on touch
+  };
+
   return (
-    <section className="relative overflow-hidden">
-      <div className="flex mx-auto transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+    <section className="relative overflow-hidden h-[40vh] md:h-[50vh] md:max-w-[50vw] mx-auto" onTouchStart={handleTouchStart}>
+      <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
         {images.map((src, index) => (
-          <div key={index} className="flex-shrink-0 w-full h-full md:w-full">
+          <div key={index} className="flex-shrink-0 w-full h-full">
             <ShowImage url={src} alt={`Slide ${index}`} style="carousel" />
           </div>
         ))}

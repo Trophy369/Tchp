@@ -22,14 +22,16 @@ const ProductCard = ({ id, product_image, name, setProducts, products }) => {
 
   return (
     <tr key={id} className="border-b ">
-      <td className="flex flex-wrap items-center py-4 space-x-4">
-        <ShowImage
+      <td className="flex flex-wrap items-center py-2 space-x-4">
+        <div className="w-24 h-24">
+          <ShowImage
           url={`static/products/default_img/${product_image}`}
           style={true}
-        />
+        /></div>
+        
         <span className="truncate">{name}</span>
       </td>
-      <td className="flex py-4 text-center md:table-cell">
+      <td className="flex py-2 text-center md:table-cell">
         <Link
           to={`/admin/product/${id}`}
           state={{ product }}
@@ -38,7 +40,7 @@ const ProductCard = ({ id, product_image, name, setProducts, products }) => {
           EDIT PRODUCT
         </Link>
       </td>
-      <td className="py-4 text-center">
+      <td className="py-2 text-center">
         <button
           onClick={handleRemove}
           className="text-red-600 transition-transform duration-200 hover:text-red-800 hover:scale-125"

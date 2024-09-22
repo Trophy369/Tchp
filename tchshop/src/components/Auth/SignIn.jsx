@@ -8,6 +8,15 @@ const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector(state => state.user);
+  const [notification, setNotification] = useState("");
+
+  useEffect(() => {
+    const message = localStorage.getItem("notification");
+    if (message) {
+      setNotification(message);
+      localStorage.removeItem("notification"); // Clear the notification after displaying it
+    }
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -59,6 +68,14 @@ const Signin = () => {
         <h2 className="mt-6 text-3xl font-extrabold text-center text-gray-900">
           Login account
         </h2>
+        
+        {/* Notification Section */}
+        {notification && (
+          <div className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+            {notification}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="mt-2 space-y-6">
           <div className="rounded-md shadow-sm">
             <div>

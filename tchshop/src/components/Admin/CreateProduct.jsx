@@ -191,8 +191,8 @@ const CreateProductComponent = () => {
       {error && <p className="mt-4 text-red-600">{error}</p>}
       
       {/* Product List Section */}
-      <div className="mt-8">
-        <h1 className="mb-4 text-2xl font-bold">All Products</h1>
+      <div className="mt-4">
+        <h1 className="mb-2 text-2xl font-bold">All Products</h1>
         <div className="overflow-x-auto">
           <table className="w-full text-left border">
             <thead>

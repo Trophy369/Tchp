@@ -100,7 +100,7 @@ const Checkout = () => {
   };
 
   return (
-    <section className="flex items-center justify-center px-4 py-4 mt-11 mb-44 bg-gray-50 sm:px-6 lg:px-8">
+    <section className="flex items-center justify-center px-4 py-2 mt-10 mb-44 bg-gray-50 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         {/* Conditionally render based on whether shippingAddress exists */}
         {shippingAddress ? loadOrders() : shipForm()}
