@@ -242,7 +242,7 @@ const Shipping = ({ setShipData }) => {
       <div className="mb-2">
         <input
           name="zipcode"
-          type="text"
+          type="number"
           placeholder="Zip Code"
           value={deliveryForm.zipcode}
           onChange={handleChange}
@@ -276,16 +276,19 @@ const Shipping = ({ setShipData }) => {
       </div>
 
       <div className="mb-2">
-        <input
-          name="phone"
-          type="text"
-          placeholder="phone"
-          value={deliveryForm.phone}
-          onChange={handleChange}
-          className="w-full p-2 border"
-        />
-        {errors.phone && <p className="text-red-500">{errors.phone}</p>}
-      </div>
+  <input
+    name="phone"
+    type="tel"
+    inputMode="numeric"
+    pattern="($\d{3}$\s?|\d{3}-)?\d{3}-\d{4}"
+    placeholder="(123) 456-7890"
+    value={deliveryForm.phone}
+    onChange={handleChange}
+    className="w-full p-2 border"
+  />
+  {errors.phone && <p className="text-red-500">{errors.phone}</p>}
+</div>
+
 
       <div>
         <button

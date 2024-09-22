@@ -264,7 +264,7 @@ const UpdateProfile = () => {
           <label className="block mb-2 text-sm font-medium" htmlFor="zipcode">Zip Code</label>
           <input
             id="zipcode"
-            type="text"
+            type="number"
             name="zipcode"
             value={deliveryForm.zipcode}
             onChange={handleChange}
@@ -305,14 +305,16 @@ const UpdateProfile = () => {
       <div>
         <label className="block mb-2 text-sm font-medium" htmlFor="phone">Phone Number</label>
         <input
-          id="phone"
-          type="text"
-          name="phone"
-          value={deliveryForm.phone}
-          onChange={handleChange}
-          className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-        />
-        {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
+    name="phone"
+    type="tel"
+     inputMode="numeric"
+    pattern="($\d{3}$\s?|\d{3}-)?\d{3}-\d{4}"
+    placeholder="(123) 456-7890"
+    value={deliveryForm.phone}
+    onChange={handleChange}
+    className="w-full p-2 border"
+  />
+  {errors.phone && <p className="text-red-500">{errors.phone}</p>}
       </div>
   
       <div className="flex justify-center mt-4">
