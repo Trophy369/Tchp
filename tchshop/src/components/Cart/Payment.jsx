@@ -122,8 +122,11 @@ const Payment = () => {
 
       {/* Payment Actions */}
       <section className="w-full max-w-md mt-6 text-center">
-        <h3 className="my-4 text-lg font-bold text-gray-800">Secure Your Order Now on Ramp with USDT. </h3>
-        <h4>See this!</h4>
+        
+        <h5 className="mt-1 mb-3 text-lg font-medium text-gray-800"> 
+        Make a seamless payment with Ramp, our trusted payment partner, or send USDT (TRC20 network) directly from your personal wallet.
+        </h5>
+        <p className="my-1 text-base text-gray-600">Secure Your Order Now on Ramp. See this!</p>
         <img
           src={Gif}
           alt="GIF For Payment Process"
@@ -136,7 +139,7 @@ const Payment = () => {
         >
           Proceed with Ramp 
         </button>
-        <p className="my-3 text-lg font-medium text-gray-600">Make a seamless payment with Ramp, our trusted payment partner, or send USDT (TRC20 network) directly from your personal wallet.</p>
+        
       </section>
 
       {/* Additional Info Section */}

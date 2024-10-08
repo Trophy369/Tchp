@@ -9,7 +9,8 @@ const ShowImage = ({ style, url }) => {
     size = "object-contain w-16 h-16"; // Small image size
   } else if (style === "home") {
     size = "object-contain w-full h-48"; // Large image size
-  } else if (style === "carousel") {
+  }
+   else if (style === "carousel") {
     size = "object-cover mx-auto w-full h-full max-w-md max-h-md"; // Set max-width and max-height
   }   else if (style === "category") {
     size = "w-24 h-24 object-contain";
