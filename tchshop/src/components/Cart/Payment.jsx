@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const Payment = () => {
   const [payInfo, setPayInfo] = useState({});
   const [copiedField, setCopiedField] = useState(null);
-  const [clicked, setClicked] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +44,6 @@ const Payment = () => {
   };
 
   const handleProceed = () => {
-    setClicked(true);
     window.open("https://www.ramp.network/buy", "_blank");
   };
 
@@ -108,25 +106,22 @@ const Payment = () => {
         <dd className="mb-3 text-xs text-center text-gray-600">{payInfo.address}</dd>
       </section>
 
-      {clicked && (
         <section className="w-full max-w-md mt-2 text-center">
-          <p className="mb-1 text-lg font-medium text-gray-800">Click Confirm below when your payment is successful!</p>
-          <button
-            onClick={handleClick}
-            className="w-full px-4 py-2 mt-1 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-          >
-            Confirm Payment
-          </button>
+          <h5 className="mt-4 font-medium text-gray-800 text-md"> 
+          Send USDT (TRC20 network) directly from your personal wallet within the countdown timer above and click "Confirm Payment" below for transaction verification.
+          </h5>
+          {/* <p className="mb-1 text-lg font-medium text-gray-800">Click Confirm below when your payment is successful!</p> */}
+          <span className="flex justify-center py-1 text-sm text-gray-300">Global</span>
         </section>
-      )}
 
       {/* Payment Actions */}
       <section className="w-full max-w-md mt-6 text-center">
         
-        <h5 className="mt-1 mb-3 text-lg font-medium text-gray-800"> 
-        Make a seamless payment with Ramp, our trusted payment partner, or send USDT (TRC20 network) directly from your personal wallet.
-        </h5>
-        <p className="my-1 text-base text-gray-600">Secure Your Order Now on Ramp. See this!</p>
+        {/* <h5 className="mt-1 mb-3 text-lg font-medium text-gray-800"> 
+        Send USDT (TRC20 network) directly from your personal wallet in due time and click "Confirm Payment".
+        </h5> */}
+        <p className="flex justify-center pb-3 text- text-black/20">Alternatively</p>
+        <p className="my-1 text-base text-gray-600">Secure Your Order Now on Ramp. See this!<br/> Make a seamless payment with Ramp, our trusted payment partner</p>
         <img
           src={Gif}
           alt="GIF For Payment Process"
@@ -135,10 +130,16 @@ const Payment = () => {
         <button
           onClick={handleProceed}
           aria-label="Proceed with payment using Ramp"
-          className="w-full px-4 py-2 mt-4 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          className="w-full px-4 py-2 mt-4 text-white rounded-md bg-paymentBtn hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
           Proceed with Ramp 
         </button>
+        <button
+            onClick={handleClick}
+            className="w-full px-4 py-2 mt-1 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Confirm Payment
+          </button>
         
       </section>
 

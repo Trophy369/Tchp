@@ -8,6 +8,7 @@ export default {
     extend: {
       colors: {
         orangeTime: '321C3A',
+        paymentBtn: 'rgba(2 173 148)' ,
       },
     },
   },
